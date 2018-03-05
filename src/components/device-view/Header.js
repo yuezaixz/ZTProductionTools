@@ -15,7 +15,7 @@ class Header extends Component {
         return (
             <View style={styles.container}>
                 <Text style={[styles.text, styles.title]}>
-                    {this.props.device_data.name}:{this.props.device_data.uuid}
+                    枕头固件测试
                 </Text>
             </View>
         );
@@ -24,16 +24,17 @@ class Header extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop:20,
-        height: 100
+        flex:1,
+        justifyContent:'center'
     },
     text: {
-        color: '#E85613'
+        color: '#000000'
     },
     title: {
+        alignSelf:'center',
         width: width,
         textAlign: 'center',
-        fontSize: 20
+        fontSize: 20,
     }
 });
 

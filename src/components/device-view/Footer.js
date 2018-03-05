@@ -12,44 +12,55 @@ import {Theme} from "../../styles";
 let {height, width} = Dimensions.get('window');
 
 class Footer extends Component {
-    handleDisconnect = ()=>{
-        this.props.actions.deviceDisconnect(this.props.device_data.uuid);
+    handleNext = ()=>{
+        //TODO 下一步
     }
     render() {
         return (
+            <View style={styles.container}>
             <TouchableHighlight
                 activeOpacity={Theme.active.opacity}
                 underlayColor='transparent'
-                onPress={this.handleDisconnect}>
-                <View style={styles.container}>
+                style={{flex:1}}
+                onPress={this.handleNext}>
+                <View style={styles.buttonContainer} >
                     <Text style={[styles.text, styles.title]}>
-                        断开连接
+                        下一步（传感器校准）
                     </Text>
                 </View>
             </TouchableHighlight>
+            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        width: width,
-        height: 40,
-        borderWidth:1,
-        borderRadius:10,
-        backgroundColor:'#AAAAAA',
-        position:'absolute',
-        bottom:20,
-        alignItems:'center',
+        flex:1,
         justifyContent:'center'
     },
+    bottom: {
+
+    },
     text: {
-        color: '#E85613'
+        color: '#000000'
+    },
+    buttonContainer: {
+        position:'absolute',
+        top:10,
+        bottom:10,
+        left:10,
+        right:10,
+        backgroundColor:'#D8D8D8',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth:1,
+        borderColor:'#979797',
+        borderRadius:4
     },
     title: {
         textAlign: 'center',
-        fontSize: 20,
-        position:'relative'
+        fontSize: 20
     }
 });
 
