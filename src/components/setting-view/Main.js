@@ -15,50 +15,47 @@ class Main extends Component {
     componentDidUpdate () {
 
     }
-    handleConnectValue (){
-        console.log('handleConnectValue')
-    }
     render() {
         return (
             <View style={styles.container}>
                 <View style={[styles.row]} >
                     <Text style={[styles.row_title]} >自动连接阈值</Text>
-                    <View style={[styles.row_right]}>
-                        <Text style={[styles.row_value]} >-40</Text>
-                        <TouchableHighlight
-                            activeOpacity={Theme.active.opacity}
-                            underlayColor='transparent'
-                            style={[styles.row_edit]}
-                            onPress={this.handleConnectValue}>
+                    <TouchableHighlight
+                        activeOpacity={Theme.active.opacity}
+                        underlayColor='transparent'
+                        style={[styles.row_right]}
+                        onPress={this.props.openModal}>
+                        <View style={[styles.row_edit]}>
+                            <Text style={[styles.row_value]} >-40</Text>
                             <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
-                        </TouchableHighlight>
-                    </View>
+                        </View>
+                    </TouchableHighlight>
                 </View>
                 <View style={[styles.row]} >
                     <Text style={[styles.row_title]} >标准电压</Text>
-                    <View style={[styles.row_right]}>
-                        <Text style={[styles.row_value]} >5.82V</Text>
-                        <TouchableHighlight
-                            activeOpacity={Theme.active.opacity}
-                            underlayColor='transparent'
-                            style={[styles.row_edit]}
-                            onPress={this.handleConnectValue}>
+                    <TouchableHighlight
+                        activeOpacity={Theme.active.opacity}
+                        underlayColor='transparent'
+                        style={[styles.row_right]}
+                        onPress={this.props.openModal}>
+                        <View style={[styles.row_edit]}>
+                            <Text style={[styles.row_value]} >5.82V</Text>
                             <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
-                        </TouchableHighlight>
-                    </View>
+                        </View>
+                    </TouchableHighlight>
                 </View>
                 <View style={[styles.row]} >
                     <Text style={[styles.row_title]} >气压校准差值</Text>
-                    <View style={[styles.row_right]}>
-                        <Text style={[styles.row_value]} >10</Text>
-                        <TouchableHighlight
-                            activeOpacity={Theme.active.opacity}
-                            underlayColor='transparent'
-                            style={[styles.row_edit]}
-                            onPress={this.handleConnectValue}>
+                    <TouchableHighlight
+                        activeOpacity={Theme.active.opacity}
+                        underlayColor='transparent'
+                        style={[styles.row_right]}
+                        onPress={this.props.openModal}>
+                        <View style={[styles.row_edit]}>
+                            <Text style={[styles.row_value]} >10</Text>
                             <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
-                        </TouchableHighlight>
-                    </View>
+                        </View>
+                    </TouchableHighlight>
                 </View>
             </View>
         );
@@ -92,7 +89,6 @@ const styles = StyleSheet.create({
     row_edit:{
         position:'absolute',
         right:0,
-        width:20,
         height:22,
         alignItems:'center',
         justifyContent:'center'

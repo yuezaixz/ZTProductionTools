@@ -8,16 +8,22 @@ import {
     TouchableOpacity,
     Dimensions
 } from 'react-native';
-let {height, width} = Dimensions.get('window');
-
 import {
     Header,
     Main,
     Footer,
 } from '../components/setting-view';
 import Actions from '../actions';
+import Modal from 'react-native-simple-modal';
+
+let {height, width} = Dimensions.get('window');
 
 class SettingView extends Component {
+    state = {open: false};
+    handleConnectValue (){
+        console.log('handleConnectValue')
+        this.setState({open: true})
+    }
     constructor(props){
         super(props);
         this.state = {isVisible: true}
@@ -32,8 +38,24 @@ class SettingView extends Component {
         return (
             <View style={styles.container}>
                 <Header {...this.props}/>
-                <Main {...this.props}/>
+                <Main openModal={this.handleConnectValue.bind(this)} {...this.props}/>
                 <Footer {...this.props}/>
+
+                <Modal
+                    offset={0}
+                    open={this.state.open}
+                    modalDidOpen={() => console.log('蓝牙提示框开启')}
+                    modalDidClose={() => this.setState({open: false})}
+                    style={{alignItems: 'center'}}>
+                    <View>
+                        <Text style={{fontSize: 20, marginBottom: 10}}>请设置TODO的阈值！</Text>
+                        <TouchableOpacity
+                            style={{margin: 5}}
+                            onPress={() => this.setState({open: false})}>
+                            <Text>好的</Text>
+                        </TouchableOpacity>
+                    </View>
+                </Modal>
             </View>
         );
     }
