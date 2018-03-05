@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {StackNavigator} from 'react-navigation'
 import HomeView from './HomeView';
 import DeviceView from './DeviceView';
+import AdjustView from './AdjustView';
 
 const RootStack = StackNavigator(
     {
@@ -10,6 +11,9 @@ const RootStack = StackNavigator(
         },
         Device: {
             screen: DeviceView,
+        },
+        Adjust: {
+            screen: AdjustView,
         },
     },
     {
