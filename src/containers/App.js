@@ -21,7 +21,7 @@ const RootStack = StackNavigator(
         },
     },
     {
-        initialRouteName: 'Setting',
+        initialRouteName: 'Home',
     }
 );
 
