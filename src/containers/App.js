@@ -3,6 +3,7 @@ import {StackNavigator} from 'react-navigation'
 import HomeView from './HomeView';
 import DeviceView from './DeviceView';
 import AdjustView from './AdjustView';
+import SettingView from './SettingView';
 
 const RootStack = StackNavigator(
     {
@@ -15,9 +16,12 @@ const RootStack = StackNavigator(
         Adjust: {
             screen: AdjustView,
         },
+        Setting: {
+            screen: SettingView,
+        },
     },
     {
-        initialRouteName: 'Home',
+        initialRouteName: 'Setting',
     }
 );
 

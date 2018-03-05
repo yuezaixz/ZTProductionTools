@@ -1,0 +1,115 @@
+import React, {Component} from 'react';
+
+import {
+    StyleSheet,
+    Text,
+    View,
+    TouchableHighlight,
+    Image, Dimensions
+} from 'react-native';
+import {Theme} from "../../styles";
+
+let {height, width} = Dimensions.get('window');
+
+class Main extends Component {
+    componentDidUpdate () {
+
+    }
+    handleConnectValue (){
+        console.log('handleConnectValue')
+    }
+    render() {
+        return (
+            <View style={styles.container}>
+                <View style={[styles.row]} >
+                    <Text style={[styles.row_title]} >自动连接阈值</Text>
+                    <View style={[styles.row_right]}>
+                        <Text style={[styles.row_value]} >-40</Text>
+                        <TouchableHighlight
+                            activeOpacity={Theme.active.opacity}
+                            underlayColor='transparent'
+                            style={[styles.row_edit]}
+                            onPress={this.handleConnectValue}>
+                            <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
+                        </TouchableHighlight>
+                    </View>
+                </View>
+                <View style={[styles.row]} >
+                    <Text style={[styles.row_title]} >标准电压</Text>
+                    <View style={[styles.row_right]}>
+                        <Text style={[styles.row_value]} >5.82V</Text>
+                        <TouchableHighlight
+                            activeOpacity={Theme.active.opacity}
+                            underlayColor='transparent'
+                            style={[styles.row_edit]}
+                            onPress={this.handleConnectValue}>
+                            <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
+                        </TouchableHighlight>
+                    </View>
+                </View>
+                <View style={[styles.row]} >
+                    <Text style={[styles.row_title]} >气压校准差值</Text>
+                    <View style={[styles.row_right]}>
+                        <Text style={[styles.row_value]} >10</Text>
+                        <TouchableHighlight
+                            activeOpacity={Theme.active.opacity}
+                            underlayColor='transparent'
+                            style={[styles.row_edit]}
+                            onPress={this.handleConnectValue}>
+                            <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
+                        </TouchableHighlight>
+                    </View>
+                </View>
+            </View>
+        );
+    }
+}
+
+const styles = StyleSheet.create({
+    row:{
+        position:'relative',
+        height:42,
+        flexDirection:'row',
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    row_right:{
+        position:'absolute',
+        right:0,
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    row_title:{
+        position:'absolute',
+        left:0,
+        fontSize:17
+    },
+    row_value:{
+        position:'absolute',
+        right:24,
+        fontSize:17
+    },
+    row_edit:{
+        position:'absolute',
+        right:0,
+        width:20,
+        height:22,
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    row_edit_img:{
+        position:'absolute',
+        top:0,
+        width:20,
+        height:20,
+        resizeMode:'contain'
+    },
+    container: {
+        flex: 8,
+        paddingBottom:20,
+        paddingLeft:20,
+        paddingRight:20
+    }
+});
+
+export default Main;
