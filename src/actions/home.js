@@ -76,7 +76,8 @@ export function startSearchDevice() {
                                 }
                             }
                             if (!isExit) {
-                                new_list.push({name:peripheral.name,uuid:peripheral.id, rssi:peripheral.rssi})
+                                var device = {name:peripheral.name,uuid:peripheral.id, rssi:peripheral.rssi}
+                                new_list.push(device)
                             }
                         }
                     }
@@ -130,7 +131,7 @@ export function startDeviceConnect(device) {
                                         writeUUID: writeCharacteristic})
                                 })
                                 .catch((error) => {
-                                    dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: "startNotification失败"})
+                                    dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: "startNotification失败"+error})
                                 });
 
                         } else {

@@ -53,13 +53,17 @@ class HomeView extends Component {
         this.props.navigation.addListener(
             'didFocus',
             payload => {
-                setTimeout(() => {this.props.actions.startSearchDevice()}, 500)
+                setTimeout(() => {
+                    this.props.actions.startSearchDevice();
+                    this.setState({isVisible: true});
+                }, 500)
             }
         );
         this.props.navigation.addListener(
             'willBlur',
             payload => {
-                this.props.actions.stopSearchDevice()
+                this.props.actions.stopSearchDevice();
+                this.setState({isVisible: false});
             }
         );
     }

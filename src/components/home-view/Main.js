@@ -4,14 +4,13 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableHighlight,
-    Image,
-    Dimensions,
+    AsyncStorage,
     ScrollView
 } from 'react-native';
 import ListItem from './ListItem';
 
 class Main extends Component {
+    connectRSSI = -40
     renderList  = () =>{
         const { home_data } = this.props;
         if(!home_data || !home_data.device_list){ return null}
@@ -47,8 +46,20 @@ class Main extends Component {
         }
         return null;
     }
+    componentWillMount() {
+        AsyncStorage.getItem('connect_threshold',function (error, result) {
+            if (!error && result) {
+                this.connectRSSI = parseInt('-'+result)
+            }
+        }.bind(this))
+    }
     componentDidUpdate () {
+        if (!this.props.isVisible) {
+            return;
+        }
+
         if (this.props.home_data.uuid) {//连接成功，那就跳转了
+            console.log(this.props.navigation.isFocused)
             this.props.navigation.navigate('Device',{
                 uuid: this.props.home_data.uuid,
                 name: this.props.home_data.name,
@@ -56,6 +67,19 @@ class Main extends Component {
                 noitfyUUID: this.props.home_data.noitfyUUID,
                 writeUUID: this.props.home_data.writeUUID
             })
+        }
+        if (!this.props.home_data.isConnecting && !this.props.home_data.uuid) {
+            const { home_data } = this.props;
+            if(home_data || home_data.device_list){
+                for (var j = 0; j < home_data.device_list.length; j++) {
+                    var device = home_data.device_list[j]
+                    if(device.rssi < 0 && device.rssi >= -40) {
+                        console.log("自动连接"+device.uuid)
+                        this.props.actions.startDeviceConnect(device)
+                        break;
+                    }
+                }
+            }
         }
     }
     render() {
