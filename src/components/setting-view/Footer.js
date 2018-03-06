@@ -13,7 +13,7 @@ let {height, width} = Dimensions.get('window');
 
 class Footer extends Component {
     handleComplete = ()=>{
-        //TODO 下一步
+        this.props.navigation.goBack()
     }
     render() {
         return (
@@ -25,7 +25,7 @@ class Footer extends Component {
                     onPress={this.handleComplete}>
                     <View style={styles.buttonContainer} >
                         <Text style={[styles.text, styles.title]}>
-                            开始设置
+                            开始测试
                         </Text>
                     </View>
                 </TouchableHighlight>

@@ -4,6 +4,7 @@ import BleManager from 'react-native-ble-manager';
 import {Platform} from 'react-native';
 
 var loopTimer = 0;
+var isSearching = false;
 
 function endTimer(){
     loopTimer && cancelAnimationFrame(loopTimer);
@@ -11,6 +12,10 @@ function endTimer(){
 }
 
 export function startSearchDevice() {
+    if (isSearching) {
+        return {type: types.START_SEARCH_DEVICE};
+    }
+    isSearching = true;
     var lastUpdateTime = 0;
     var callback = null;
     function startTimer(cb) {
@@ -85,6 +90,7 @@ export function startSearchDevice() {
 }
 
 export function stopSearchDevice() {
+    isSearching = false
     endTimer()
     BleManager.stopScan()
     return {type: types.STOP_SEARCH_DEVICE}

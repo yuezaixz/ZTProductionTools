@@ -11,6 +11,7 @@ import {
     NativeEventEmitter,
     NativeModules, Dimensions
 } from 'react-native';
+import Button from '../components/common/Button'
 import Modal from 'react-native-simple-modal';
 import BleManager from 'react-native-ble-manager';
 let {height, width} = Dimensions.get('window');
@@ -26,12 +27,43 @@ const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 class HomeView extends Component {
+
+    static navigationOptions = ({ navigation }) => {
+        const params = navigation.state.params || {};
+
+        return {
+            title:"枕头固件测试",
+            headerLeft: (
+                <Button onPress={params.settingAction} style={{width:60}} textStyle={{fontSize:14,textAlign:'center'}} title="设置" />
+            ),
+        };
+    };
     isFirst = true
     state = {open: true};
     constructor(props){
         super(props);
         this.state = {isVisible: true}
     }
+    _settingAction(){
+        this.props.navigation.navigate('Setting')
+    }
+    componentWillMount() {
+        this.props.navigation.setParams({ settingAction: this._settingAction.bind(this) });
+
+        this.props.navigation.addListener(
+            'didFocus',
+            payload => {
+                setTimeout(() => {this.props.actions.startSearchDevice()}, 500)
+            }
+        );
+        this.props.navigation.addListener(
+            'willBlur',
+            payload => {
+                this.props.actions.stopSearchDevice()
+            }
+        );
+    }
+
     componentDidMount() {
         bleManagerEmitter.addListener(
             'BleManagerDidUpdateState',
@@ -82,6 +114,8 @@ class HomeView extends Component {
     }
     componentWillUnmount(){
         bleManagerEmitter.removeAllListeners('BleManagerDidUpdateState')
+        this.props.navigation.removeAllListeners('willBlur')
+        this.props.navigation.removeAllListeners('didFocus')
         this.props.actions.stopSearchDevice()
     }
     bindEvents = ()=>{
@@ -103,7 +137,7 @@ class HomeView extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Header {...this.props}/>
+                {/*<Header {...this.props}/>*/}
                 <Main {...this.props} isVisible={this.state.isVisible}/>
                 <Footer {...this.props}/>
 

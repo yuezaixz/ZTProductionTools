@@ -19,8 +19,18 @@ import Modal from 'react-native-simple-modal';
 let {height, width} = Dimensions.get('window');
 
 class SettingView extends Component {
+    static navigationOptions = ({ navigation }) => {
+        const params = navigation.state.params || {};
+
+        return {
+            title:"测试项阈值设置",
+            headerLeft: (
+                <View />
+            ),
+        };
+    };
     state = {open: false};
-    handleConnectValue (){
+    handleConnectValue (type){
         console.log('handleConnectValue')
         this.setState({open: true})
     }
@@ -37,7 +47,7 @@ class SettingView extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Header {...this.props}/>
+                {/*<Header {...this.props}/>*/}
                 <Main openModal={this.handleConnectValue.bind(this)} {...this.props}/>
                 <Footer {...this.props}/>
 
