@@ -26,7 +26,7 @@ class Main extends Component {
                         style={[styles.row_right]}
                         onPress={() => this.props.openModal('connect_threshold')}>
                         <View style={[styles.row_edit]}>
-                            <Text style={[styles.row_value]} >-40</Text>
+                            <Text style={[styles.row_value]} >-{this.props.settingValue['connect_threshold']}</Text>
                             <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
                         </View>
                     </TouchableHighlight>
@@ -39,7 +39,7 @@ class Main extends Component {
                         style={[styles.row_right]}
                         onPress={() => this.props.openModal('std_voltage')}>
                         <View style={[styles.row_edit]}>
-                            <Text style={[styles.row_value]} >5.82</Text>
+                            <Text style={[styles.row_value]} >{this.props.settingValue['std_voltage']}</Text>
                             <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
                         </View>
                     </TouchableHighlight>
@@ -52,7 +52,7 @@ class Main extends Component {
                         style={[styles.row_right]}
                         onPress={() => this.props.openModal('air_pressure_threshold')}>
                         <View style={[styles.row_edit]}>
-                            <Text style={[styles.row_value]} >10</Text>
+                            <Text style={[styles.row_value]} >{this.props.settingValue['air_pressure_threshold']}</Text>
                             <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
                         </View>
                     </TouchableHighlight>

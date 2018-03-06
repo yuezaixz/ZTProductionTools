@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import {
     Platform,
     PermissionsAndroid,
-    NativeEventEmitter,
-    NativeModules
+    AsyncStorage
 } from 'react-native';
 import { Provider } from 'react-redux';
 
@@ -13,6 +12,15 @@ import BleManager from 'react-native-ble-manager';
 
 class Root extends Component {
     componentWillMount() {
+        AsyncStorage.getItem('connect_threshold',function (error, result) {
+            if(!error) {
+                if (!result) {
+                    AsyncStorage.setItem('connect_threshold','40')
+                    AsyncStorage.setItem('air_pressure_threshold','10')
+                    AsyncStorage.setItem('std_voltage','5.82')
+                }
+            }
+        })
         BleManager.start({showAlert: false})
             .then(() => {
                 // Success code
