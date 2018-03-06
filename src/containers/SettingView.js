@@ -37,14 +37,25 @@ class SettingView extends Component {
             ),
         };
     };
-    state = {open: false};
+    state = {open: false,text:0};
     handleConnectValue (type){
         var title = typeMap[type]
         console.log('handleConnectValue'+ title)
         if (title) {
             this.setState({open: true, title})
         }
+        this.refs.HiddenInput.focus()
 
+    }
+    handleClose() {
+        this.setState({open: false})
+        this.refs.HiddenInput.clear()
+        this.refs.HiddenInput.blur()
+    }
+    inputChange(text) {
+        console.log(text)
+        text = text || 0
+        this.setState({text})
     }
     constructor(props){
         super(props);
@@ -62,19 +73,32 @@ class SettingView extends Component {
                 {/*<Header {...this.props}/>*/}
                 <Main openModal={this.handleConnectValue.bind(this)} {...this.props}/>
                 <Footer {...this.props}/>
+                <TextInput ref='HiddenInput' keyboardType='numeric' onChangeText={this.inputChange.bind(this)} style={{position:'absolute',width:0,height:0}} ></TextInput>
                 <Modal
-                    offset={0}
+                    offset={-80}
                     open={this.state.open}
                     modalDidOpen={() => console.log('开始修改阈值')}
-                    modalDidClose={() => this.setState({open: false})}
+                    modalDidClose={() => this.handleClose()}
                     style={{alignItems: 'center'}}>
                     <View>
-                        <Text style={{fontSize: 20, marginBottom: 10}}>请设置{this.state.title || "[ERROR]"}！</Text>
-                        <TouchableOpacity
-                            style={{margin: 5}}
-                            onPress={() => this.setState({open: false})}>
-                            <Text>好的</Text>
-                        </TouchableOpacity>
+                        <Text style={{fontSize: 20,fontWeight:'bold', marginTop: 10,textAlign:'center'}}>请设置{this.state.title || "[ERROR]"}！</Text>
+                        <Text style={{fontSize: 40,fontWeight:'bold', marginTop: 15, marginBottom: 5,textAlign:'center'}}>
+                            {this.state.text}
+                        </Text>
+                        <View style={{flexDirection:'row',height:40}}>
+
+                            <TouchableOpacity
+                                style={{flex:1,alignItems:'center',justifyContent:'center'}}
+                                onPress={() => this.handleClose()}>
+                                <Text style={{fontSize: 16,textAlign:'center'}} >确定</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={{flex:1,alignItems:'center',justifyContent:'center'}}
+                                onPress={() => this.handleClose()}>
+                                <Text style={{fontSize: 16,textAlign:'center'}} >取消</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </Modal>
             </View>

@@ -39,7 +39,7 @@ class Main extends Component {
                         style={[styles.row_right]}
                         onPress={() => this.props.openModal('std_voltage')}>
                         <View style={[styles.row_edit]}>
-                            <Text style={[styles.row_value]} >5.82V</Text>
+                            <Text style={[styles.row_value]} >5.82</Text>
                             <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
                         </View>
                     </TouchableHighlight>
