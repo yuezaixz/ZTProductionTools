@@ -24,7 +24,7 @@ class Main extends Component {
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
                         style={[styles.row_right]}
-                        onPress={this.props.openModal}>
+                        onPress={() => this.props.openModal('connect_threshold')}>
                         <View style={[styles.row_edit]}>
                             <Text style={[styles.row_value]} >-40</Text>
                             <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
@@ -37,7 +37,7 @@ class Main extends Component {
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
                         style={[styles.row_right]}
-                        onPress={this.props.openModal}>
+                        onPress={() => this.props.openModal('std_voltage')}>
                         <View style={[styles.row_edit]}>
                             <Text style={[styles.row_value]} >5.82V</Text>
                             <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
@@ -50,7 +50,7 @@ class Main extends Component {
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
                         style={[styles.row_right]}
-                        onPress={this.props.openModal}>
+                        onPress={() => this.props.openModal('air_pressure_threshold')}>
                         <View style={[styles.row_edit]}>
                             <Text style={[styles.row_value]} >10</Text>
                             <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
@@ -65,10 +65,11 @@ class Main extends Component {
 const styles = StyleSheet.create({
     row:{
         position:'relative',
-        height:42,
+        height:40,
         flexDirection:'row',
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
+        marginTop:20
     },
     row_right:{
         position:'absolute',
@@ -79,7 +80,8 @@ const styles = StyleSheet.create({
     row_title:{
         position:'absolute',
         left:0,
-        fontSize:17
+        fontSize:18,
+        fontWeight:'bold'
     },
     row_value:{
         position:'absolute',
@@ -104,7 +106,8 @@ const styles = StyleSheet.create({
         flex: 8,
         paddingBottom:20,
         paddingLeft:20,
-        paddingRight:20
+        paddingRight:20,
+        paddingTop:10
     }
 });
 

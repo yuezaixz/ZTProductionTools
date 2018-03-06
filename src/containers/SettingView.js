@@ -5,6 +5,7 @@ import {
     StyleSheet,
     View,
     Text,
+    TextInput,
     TouchableOpacity,
     Dimensions
 } from 'react-native';
@@ -18,7 +19,14 @@ import Modal from 'react-native-simple-modal';
 
 let {height, width} = Dimensions.get('window');
 
+const typeMap = {
+    'connect_threshold':'自动连接阈值',
+    'std_voltage':'标准电压',
+    'air_pressure_threshold':'气压校准差值'
+}
+
 class SettingView extends Component {
+
     static navigationOptions = ({ navigation }) => {
         const params = navigation.state.params || {};
 
@@ -31,8 +39,12 @@ class SettingView extends Component {
     };
     state = {open: false};
     handleConnectValue (type){
-        console.log('handleConnectValue')
-        this.setState({open: true})
+        var title = typeMap[type]
+        console.log('handleConnectValue'+ title)
+        if (title) {
+            this.setState({open: true, title})
+        }
+
     }
     constructor(props){
         super(props);
@@ -50,15 +62,14 @@ class SettingView extends Component {
                 {/*<Header {...this.props}/>*/}
                 <Main openModal={this.handleConnectValue.bind(this)} {...this.props}/>
                 <Footer {...this.props}/>
-
                 <Modal
                     offset={0}
                     open={this.state.open}
-                    modalDidOpen={() => console.log('蓝牙提示框开启')}
+                    modalDidOpen={() => console.log('开始修改阈值')}
                     modalDidClose={() => this.setState({open: false})}
                     style={{alignItems: 'center'}}>
                     <View>
-                        <Text style={{fontSize: 20, marginBottom: 10}}>请设置TODO的阈值！</Text>
+                        <Text style={{fontSize: 20, marginBottom: 10}}>请设置{this.state.title || "[ERROR]"}！</Text>
                         <TouchableOpacity
                             style={{margin: 5}}
                             onPress={() => this.setState({open: false})}>
