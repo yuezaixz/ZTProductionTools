@@ -39,8 +39,9 @@ class Main extends Component {
         var datas = data.value
         var dataStr = util.arrayBufferToBase64Str(datas)
         if (that.props.device_data.uuid == data.peripheral) {
-            if (datas[0] == 1) {
-
+            if (util.startWith(dataStr, "Batt")) {
+                var voltage = dataStr.substring(7,dataStr.length-2)
+                that.props.actions.readVoltage(voltage)
             }
         }
     }
@@ -51,7 +52,7 @@ class Main extends Component {
                     <View style={styles.block_line} />
                     <Text style={styles.block_title}>电压测试</Text>
                     <View style={styles.block_main} >
-                        <Text style={styles.block_main_text}>电压:5.83V</Text>
+                        <Text style={styles.block_main_text}>电压:{this.props.device_data.voltage || '--'}mV</Text>
                         <TouchableHighlight
                             activeOpacity={Theme.active.opacity}
                             underlayColor='transparent'
