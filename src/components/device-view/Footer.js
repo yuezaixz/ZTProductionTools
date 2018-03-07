@@ -13,7 +13,8 @@ let {height, width} = Dimensions.get('window');
 
 class Footer extends Component {
     handleNext = ()=>{
-        //TODO 下一步
+        // 写命令去开始校准
+        // this.props.navigation.navigate('Adjust')
     }
     render() {
         return (
@@ -24,7 +25,8 @@ class Footer extends Component {
                 style={{flex:1}}
                 onPress={this.handleNext}>
                 <View style={styles.buttonContainer} >
-                    <Text style={[styles.text, styles.title]}>
+                    <Text style={[this.props.device_data.hadInflateTest&&this.props.device_data.voltage&&
+                    (this.props.device_data.fcpMax||this.props.device_data.fcpMax==0)&&this.props.device_data.hadFATTest ?styles.text:styles.textDisable, styles.title]}>
                         下一步（传感器校准）
                     </Text>
                 </View>
@@ -43,7 +45,10 @@ const styles = StyleSheet.create({
 
     },
     text: {
-        color: '#000000'
+        color: '#7ED321'
+    },
+    textDisable: {
+        color: '#777777'
     },
     buttonContainer: {
         position:'absolute',

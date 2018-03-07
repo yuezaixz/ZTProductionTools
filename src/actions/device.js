@@ -67,11 +67,11 @@ export function successReadRAT() {
 export function startReadFCP(uuid, serviceUUID, writeUUID) {
     const data = stringToBytes('FCP');
 
-    return writeData(uuid, serviceUUID, writeUUID, types.START_READ_FAT, data);
+    return writeData(uuid, serviceUUID, writeUUID, types.START_READ_FCP, data);
 }
 
 export function readFCP(max, min) {
-    return {type: types.SUCCESS_READ_FAT, max, min}
+    return {type: types.READ_FCP, max, min}
 }
 
 /****************充放气测试****************/
@@ -155,8 +155,8 @@ export function stopAdjust(uuid, serviceUUID, writeUUID) {
     return writeData(uuid, serviceUUID, writeUUID, types.STOP_ADJUST, data);
 }
 
-export function successStopAdjust(index) {
-    return {type: types.SUCCESS_STOP_ADJUST, index}
+export function successStopAdjust() {
+    return {type: types.SUCCESS_STOP_ADJUST}
 }
 
 const sensorIndexCMDMap = ['01','02','03','04','05','06','07','08','09','0A','0B','0C','0D','0E','0F','10']
@@ -167,6 +167,6 @@ export function sensorAdjust(uuid, serviceUUID, writeUUID, index) {
     return writeData(uuid, serviceUUID, writeUUID, types.SENSOR_ADJUST, data);
 }
 
-export function successSensorAdjust(max, min) {
-    return {type: types.SUCCESS_SENSOR_ADJUST, max, min}
+export function successSensorAdjust(index) {
+    return {type: types.SUCCESS_SENSOR_ADJUST, index}
 }

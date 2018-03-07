@@ -16,15 +16,40 @@ const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 let {height, width} = Dimensions.get('window');
 
-let that = null
+const indexMap = {
+    '01':0,
+    '02':1,
+    '03':2,
+    '04':3,
+    '05':4,
+    '06':5,
+    '07':6,
+    '08':7,
+    '09':8,
+    '0A':9,
+    '0B':10,
+    '0C':11,
+    '0D':12,
+    '0E':13,
+    '0F':14,
+    '10':15,
+}
 
 class Main extends Component {
     handleVoltage = ()=>{
         this.props.actions.startReadVoltage(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
     }
+    handleReadFAT = ()=>{
+        this.props.actions.startReadFAT(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+    }
+    handleReadFCP = ()=>{
+        this.props.actions.startReadFCP(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+    }
+    handleTestInflat = ()=>{
+        this.props.actions.startManual(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+    }
     componentDidMount() {
-        that = this
-        this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
+        this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
     }
     componentWillUnmount() {
         this.handlerUpdate.remove();
@@ -38,13 +63,73 @@ class Main extends Component {
         console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
         var datas = data.value
         var dataStr = util.arrayBufferToBase64Str(datas)
-        if (that.props.device_data.uuid == data.peripheral) {
+        console.log(dataStr)
+        if (this.props.device_data.uuid == data.peripheral) {
             if (util.startWith(dataStr, "Batt")) {
                 var voltage = dataStr.substring(7,dataStr.length-2)
-                that.props.actions.readVoltage(voltage)
+                this.props.actions.readVoltage(voltage)
+            } else if (util.startWith(dataStr, "Reached Side Line")) {//充气成功
+                this.props.actions.completeInflate()
+                this.props.actions.startFlate(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+            } else if (util.startWith(dataStr, "Reached Flat Line")) {//放气成功
+                this.props.actions.completeFlate()
+                this.props.actions.stopManual(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+            } else if (util.startWith(dataStr, "\\*5S")) {
+                var index = indexMap[dataStr.substring(3,5)]
+                var isSuccess = indexMap[dataStr.substring(6,7)] === '1'
+                if (isSuccess) {
+                    this.props.actions.successSensorAdjust(index)
+                    if (index == 15) {
+                        this.props.actions.stopAdjust(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+                    } else {
+                        this.props.actions.sensorAdjust(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID,index+1)//校准下一个
+                    }
+                } else {
+                    //TODO 失败
+                }
+
+            } else if (util.startWith(dataStr, "PUMP TH:")) {
+                var min = parseInt(dataStr.substring(8,10))
+                var max = parseInt(dataStr.substring(12,14))
+                this.props.actions.readFCP(max, min)
+            } else if (util.startWith(dataStr, "Recv ACK")) {
+                if (this.props.device_data.isReadingFAT) {
+                    this.props.actions.successReadRAT()
+                } else if (this.props.device_data.isStartingManual) {
+                    this.props.actions.successStartManual()
+                    this.props.actions.startInflate(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+                } else if (this.props.device_data.isStopingManual) {
+                    this.props.actions.successStopManual()
+                } else if (this.props.device_data.isStartAdjustSUB) {
+                    this.props.actions.successStartAdjustSUB()
+                    this.props.actions.startAdjust(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+                } else if (this.props.device_data.isStopAdjustSUB) {//TODO 这个是在下个页面的操作
+                    this.props.actions.successStopAdjustSUB()
+                    //TODO 提示成功
+                } else if (this.props.device_data.isStartAdjust) {
+                    this.props.actions.successStartAdjust()
+                    //TODO 跳转下个页面
+                } else if (this.props.device_data.isStopAdjust) {//TODO 这个是在下个页面的操作
+                    this.props.actions.successStopAdjust()
+                    this.props.actions.stopAdjustSUB(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+                }
             }
         }
     }
+    manualStatusStr(data) {
+        if(data.isStartingManual) {
+            return "准备开始测试中"
+        } else if(data.isInflate) {
+            return "充气中"
+        } else if(data.isFlate) {
+            return "放气中"
+        } else if(data.isStopingManual) {
+            return "完成测试中"
+        } else if(data.hadInflateTest) {
+            return "已测试"
+        }
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -68,12 +153,12 @@ class Main extends Component {
                     <View style={styles.block_line} />
                     <Text style={[styles.block_title,styles.block_title_long]}>板级基本功能测试</Text>
                     <View style={styles.block_main} >
-                        <Text style={styles.block_main_text}>未测试</Text>
+                        <Text style={styles.block_main_text}>{this.props.device_data.hadFATTest ? '已':'未'}测试</Text>
                         <TouchableHighlight
                             activeOpacity={Theme.active.opacity}
                             underlayColor='transparent'
                             style={[styles.block_main_button,styles.block_main_button_right,{width:140}]}
-                            onPress={this.handleNext}>
+                            onPress={this.handleReadFAT}>
                             <Text style={[styles.block_main_button_text]}>
                                 板级功能测试
                             </Text>
@@ -84,14 +169,16 @@ class Main extends Component {
                     <View style={styles.block_line} />
                     <Text style={[styles.block_title,styles.block_title_long]}>气压校准功能测试</Text>
                     <View style={[styles.block_main,styles.block_main_big]} >
-                        <Text style={[styles.block_main_text,{flex:1}]}>差值：10</Text>
-                        <Text style={[styles.block_main_text,{flex:1,textAlign:'center'}]}>峰值：10</Text>
-                        <Text style={[styles.block_main_text,{flex:1,textAlign:'right'}]}>谷值：10</Text>
+                        <Text style={[styles.block_main_text,{flex:1}]}>
+                            差值：{this.props.device_data.isReadingFCP?"检测中，请稍等":(this.props.device_data.fcpMax?(parseInt(this.props.device_data.fcpMax)-parseInt(this.props.device_data.fcpMin)):"--")}
+                        </Text>
+                        <Text style={[styles.block_main_text,{flex:1,textAlign:'center'}]}>峰值：{this.props.device_data.fcpMax || "--"}</Text>
+                        <Text style={[styles.block_main_text,{flex:1,textAlign:'right'}]}>谷值：{this.props.device_data.fcpMin || "--"}</Text>
                         <TouchableHighlight
                             activeOpacity={Theme.active.opacity}
                             underlayColor='transparent'
                             style={[styles.block_main_button,styles.block_main_button_right,{width:140,top:40}]}
-                            onPress={this.handleNext}>
+                            onPress={this.handleReadFCP}>
                             <Text style={[styles.block_main_button_text]}>
                                 气压校准
                             </Text>
@@ -102,12 +189,12 @@ class Main extends Component {
                     <View style={styles.block_line} />
                     <Text style={[styles.block_title,styles.block_title_middle]}>充放气功能测试</Text>
                     <View style={styles.block_main} >
-                        <Text style={styles.block_main_text}>未测试</Text>
+                        <Text style={styles.block_main_text}>{this.manualStatusStr(this.props.device_data)}</Text>
                         <TouchableHighlight
                             activeOpacity={Theme.active.opacity}
                             underlayColor='transparent'
                             style={[styles.block_main_button,styles.block_main_button_right,{width:140}]}
-                            onPress={this.handleNext}>
+                            onPress={this.handleTestInflat}>
                             <Text style={[styles.block_main_button_text]}>
                                 充放气测试
                             </Text>
