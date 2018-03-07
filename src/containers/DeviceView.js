@@ -18,19 +18,20 @@ class DeviceView extends Component {
         super(props);
     }
     componentWillMount(){
-        const { params } = this.props.navigation.state;
-        if (params && params.uuid) {
-            var uuid = params ? params.uuid : null;
-            var name = params ? params.name : null;
-            var serviceUUID = params ? params.serviceUUID : null;
-            var noitfyUUID = params ? params.noitfyUUID : null;
-            var writeUUID = params ? params.writeUUID : null;
-            this.setState({
-                uuid, name, serviceUUID, noitfyUUID, writeUUID
-            });
-        }
-        //先检查电量
-        this.props.actions.startCheckVoltage(uuid, serviceUUID, writeUUID);
+        // 不需要这样传递数据，直接调用this.props.device_data就可以了。因为mapStateToProps已经先执行过了
+        // const { params } = this.props.navigation.state;
+        // if (params && params.uuid) {
+        //     var uuid = params ? params.uuid : null;
+        //     var name = params ? params.name : null;
+        //     var serviceUUID = params ? params.serviceUUID : null;
+        //     var noitfyUUID = params ? params.noitfyUUID : null;
+        //     var writeUUID = params ? params.writeUUID : null;
+        //     this.setState({
+        //         uuid, name, serviceUUID, noitfyUUID, writeUUID
+        //     });
+        // }
+        //TODO 连上后先发什么指令?
+
     }
     componentDidMount(){
         console.log('进入设备页面')
