@@ -13,7 +13,7 @@ let {height, width} = Dimensions.get('window');
 
 class Footer extends Component {
     handleComplete = ()=>{
-        //TODO 下一步
+        this.props.actions.stopAdjust(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
     }
     render() {
         return (
@@ -24,7 +24,7 @@ class Footer extends Component {
                     style={{flex:1}}
                     onPress={this.handleComplete}>
                     <View style={styles.buttonContainer} >
-                        <Text style={[styles.text, styles.title]}>
+                        <Text style={[(this.props.device_data.completeSensorIndex || []).size == 16 ? styles.text : styles.textDisable, styles.title]}>
                             完成
                         </Text>
                     </View>
@@ -44,6 +44,9 @@ const styles = StyleSheet.create({
     },
     text: {
         color: '#000000'
+    },
+    textDisable: {
+        color: '#777777'
     },
     buttonContainer: {
         position:'absolute',

@@ -16,25 +16,6 @@ const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 let {height, width} = Dimensions.get('window');
 
-const indexMap = {
-    '01':0,
-    '02':1,
-    '03':2,
-    '04':3,
-    '05':4,
-    '06':5,
-    '07':6,
-    '08':7,
-    '09':8,
-    '0A':9,
-    '0B':10,
-    '0C':11,
-    '0D':12,
-    '0E':13,
-    '0F':14,
-    '10':15,
-}
-
 class Main extends Component {
     handleVoltage = ()=>{
         this.props.actions.startReadVoltage(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
@@ -48,8 +29,22 @@ class Main extends Component {
     handleTestInflat = ()=>{
         this.props.actions.startManual(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
     }
+    componentWillMount() {
+        this.props.navigation.addListener(
+            'didFocus',
+            payload => {
+                this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
+            }
+        );
+        this.props.navigation.addListener(
+            'willBlur',
+            payload => {
+                this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
+            }
+        );
+    }
     componentDidMount() {
-        this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
+
     }
     componentWillUnmount() {
         this.handlerUpdate.remove();
@@ -74,20 +69,6 @@ class Main extends Component {
             } else if (util.startWith(dataStr, "Reached Flat Line")) {//放气成功
                 this.props.actions.completeFlate()
                 this.props.actions.stopManual(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-            } else if (util.startWith(dataStr, "\\*5S")) {
-                var index = indexMap[dataStr.substring(3,5)]
-                var isSuccess = indexMap[dataStr.substring(6,7)] === '1'
-                if (isSuccess) {
-                    this.props.actions.successSensorAdjust(index)
-                    if (index == 15) {
-                        this.props.actions.stopAdjust(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-                    } else {
-                        this.props.actions.sensorAdjust(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID,index+1)//校准下一个
-                    }
-                } else {
-                    //TODO 失败
-                }
-
             } else if (util.startWith(dataStr, "PUMP TH:")) {
                 var min = parseInt(dataStr.substring(8,10))
                 var max = parseInt(dataStr.substring(12,14))
@@ -103,15 +84,10 @@ class Main extends Component {
                 } else if (this.props.device_data.isStartAdjustSUB) {
                     this.props.actions.successStartAdjustSUB()
                     this.props.actions.startAdjust(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-                } else if (this.props.device_data.isStopAdjustSUB) {//TODO 这个是在下个页面的操作
-                    this.props.actions.successStopAdjustSUB()
-                    //TODO 提示成功
                 } else if (this.props.device_data.isStartAdjust) {
                     this.props.actions.successStartAdjust()
-                    //TODO 跳转下个页面
-                } else if (this.props.device_data.isStopAdjust) {//TODO 这个是在下个页面的操作
-                    this.props.actions.successStopAdjust()
-                    this.props.actions.stopAdjustSUB(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+                    // 写命令去开始校准
+                    this.props.navigation.navigate('Adjust')
                 }
             }
         }

@@ -13,8 +13,9 @@ let {height, width} = Dimensions.get('window');
 
 class Footer extends Component {
     handleNext = ()=>{
-        // 写命令去开始校准
-        // this.props.navigation.navigate('Adjust')
+        if (!this.props.device_data.isStartAdjust || !this.props.device_data.isStartAdjustSUB) {//防止多次发送
+            this.props.actions.startAdjustSUB(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+        }
     }
     render() {
         return (

@@ -162,11 +162,13 @@ export function successStopAdjust() {
 const sensorIndexCMDMap = ['01','02','03','04','05','06','07','08','09','0A','0B','0C','0D','0E','0F','10']
 //传感器校准，1~16个传感器的校准
 export function sensorAdjust(uuid, serviceUUID, writeUUID, index) {
-    const data = stringToBytes('SUC:AB'+sensorIndexCMDMap[index]+'5E');
+    var cmd = 'SUC:AB'+sensorIndexCMDMap[index]+'5E'
+    console.log(cmd)
+    const data = stringToBytes(cmd);
 
     return writeData(uuid, serviceUUID, writeUUID, types.SENSOR_ADJUST, data);
 }
 
-export function successSensorAdjust(index) {
-    return {type: types.SUCCESS_SENSOR_ADJUST, index}
+export function successSensorAdjust(index, isSuccess) {
+    return {type: types.SUCCESS_SENSOR_ADJUST, index, isSuccess}
 }

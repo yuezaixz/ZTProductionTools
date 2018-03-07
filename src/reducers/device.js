@@ -8,7 +8,7 @@ export default function(state = {index: 0}, action) {
     switch(action.type) {
         case types.DEVICE_DISCONNECT:
             return {...state, uuid: "", serviceUUID: "", noitfyUUID: "", writeUUID: "", voltage:"", fcpMax: "", fcpMin: "",
-                completeSensorIndex:[], hadInflateTest: false, hadFATTest: false, hadAdjust: false};
+                completeSensorIndex:null,errorSensorIndex:null, hadInflateTest: false, hadFATTest: false, hadAdjust: false};
         case types.START_READ_VOLTAGE:
             return {...state, isReadingVoltage: true};
         case types.READ_VOLTAGE:
@@ -63,7 +63,7 @@ export default function(state = {index: 0}, action) {
         case types.SENSOR_ADJUST:
             return {...state, isSensorAdjust: true};
         case types.SUCCESS_SENSOR_ADJUST:
-            return {...state, isSensorAdjust: false, completeSensorIndex:[state.completeSensorIndex, action.index]};
+            return {...state, isSensorAdjust: false, completeSensorIndex:action.isSuccess? new Set([...(state.completeSensorIndex || []), action.index]):new Set(state.completeSensorIndex || []), errorSensorIndex:!action.isSuccess? new Set([...(state.errorSensorIndex || []), action.index]):new Set(state.errorSensorIndex || [])};
     }
 
     return state;
