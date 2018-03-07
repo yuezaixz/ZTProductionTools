@@ -159,10 +159,10 @@ export function successStopAdjust(index) {
     return {type: types.SUCCESS_STOP_ADJUST, index}
 }
 
-const sensorIndexCMDMap = ['1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G']
+const sensorIndexCMDMap = ['01','02','03','04','05','06','07','08','09','0A','0B','0C','0D','0E','0F','10']
 //传感器校准，1~16个传感器的校准
 export function sensorAdjust(uuid, serviceUUID, writeUUID, index) {
-    const data = stringToBytes('SUC:AB0'+sensorIndexCMDMap[index]+'5E');
+    const data = stringToBytes('SUC:AB'+sensorIndexCMDMap[index]+'5E');
 
     return writeData(uuid, serviceUUID, writeUUID, types.SENSOR_ADJUST, data);
 }
