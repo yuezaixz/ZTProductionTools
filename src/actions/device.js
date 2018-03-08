@@ -29,7 +29,7 @@ export function deviceDisconnect(uuid) {
         dispatch({type: types.DEVICE_DISCONNECT, uuid: uuid})
         BleManager.disconnect(uuid)
             .then(() => {
-                dispatch({type: types.SUCCESS_DEVICE_CONNECT, uuid: uuid})
+                dispatch({type: types.SUCCESS_DEVICE_DISCONNECT, uuid: uuid})
             })
             .catch((error) => {
                 dispatch({type: types.FAIL_DEVICE_DISCONNECT, errorMsg: error})

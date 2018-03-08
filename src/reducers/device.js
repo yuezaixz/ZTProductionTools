@@ -6,9 +6,6 @@ const initialState = {
 
 export default function(state = {index: 0}, action) {
     switch(action.type) {
-        case types.DEVICE_DISCONNECT:
-            return {...state, uuid: "", serviceUUID: "", noitfyUUID: "", writeUUID: "", voltage:"", fcpMax: "", fcpMin: "",
-                completeSensorIndex:null,errorSensorIndex:null, hadInflateTest: false, hadFATTest: false, hadAdjust: false};
         case types.START_READ_VOLTAGE:
             return {...state, isReadingVoltage: true};
         case types.READ_VOLTAGE:

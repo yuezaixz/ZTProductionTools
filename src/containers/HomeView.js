@@ -70,6 +70,14 @@ class HomeView extends Component {
 
     componentDidMount() {
         bleManagerEmitter.addListener(
+            'BleManagerDisconnectPeripheral',
+                (args) => {
+                console.log(args.peripheral)
+
+                    //TODO 判断如果uuid还在，就去自动连接
+            }
+        );
+        bleManagerEmitter.addListener(
             'BleManagerDidUpdateState',
             (args) => {
                 if (args.state === 'off') {
@@ -118,6 +126,7 @@ class HomeView extends Component {
     }
     componentWillUnmount(){
         bleManagerEmitter.removeAllListeners('BleManagerDidUpdateState')
+        bleManagerEmitter.removeAllListeners('BleManagerDisconnectPeripheral')
         this.props.navigation.removeAllListeners('willBlur')
         this.props.navigation.removeAllListeners('didFocus')
         this.props.actions.stopSearchDevice()

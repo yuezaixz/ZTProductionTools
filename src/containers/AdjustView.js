@@ -87,7 +87,8 @@ class AdjustView extends Component {
                     this.props.actions.successStopAdjustSUB()
                     //返回主界面,断开连接
                     this.props.actions.deviceDisconnect(this.props.device_data.uuid)
-                    this.props.navigation.popToTop()
+                    //延迟点点
+                    setTimeout(()=>{this.props.navigation.popToTop()},100)
                 } else if (this.props.device_data.isStopAdjust) {
                     this.props.actions.successStopAdjust()
                     this.props.actions.stopAdjustSUB(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
