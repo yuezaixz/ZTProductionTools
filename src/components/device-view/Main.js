@@ -92,8 +92,8 @@ class Main extends Component {
                 this.props.actions.completeFlate()
                 this.props.actions.stopManual(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
             } else if (util.startWith(dataStr, "PUMP TH:")) {
-                var min = parseInt(dataStr.substring(8,10))
-                var max = parseInt(dataStr.substring(12,14))
+                var min = parseInt(dataStr.substring(8,10), 16)
+                var max = parseInt(dataStr.substring(12,14), 16)
                 this.props.actions.readFCP(max, min)
             } else if (util.startWith(dataStr, "Recv ACK")) {
                 if (this.props.device_data.isReadingFAT) {
