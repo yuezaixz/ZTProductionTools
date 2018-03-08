@@ -148,8 +148,6 @@ class HomeView extends Component {
     componentWillUnmount(){
         bleManagerEmitter.removeAllListeners('BleManagerDidUpdateState')
         bleManagerEmitter.removeAllListeners('BleManagerDisconnectPeripheral')
-        this.props.navigation.removeAllListeners('willBlur')
-        this.props.navigation.removeAllListeners('didFocus')
         this.props.actions.stopSearchDevice()
     }
     bindEvents = ()=>{
