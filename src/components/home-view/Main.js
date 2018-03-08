@@ -4,14 +4,11 @@ import {
     StyleSheet,
     Text,
     View,
-    AsyncStorage,
     ScrollView
 } from 'react-native';
 import ListItem from './ListItem';
-import * as StorageKeys from '../../constants/StorageKeys'
 
 class Main extends Component {
-    connectRSSI = -40
     renderList  = () =>{
         const { home_data } = this.props;
         if(!home_data || !home_data.device_list){ return null}
@@ -48,11 +45,7 @@ class Main extends Component {
         return null;
     }
     componentWillMount() {
-        AsyncStorage.getItem(StorageKeys.CONNECT_THRESHOLD,function (error, result) {
-            if (!error && result) {
-                this.connectRSSI = parseInt('-'+result)
-            }
-        }.bind(this))
+
     }
     componentDidUpdate () {
         if (!this.props.isVisible) {
@@ -74,7 +67,7 @@ class Main extends Component {
             if(home_data || home_data.device_list){
                 for (var j = 0; j < home_data.device_list.length; j++) {
                     var device = home_data.device_list[j]
-                    if(device.rssi < 0 && device.rssi >= -40) {
+                    if(device.rssi < 0 && device.rssi >= this.props.connectRSSI) {
                         console.log("自动连接"+device.uuid)
                         this.props.actions.startDeviceConnect(device)
                         break;

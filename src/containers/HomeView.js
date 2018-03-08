@@ -9,6 +9,7 @@ import {
     Platform,
     PermissionsAndroid,
     NativeEventEmitter,
+    AsyncStorage,
     NativeModules, Dimensions
 } from 'react-native';
 import Button from '../components/common/Button'
@@ -22,11 +23,14 @@ import {
     Footer,
 } from '../components/home-view';
 import Actions from '../actions';
+import * as StorageKeys from "../constants/StorageKeys";
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 class HomeView extends Component {
+
+    settingValue = {connect_threshold:'40',std_voltage:'3.8',air_pressure_threshold:'10'};
 
     static navigationOptions = ({ navigation }) => {
         const params = navigation.state.params || {};
@@ -45,9 +49,25 @@ class HomeView extends Component {
         this.state = {isVisible: true}
     }
     _settingAction(){
-        this.props.navigation.navigate('Setting')
+        this.props.navigation.navigate('Setting',{settingValue: this.settingValue})
     }
     componentWillMount() {
+        AsyncStorage.getItem(StorageKeys.CONNECT_THRESHOLD,function (error, result) {
+            if (!error && result) {
+                this.settingValue[StorageKeys.CONNECT_THRESHOLD] = result
+            }
+        }.bind(this))
+        AsyncStorage.getItem(StorageKeys.AIR_PRESSURE_THRESHOLD,function (error, result) {
+            if (!error && result) {
+                this.settingValue[StorageKeys.AIR_PRESSURE_THRESHOLD] = result
+            }
+        }.bind(this))
+        AsyncStorage.getItem(StorageKeys.STD_VOLTAGE,function (error, result) {
+            if (!error && result) {
+                this.settingValue[StorageKeys.STD_VOLTAGE] = result
+            }
+        }.bind(this))
+
         this.props.navigation.setParams({ settingAction: this._settingAction.bind(this) });
 
         this.props.navigation.addListener(
@@ -152,7 +172,7 @@ class HomeView extends Component {
         return (
             <View style={styles.container}>
                 {/*<Header {...this.props}/>*/}
-                <Main {...this.props} isVisible={this.state.isVisible}/>
+                <Main {...this.props} connectRSSI={parseInt("-"+this.settingValue[StorageKeys.CONNECT_THRESHOLD])} isVisible={this.state.isVisible}/>
                 <Footer {...this.props}/>
 
                 <View style={{position:'absolute',width: width, height: height}}>

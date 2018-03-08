@@ -53,7 +53,7 @@ class SettingView extends Component {
     handleOk(){
         if (this.state.type && this.state.text) {
             this.settingValue[this.state.type] = this.state.text
-            AsyncStorage.setItem(type, this.state.text)
+            AsyncStorage.setItem(this.state.type, this.state.text)
         }
         this.setState({open: false})
         this.refs.HiddenInput.clear()
@@ -75,27 +75,15 @@ class SettingView extends Component {
     componentDidMount() {
     }
     componentWillMount(){
-        AsyncStorage.getItem(StorageKeys.CONNECT_THRESHOLD,function (error, result) {
-            if (!error && result) {
-                this.settingValue[StorageKeys.CONNECT_THRESHOLD] = result
-            }
-        }.bind(this))
-        AsyncStorage.getItem(StorageKeys.AIR_PRESSURE_THRESHOLD,function (error, result) {
-            if (!error && result) {
-                this.settingValue[StorageKeys.AIR_PRESSURE_THRESHOLD] = result
-            }
-        }.bind(this))
-        AsyncStorage.getItem(StorageKeys.STD_VOLTAGE,function (error, result) {
-            if (!error && result) {
-                this.settingValue[StorageKeys.STD_VOLTAGE] = result
-            }
-        }.bind(this))
+        const { params } = this.props.navigation.state;
+        this.settingValue = params.settingValue
+        console.log("设置页面收到的数据:"+JSON.stringify(this.settingValue))
     }
     render() {
         return (
             <View style={styles.container}>
                 {/*<Header {...this.props}/>*/}
-                <Main openModal={this.handleConnectValue.bind(this)} {...this.props}/>
+                <Main openModal={this.handleConnectValue.bind(this)} settingValue={this.settingValue} {...this.props}/>
                 <Footer {...this.props}/>
                 <TextInput ref='HiddenInput'
                            keyboardType='numeric'

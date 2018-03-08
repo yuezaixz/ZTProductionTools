@@ -48,7 +48,7 @@ class DeviceView extends Component {
         //         uuid, name, serviceUUID, noitfyUUID, writeUUID
         //     });
         // }
-        //TODO 连上后先发什么指令?
+        //连上后需要发指令就在这把
 
     }
     componentDidMount(){
