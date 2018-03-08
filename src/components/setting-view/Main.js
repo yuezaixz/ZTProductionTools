@@ -75,7 +75,8 @@ const styles = StyleSheet.create({
     row_right:{
         position:'absolute',
         right:0,
-        alignItems:'center',
+        width:100,
+        alignItems:'flex-end',
         justifyContent:'center'
     },
     row_title:{
@@ -85,13 +86,13 @@ const styles = StyleSheet.create({
         fontWeight:'bold'
     },
     row_value:{
-        position:'absolute',
-        right:24,
+        position:'relative',
+        textAlign:'right',
+        right:28,
         fontSize:17
     },
     row_edit:{
-        position:'absolute',
-        right:0,
+        position:'relative',
         height:22,
         alignItems:'center',
         justifyContent:'center'
