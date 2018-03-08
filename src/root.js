@@ -9,15 +9,17 @@ import { Provider } from 'react-redux';
 import App from './containers/App';
 import configureStore from './store/configureStore';
 import BleManager from 'react-native-ble-manager';
+import * as StorageKeys from './constants/StorageKeys'
 
 class Root extends Component {
     componentWillMount() {
-        AsyncStorage.getItem('connect_threshold',function (error, result) {
+        AsyncStorage.getItem(StorageKeys.CONNECT_THRESHOLD,function (error, result) {
             if(!error) {
                 if (!result) {
-                    AsyncStorage.setItem('connect_threshold','40')
-                    AsyncStorage.setItem('air_pressure_threshold','10')
-                    AsyncStorage.setItem('std_voltage','5.82')
+                    //默认值，最好放个配置文件中
+                    AsyncStorage.setItem(StorageKeys.CONNECT_THRESHOLD,'40')
+                    AsyncStorage.setItem(StorageKeys.AIR_PRESSURE_THRESHOLD,'10')
+                    AsyncStorage.setItem(StorageKeys.STD_VOLTAGE,'3.8')
                 }
             }
         })

@@ -4,11 +4,13 @@ import {
     Text,
     View,
     Image,
+    AsyncStorage,
     TouchableHighlight,
     Dimensions, NativeEventEmitter, NativeModules
 } from 'react-native';
 import {Theme} from "../../styles";
 import * as util from "../../utils/InsoleUtils"
+import * as StorageKeys from '../../constants/StorageKeys'
 
 
 const BleManagerModule = NativeModules.BleManager;
@@ -17,6 +19,9 @@ const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 let {height, width} = Dimensions.get('window');
 
 class Main extends Component {
+    stdVoltage = 3.8
+    airPressureThreshold = 10
+
     handleVoltage = ()=>{
         this.props.actions.startReadVoltage(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
     }
@@ -29,7 +34,24 @@ class Main extends Component {
     handleTestInflat = ()=>{
         this.props.actions.startManual(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
     }
+    voltageIsPassed = (voltage, stdVoltage)=> {
+        return voltage < stdVoltage + 50 && voltage > stdVoltage - 50
+    }
+    airPressureIsPassed = (airPressure, airPressureThreshold)=> {
+        return airPressure > airPressureThreshold
+    }
     componentWillMount() {
+        AsyncStorage.getItem(StorageKeys.STD_VOLTAGE,function (error, result) {
+            if (!error && result) {
+                this.stdVoltage = parseInt(result)
+            }
+        }.bind(this))
+        AsyncStorage.getItem(StorageKeys.AIR_PRESSURE_THRESHOLD,function (error, result) {
+            if (!error && result) {
+                this.airPressureThreshold = parseInt(result)
+            }
+        }.bind(this))
+
         this.props.navigation.addListener(
             'didFocus',
             payload => {
@@ -113,7 +135,9 @@ class Main extends Component {
                     <View style={styles.block_line} />
                     <Text style={styles.block_title}>电压测试</Text>
                     <View style={styles.block_main} >
-                        <Text style={styles.block_main_text}>电压:{this.props.device_data.voltage || '--'}mV</Text>
+                        <Text style={[styles.block_main_text,this.props.device_data.voltage?(this.voltageIsPassed(parseInt(this.props.device_data.voltage),this.stdVoltage*1000)?styles.text_passed:styles.text_fail):null]}>
+                            电压:{this.props.device_data.voltage || '--'}mV
+                        </Text>
                         <TouchableHighlight
                             activeOpacity={Theme.active.opacity}
                             underlayColor='transparent'
@@ -145,7 +169,7 @@ class Main extends Component {
                     <View style={styles.block_line} />
                     <Text style={[styles.block_title,styles.block_title_long]}>气压校准功能测试</Text>
                     <View style={[styles.block_main,styles.block_main_big]} >
-                        <Text style={[styles.block_main_text,{flex:1}]}>
+                        <Text style={[styles.block_main_text,{flex:1},this.props.device_data.fcpMax?(this.airPressureIsPassed((this.props.device_data.fcpMax?(parseInt(this.props.device_data.fcpMax)-parseInt(this.props.device_data.fcpMin)):0),this.airPressureThreshold)?styles.text_passed:styles.text_fail):null]}>
                             差值：{this.props.device_data.isReadingFCP?"检测中，请稍等":(this.props.device_data.fcpMax?(parseInt(this.props.device_data.fcpMax)-parseInt(this.props.device_data.fcpMin)):"--")}
                         </Text>
                         <Text style={[styles.block_main_text,{flex:1,textAlign:'center'}]}>峰值：{this.props.device_data.fcpMax || "--"}</Text>
@@ -266,7 +290,10 @@ const styles = StyleSheet.create({
         height: 60,
         width:width
     },
-    text: {
+    text_passed: {
+        color:'#7ED321'
+    },
+    text_fail: {
         color: '#E85613'
     },
     title: {

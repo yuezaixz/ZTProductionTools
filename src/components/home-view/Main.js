@@ -8,6 +8,7 @@ import {
     ScrollView
 } from 'react-native';
 import ListItem from './ListItem';
+import * as StorageKeys from '../../constants/StorageKeys'
 
 class Main extends Component {
     connectRSSI = -40
@@ -47,7 +48,7 @@ class Main extends Component {
         return null;
     }
     componentWillMount() {
-        AsyncStorage.getItem('connect_threshold',function (error, result) {
+        AsyncStorage.getItem(StorageKeys.CONNECT_THRESHOLD,function (error, result) {
             if (!error && result) {
                 this.connectRSSI = parseInt('-'+result)
             }

@@ -8,6 +8,7 @@ import {
     Image, Dimensions
 } from 'react-native';
 import {Theme} from "../../styles";
+import * as StorageKeys from '../../constants/StorageKeys'
 
 let {height, width} = Dimensions.get('window');
 
@@ -24,9 +25,9 @@ class Main extends Component {
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
                         style={[styles.row_right]}
-                        onPress={() => this.props.openModal('connect_threshold')}>
+                        onPress={() => this.props.openModal(StorageKeys.CONNECT_THRESHOLD)}>
                         <View style={[styles.row_edit]}>
-                            <Text style={[styles.row_value]} >-{this.props.settingValue['connect_threshold']}</Text>
+                            <Text style={[styles.row_value]} >-{this.props.settingValue[StorageKeys.CONNECT_THRESHOLD]}</Text>
                             <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
                         </View>
                     </TouchableHighlight>
@@ -37,9 +38,9 @@ class Main extends Component {
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
                         style={[styles.row_right]}
-                        onPress={() => this.props.openModal('std_voltage')}>
+                        onPress={() => this.props.openModal(StorageKeys.STD_VOLTAGE)}>
                         <View style={[styles.row_edit]}>
-                            <Text style={[styles.row_value]} >{this.props.settingValue['std_voltage']}</Text>
+                            <Text style={[styles.row_value]} >{this.props.settingValue[StorageKeys.STD_VOLTAGE]}</Text>
                             <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
                         </View>
                     </TouchableHighlight>
@@ -50,9 +51,9 @@ class Main extends Component {
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
                         style={[styles.row_right]}
-                        onPress={() => this.props.openModal('air_pressure_threshold')}>
+                        onPress={() => this.props.openModal(StorageKeys.AIR_PRESSURE_THRESHOLD)}>
                         <View style={[styles.row_edit]}>
-                            <Text style={[styles.row_value]} >{this.props.settingValue['air_pressure_threshold']}</Text>
+                            <Text style={[styles.row_value]} >{this.props.settingValue[StorageKeys.AIR_PRESSURE_THRESHOLD]}</Text>
                             <Image style={[styles.row_edit_img]} source={require('./img/edit.png')}/>
                         </View>
                     </TouchableHighlight>

@@ -17,6 +17,7 @@ import {
 } from '../components/setting-view';
 import Actions from '../actions';
 import Modal from 'react-native-simple-modal';
+import * as StorageKeys from '../constants/StorageKeys'
 
 let {height, width} = Dimensions.get('window');
 
@@ -52,7 +53,7 @@ class SettingView extends Component {
     handleOk(){
         if (this.state.type && this.state.text) {
             this.settingValue[this.state.type] = this.state.text
-            AsyncStorage.setItem(this.state.type, this.state.text)
+            AsyncStorage.setItem(type, this.state.text)
         }
         this.setState({open: false})
         this.refs.HiddenInput.clear()
@@ -74,19 +75,19 @@ class SettingView extends Component {
     componentDidMount() {
     }
     componentWillMount(){
-        AsyncStorage.getItem('connect_threshold',function (error, result) {
+        AsyncStorage.getItem(StorageKeys.CONNECT_THRESHOLD,function (error, result) {
             if (!error && result) {
-                this.settingValue['connect_threshold'] = result
+                this.settingValue[StorageKeys.CONNECT_THRESHOLD] = result
             }
         }.bind(this))
-        AsyncStorage.getItem('air_pressure_threshold',function (error, result) {
+        AsyncStorage.getItem(StorageKeys.AIR_PRESSURE_THRESHOLD,function (error, result) {
             if (!error && result) {
-                this.settingValue['air_pressure_threshold'] = result
+                this.settingValue[StorageKeys.AIR_PRESSURE_THRESHOLD] = result
             }
         }.bind(this))
-        AsyncStorage.getItem('std_voltage',function (error, result) {
+        AsyncStorage.getItem(StorageKeys.STD_VOLTAGE,function (error, result) {
             if (!error && result) {
-                this.settingValue['std_voltage'] = result
+                this.settingValue[StorageKeys.STD_VOLTAGE] = result
             }
         }.bind(this))
     }
@@ -94,7 +95,7 @@ class SettingView extends Component {
         return (
             <View style={styles.container}>
                 {/*<Header {...this.props}/>*/}
-                <Main openModal={this.handleConnectValue.bind(this)} settingValue={this.settingValue} {...this.props}/>
+                <Main openModal={this.handleConnectValue.bind(this)} {...this.props}/>
                 <Footer {...this.props}/>
                 <TextInput ref='HiddenInput'
                            keyboardType='numeric'
@@ -111,7 +112,7 @@ class SettingView extends Component {
                     <View>
                         <Text style={{fontSize: 20,fontWeight:'bold', marginTop: 10,textAlign:'center'}}>请设置{this.state.title || "[ERROR]"}！</Text>
                         <Text style={{fontSize: 40,fontWeight:'bold', marginTop: 15, marginBottom: 5,textAlign:'center'}}>
-                            {this.state.type&&this.state.type==='connect_threshold'?"-":""}{this.state.text || '0'}
+                            {this.state.type&&this.state.type===StorageKeys.CONNECT_THRESHOLD?"-":""}{this.state.text || '0'}
                         </Text>
                         <View style={{flexDirection:'row',height:40}}>
 
