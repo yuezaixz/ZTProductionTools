@@ -15,6 +15,7 @@ import {
 } from '../components/adjust-view';
 import Actions from '../actions';
 import * as util from "../utils/InsoleUtils";
+import Button from '../components/common/Button'
 
 let {height, width} = Dimensions.get('window');
 const BleManagerModule = NativeModules.BleManager;
@@ -40,11 +41,27 @@ const indexMap = {
 }
 
 class AdjustView extends Component {
+    static navigationOptions = ({ navigation }) => {
+        const params = navigation.state.params || {};
+
+        return {
+            title:"传感器校准",
+            headerLeft: (
+                <Button onPress={params.backAction} style={{width:60}} textStyle={{fontSize:14,textAlign:'center'}} title="返回" />
+            ),
+        };
+    };
+
+    _backAction(){
+        this.props.navigation.pop()
+    }
+
     constructor(props){
         super(props);
         this.state = {isVisible: true}
     }
     componentWillMount() {
+        this.props.navigation.setParams({ backAction: this._backAction.bind(this) });
         this.props.navigation.addListener(
             'didFocus',
             payload => {
@@ -99,7 +116,7 @@ class AdjustView extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Header {...this.props}/>
+                {/*<Header {...this.props}/>*/}
                 <Main {...this.props}/>
                 <Footer {...this.props}/>
             </View>

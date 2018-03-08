@@ -12,12 +12,30 @@ import {
     Footer,
 } from '../components/device-view';
 import Actions from '../actions';
+import Button from '../components/common/Button'
 
 class DeviceView extends Component {
+    static navigationOptions = ({ navigation }) => {
+        const params = navigation.state.params || {};
+
+        return {
+            title:"枕头固件测试",
+            headerLeft: (
+                <Button onPress={params.backAction} style={{width:60}} textStyle={{fontSize:14,textAlign:'center'}} title="返回" />
+            ),
+        };
+    };
+
+    _backAction(){
+        this.props.actions.deviceDisconnect(this.props.device_data.uuid)
+        setTimeout(()=>{this.props.navigation.pop()},100)
+    }
+
     constructor(props){
         super(props);
     }
     componentWillMount(){
+        this.props.navigation.setParams({ backAction: this._backAction.bind(this) });
         // 不需要这样传递数据，直接调用this.props.device_data就可以了。因为mapStateToProps已经先执行过了
         // const { params } = this.props.navigation.state;
         // if (params && params.uuid) {

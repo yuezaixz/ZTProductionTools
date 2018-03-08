@@ -14,9 +14,9 @@ class Header extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={[styles.text, styles.title]}>
-                    传感器校准
-                </Text>
+                {/*<Text style={[styles.text, styles.title]}>*/}
+                    {/*传感器校准*/}
+                {/*</Text>*/}
             </View>
         );
     }
@@ -24,7 +24,7 @@ class Header extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex:1,
+        flex:0.3,
         justifyContent:'center'
     },
     text: {
