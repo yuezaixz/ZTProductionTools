@@ -71,11 +71,11 @@ class HomeView extends Component {
     componentDidMount() {
         bleManagerEmitter.addListener(
             'BleManagerDisconnectPeripheral',
-                (args) => {
-                console.log(args.peripheral)
-
-                    //TODO 判断如果uuid还在，就去自动连接
-            }
+            ((args) => {
+                if(this.props.home_data.uuid && this.props.home_data.uuid == args.peripheral) {
+                    this.props.actions.startDeviceConnect({"uuid":this.props.home_data.uuid ,"name":this.props.home_data.name })
+                }
+            }).bind(this)
         );
         bleManagerEmitter.addListener(
             'BleManagerDidUpdateState',
