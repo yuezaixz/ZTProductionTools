@@ -102,6 +102,10 @@ export function startInflate(uuid, serviceUUID, writeUUID) {
     return writeData(uuid, serviceUUID, writeUUID, types.START_INFLATE, data);
 }
 
+export function clearDeviceData() {
+    return {type: types.CLEAR_DEVICE_DATA}
+}
+
 export function completeInflate() {
     return {type: types.COMPLETE_INFLATE}
 }

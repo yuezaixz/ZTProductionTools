@@ -61,6 +61,8 @@ export default function(state = {index: 0}, action) {
             return {...state, isSensorAdjust: true};
         case types.SUCCESS_SENSOR_ADJUST:
             return {...state, isSensorAdjust: false, completeSensorIndex:action.isSuccess? new Set([...(state.completeSensorIndex || []), action.index]):new Set(state.completeSensorIndex || []), errorSensorIndex:!action.isSuccess? new Set([...(state.errorSensorIndex || []), action.index]):new Set(state.errorSensorIndex || [])};
+        case types.CLEAR_DEVICE_DATA:
+            return {...state, hadAdjust: false, hadInflateTest: false, fcpMax: 0, fcpMin: 0, hadFATTest: false, voltage: 0, completeSensorIndex:new Set([]), errorSensorIndex:new Set([])}
     }
 
     return state;
