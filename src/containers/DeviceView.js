@@ -65,7 +65,7 @@ class DeviceView extends Component {
             <View style={styles.container}>
                 <Header {...this.props}/>
                 <Main {...this.props} getLoading={this.getLoading.bind(this)} />
-                <Footer {...this.props}/>
+                <Footer {...this.props} getLoading={this.getLoading.bind(this)} />
                 <Loading ref={'loading'} text={'测试中...'} />
             </View>
         );

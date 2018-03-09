@@ -14,6 +14,7 @@ let {height, width} = Dimensions.get('window');
 class Footer extends Component {
     handleNext = ()=>{
         if (!this.props.device_data.isStartAdjust || !this.props.device_data.isStartAdjustSUB) {//防止多次发送
+            this.props.getLoading().show()
             this.props.actions.startAdjustSUB(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
         }
     }
@@ -24,7 +25,7 @@ class Footer extends Component {
                 activeOpacity={Theme.active.opacity}
                 underlayColor='transparent'
                 style={{flex:1}}
-                onPress={this.handleNext}>
+                onPress={this.handleNext.bind(this)}>
                 <View style={styles.buttonContainer} >
                     <Text style={[this.props.device_data.hadInflateTest&&this.props.device_data.voltage&&
                     (this.props.device_data.fcpMax||this.props.device_data.fcpMax==0)&&this.props.device_data.hadFATTest ?styles.text:styles.textDisable, styles.title]}>

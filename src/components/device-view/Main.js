@@ -118,6 +118,7 @@ class Main extends Component {
                     this.props.actions.successStartAdjust()
                     // 写命令去开始校准
                     this.props.navigation.navigate('Adjust')
+                    setTimeout((()=>{this.props.getLoading().dismiss()}).bind(this),100)//100ms后在结束loading
                 }
             }
         }
