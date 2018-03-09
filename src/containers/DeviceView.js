@@ -12,7 +12,7 @@ import {
     Footer,
 } from '../components/device-view';
 import Actions from '../actions';
-import Button from '../components/common/Button'
+import StatusBarLeftButton from '../components/common/StatusBarLeftButton'
 import Loading from '../components/common/WLoading'
 
 class DeviceView extends Component {
@@ -22,7 +22,7 @@ class DeviceView extends Component {
         return {
             title:"枕头固件测试",
             headerLeft: (
-                <Button onPress={params.backAction} style={{width:60}} textStyle={{fontSize:14,textAlign:'center'}} title="返回" />
+                <StatusBarLeftButton onPress={params.backAction} title="返回" ></StatusBarLeftButton>
             ),
         };
     };
@@ -42,20 +42,7 @@ class DeviceView extends Component {
     }
     componentWillMount(){
         this.props.navigation.setParams({ backAction: this._backAction.bind(this) });
-        // 不需要这样传递数据，直接调用this.props.device_data就可以了。因为mapStateToProps已经先执行过了
-        // const { params } = this.props.navigation.state;
-        // if (params && params.uuid) {
-        //     var uuid = params ? params.uuid : null;
-        //     var name = params ? params.name : null;
-        //     var serviceUUID = params ? params.serviceUUID : null;
-        //     var noitfyUUID = params ? params.noitfyUUID : null;
-        //     var writeUUID = params ? params.writeUUID : null;
-        //     this.setState({
-        //         uuid, name, serviceUUID, noitfyUUID, writeUUID
-        //     });
-        // }
         //连上后需要发指令就在这把
-
     }
     componentDidMount(){
         console.log('进入设备页面')

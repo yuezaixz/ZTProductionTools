@@ -15,7 +15,7 @@ import {
 } from '../components/adjust-view';
 import Actions from '../actions';
 import * as util from "../utils/InsoleUtils";
-import Button from '../components/common/Button'
+import StatusBarLeftButton from '../components/common/StatusBarLeftButton'
 
 let {height, width} = Dimensions.get('window');
 const BleManagerModule = NativeModules.BleManager;
@@ -47,7 +47,7 @@ class AdjustView extends Component {
         return {
             title:"传感器校准",
             headerLeft: (
-                <Button onPress={params.backAction} style={{width:60}} textStyle={{fontSize:14,textAlign:'center'}} title="返回" />
+                <StatusBarLeftButton onPress={params.backAction} title="返回" ></StatusBarLeftButton>
             ),
         };
     };

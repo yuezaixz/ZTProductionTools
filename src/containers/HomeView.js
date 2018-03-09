@@ -12,7 +12,7 @@ import {
     AsyncStorage,
     NativeModules, Dimensions
 } from 'react-native';
-import Button from '../components/common/Button'
+import StatusBarLeftButton from '../components/common/StatusBarLeftButton'
 import Modal from 'react-native-simple-modal';
 import BleManager from 'react-native-ble-manager';
 let {height, width} = Dimensions.get('window');
@@ -38,7 +38,7 @@ class HomeView extends Component {
         return {
             title:"枕头固件测试",
             headerLeft: (
-                <Button onPress={params.settingAction} style={{width:60}} textStyle={{fontSize:14,textAlign:'center'}} title="设置" />
+                <StatusBarLeftButton onPress={params.settingAction} title="设置" ></StatusBarLeftButton>
             ),
         };
     };

@@ -7,6 +7,8 @@ import {
     StyleSheet
 } from 'react-native';
 
+import {Theme} from "../../styles";
+
 export default class Button extends Component{
 
     constructor(props) {
@@ -16,7 +18,11 @@ export default class Button extends Component{
 
     render (){
         return (
-            <TouchableHighlight style={this.props.style} onPress={this.props.onPress}>
+            <TouchableHighlight
+                style={this.props.style}
+                activeOpacity={Theme.active.opacity}
+                underlayColor='transparent'
+                onPress={this.props.onPress}>
                 <Text style={this.props.textStyle}>{this.props.title}</Text>
             </TouchableHighlight>
         );
