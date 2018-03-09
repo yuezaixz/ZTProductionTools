@@ -13,6 +13,7 @@ import {
 } from '../components/device-view';
 import Actions from '../actions';
 import Button from '../components/common/Button'
+import Loading from '../components/common/WLoading'
 
 class DeviceView extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -25,6 +26,10 @@ class DeviceView extends Component {
             ),
         };
     };
+
+    getLoading() {
+        return this.refs['loading'];
+    }
 
     _backAction(){
         this.props.actions.deviceDisconnect(this.props.device_data.uuid)
@@ -59,8 +64,9 @@ class DeviceView extends Component {
         return (
             <View style={styles.container}>
                 <Header {...this.props}/>
-                <Main {...this.props}/>
+                <Main {...this.props} getLoading={this.getLoading.bind(this)} />
                 <Footer {...this.props}/>
+                <Loading ref={'loading'} text={'测试中...'} />
             </View>
         );
     }

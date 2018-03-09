@@ -24,15 +24,19 @@ class Main extends Component {
 
     handleVoltage = ()=>{
         this.props.actions.startReadVoltage(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+        this.props.getLoading().show()
     }
     handleReadFAT = ()=>{
         this.props.actions.startReadFAT(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+        this.props.getLoading().show()
     }
     handleReadFCP = ()=>{
         this.props.actions.startReadFCP(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+        this.props.getLoading().show()
     }
     handleTestInflat = ()=>{
         this.props.actions.startManual(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+        this.props.getLoading().show()
     }
     voltageIsPassed = (voltage, stdVoltage)=> {
         return voltage < stdVoltage + 50 && voltage > stdVoltage - 50
@@ -85,6 +89,7 @@ class Main extends Component {
             if (util.startWith(dataStr, "Batt")) {
                 var voltage = dataStr.substring(7,dataStr.length-2)
                 this.props.actions.readVoltage(voltage)
+                this.props.getLoading().dismiss()
             } else if (util.startWith(dataStr, "Reached Side Line")) {//充气成功
                 this.props.actions.completeInflate()
                 this.props.actions.startFlate(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
@@ -95,14 +100,17 @@ class Main extends Component {
                 var min = parseInt(dataStr.substring(8,10), 16)
                 var max = parseInt(dataStr.substring(12,14), 16)
                 this.props.actions.readFCP(max, min)
+                this.props.getLoading().dismiss()
             } else if (util.startWith(dataStr, "Recv ACK")) {
                 if (this.props.device_data.isReadingFAT) {
                     this.props.actions.successReadRAT()
+                    this.props.getLoading().dismiss()
                 } else if (this.props.device_data.isStartingManual) {
                     this.props.actions.successStartManual()
                     this.props.actions.startInflate(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
                 } else if (this.props.device_data.isStopingManual) {
                     this.props.actions.successStopManual()
+                    this.props.getLoading().dismiss()
                 } else if (this.props.device_data.isStartAdjustSUB) {
                     this.props.actions.successStartAdjustSUB()
                     this.props.actions.startAdjust(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
@@ -142,7 +150,7 @@ class Main extends Component {
                             activeOpacity={Theme.active.opacity}
                             underlayColor='transparent'
                             style={[styles.block_main_button,styles.block_main_button_right]}
-                            onPress={this.handleVoltage}>
+                            onPress={this.handleVoltage.bind(this)}>
                             <Text style={[styles.block_main_button_text]}>
                                 读取
                             </Text>
