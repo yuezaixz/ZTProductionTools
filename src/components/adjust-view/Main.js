@@ -20,11 +20,11 @@ class Main extends Component {
     }
     colorStyle(index) {
         if ((this.props.device_data.completeSensorIndex || new Set([])).has(index)) {
-            return styles.row_button_text_done
+            return styles.row_done
         } else if ((this.props.device_data.errorSensorIndex || new Set([])).has(index)) {
-            return styles.row_button_text_error
+            return styles.row_error
         } else {
-            return styles.row_button_text_color
+            return styles.row_unknow
         }
     }
     render() {
@@ -34,18 +34,18 @@ class Main extends Component {
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(0)]}
                         onPress={() => {this.handleSensorAdjust(0)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(0)]}>
+                        <Text style={[styles.row_button_text]}>
                             1
                         </Text>
                     </TouchableHighlight>
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(8)]}
                         onPress={() => {this.handleSensorAdjust(8)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(8)]}>
+                        <Text style={[styles.row_button_text]}>
                             9
                         </Text>
                     </TouchableHighlight>
@@ -54,18 +54,18 @@ class Main extends Component {
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(1)]}
                         onPress={() => {this.handleSensorAdjust(1)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(1)]}>
+                        <Text style={[styles.row_button_text]}>
                             2
                         </Text>
                     </TouchableHighlight>
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(9)]}
                         onPress={() => {this.handleSensorAdjust(9)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(9)]}>
+                        <Text style={[styles.row_button_text]}>
                             10
                         </Text>
                     </TouchableHighlight>
@@ -74,18 +74,18 @@ class Main extends Component {
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(2)]}
                         onPress={() => {this.handleSensorAdjust(2)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(2)]}>
+                        <Text style={[styles.row_button_text]}>
                             3
                         </Text>
                     </TouchableHighlight>
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(10)]}
                         onPress={() => {this.handleSensorAdjust(10)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(10)]}>
+                        <Text style={[styles.row_button_text]}>
                             11
                         </Text>
                     </TouchableHighlight>
@@ -94,18 +94,18 @@ class Main extends Component {
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(3)]}
                         onPress={() => {this.handleSensorAdjust(3)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(3)]}>
+                        <Text style={[styles.row_button_text]}>
                             4
                         </Text>
                     </TouchableHighlight>
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(11)]}
                         onPress={() => {this.handleSensorAdjust(11)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(11)]}>
+                        <Text style={[styles.row_button_text]}>
                             12
                         </Text>
                     </TouchableHighlight>
@@ -114,18 +114,18 @@ class Main extends Component {
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(4)]}
                         onPress={() => {this.handleSensorAdjust(4)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(4)]}>
+                        <Text style={[styles.row_button_text]}>
                             5
                         </Text>
                     </TouchableHighlight>
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(12)]}
                         onPress={() => {this.handleSensorAdjust(12)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(12)]}>
+                        <Text style={[styles.row_button_text]}>
                             13
                         </Text>
                     </TouchableHighlight>
@@ -134,18 +134,18 @@ class Main extends Component {
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(5)]}
                         onPress={() => {this.handleSensorAdjust(5)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(5)]}>
+                        <Text style={[styles.row_button_text]}>
                             6
                         </Text>
                     </TouchableHighlight>
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(13)]}
                         onPress={() => {this.handleSensorAdjust(13)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(13)]}>
+                        <Text style={[styles.row_button_text]}>
                             14
                         </Text>
                     </TouchableHighlight>
@@ -154,18 +154,18 @@ class Main extends Component {
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(6)]}
                         onPress={() => {this.handleSensorAdjust(6)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(6)]}>
+                        <Text style={[styles.row_button_text]}>
                             7
                         </Text>
                     </TouchableHighlight>
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(14)]}
                         onPress={() => {this.handleSensorAdjust(14)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(14)]}>
+                        <Text style={[styles.row_button_text]}>
                             15
                         </Text>
                     </TouchableHighlight>
@@ -174,18 +174,18 @@ class Main extends Component {
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(7)]}
                         onPress={() => {this.handleSensorAdjust(7)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(7)]}>
+                        <Text style={[styles.row_button_text]}>
                             8
                         </Text>
                     </TouchableHighlight>
                     <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        style={[styles.row_start, styles.row_button]}
+                        style={[styles.row_start, styles.row_button,this.colorStyle(15)]}
                         onPress={() => {this.handleSensorAdjust(15)}}>
-                        <Text style={[styles.row_button_text,this.colorStyle(15)]}>
+                        <Text style={[styles.row_button_text]}>
                             16
                         </Text>
                     </TouchableHighlight>
@@ -204,6 +204,15 @@ const styles = StyleSheet.create({
         flex:1,
         flexDirection:'row',
     },
+    row_unknow: {
+        backgroundColor:'#D8D8D8'
+    },
+    row_error: {
+        backgroundColor:'#d38f85'
+    },
+    row_done: {
+        backgroundColor:'#9ed36f'
+    },
     row_start: {
         flex:1,
         justifyContent: 'center',
@@ -219,13 +228,6 @@ const styles = StyleSheet.create({
     },
     row_button_text_color: {
         color:'#000000'
-    },
-
-    row_button_text_error: {
-        color:'#d33131'
-    },
-    row_button_text_done: {
-        color:'#7ED321'
     },
     row_button: {
         backgroundColor:'#D8D8D8',
