@@ -65,7 +65,8 @@ class Main extends Component {
         this.props.navigation.addListener(
             'willBlur',
             payload => {
-                this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
+                bleManagerEmitter.removeAllListeners('BleManagerDidUpdateValueForCharacteristic')
+                // this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
             }
         );
     }
