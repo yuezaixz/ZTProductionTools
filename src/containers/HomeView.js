@@ -74,7 +74,12 @@ class HomeView extends Component {
             'didFocus',
             payload => {
                 setTimeout(() => {
-                    this.props.actions.startSearchDevice();
+                    if (this.isFirst) {
+                        setTimeout(() => {this.props.actions.startSearchDevice()}, 500)
+                        this.isFirst = false
+                    } else {
+                        //TODO 刷新？
+                    }
                     this.setState({isVisible: true});
                 }, 500)
             }
