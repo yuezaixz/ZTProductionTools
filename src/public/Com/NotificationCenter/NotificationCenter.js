@@ -5,7 +5,9 @@ import NotificationName from './NotificationName';
 
 function _lister_create_broadcast_for_(name, callback, init) {
     let res =  RCTDeviceEventEmitter.addListener(name, callback);
-    callback(init);
+    if (init) {
+        callback(init);
+    }
     return res
 }
 

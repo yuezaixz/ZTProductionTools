@@ -33,8 +33,8 @@ export function startDeviceConnect(device) {
                     uuid: device.uuid,
                     name: device.name,
                     serviceUUID:BleUUIDs.ZT_SERVICE_UUID,
-                    noitfyUUID: device.notifyCharacteristic,
-                    writeUUID: device.writeCharacteristic})
+                    noitfyUUID: device.noitfyUUID,
+                    writeUUID: device.writeUUID})
             }).catch(error => {
                 dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: error})
 

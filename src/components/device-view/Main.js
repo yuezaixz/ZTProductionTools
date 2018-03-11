@@ -80,12 +80,59 @@ class Main extends Component {
         this.props.getLoading().dismiss()
     }
 
+    readFCP(data) {
+        if (data.max && data.min) {
+            this.props.actions.readFCP(data.max, data.min)
+        }
+        this.props.getLoading().dismiss()
+    }
+
+    completeInflate() {
+        this.props.actions.completeInflate()
+        this.props.getLoading().dismiss()
+    }
+
+    completeFlate() {
+        this.props.actions.completeFlate()
+        this.props.getLoading().dismiss()
+    }
+
+    recvACK() {
+        //根据当前状态判断是什么操作的接受成功
+        if (this.props.device_data.isReadingFAT) {
+            this.props.actions.successReadRAT()
+            this.props.getLoading().dismiss()
+        } else if (this.props.device_data.isStartingManual) {
+            this.props.actions.successStartManual()
+            this.props.actions.startInflate(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+        } else if (this.props.device_data.isStopingManual) {
+            this.props.actions.successStopManual()
+            this.props.getLoading().dismiss()
+        } else if (this.props.device_data.isStartAdjustSUB) {
+            this.props.actions.successStartAdjustSUB()
+            this.props.actions.startAdjust(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+        } else if (this.props.device_data.isStartAdjust) {
+            this.props.actions.successStartAdjust()
+            // 写命令去开始校准
+            this.props.navigation.navigate('Adjust')
+            setTimeout((()=>{this.props.getLoading().dismiss()}).bind(this),100)//100ms后在结束loading
+        }
+    }
+
     componentDidMount() {
         this.voltageListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.voltage, this.readVoltage.bind(this), '');
+        this.readFCPListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.readFCP, this.readFCP.bind(this), '');
+        this.completeInflateListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.completeInflate, this.completeInflate.bind(this), '');
+        this.completeFlateListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.completeFlate, this.completeFlate.bind(this), '');
+        this.recvACKListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.recvACK, this.recvACK.bind(this), '');
     }
     componentWillUnmount() {
         this.handlerUpdate.remove();
         NotificationCenter.removeListener(this.voltageListener);
+        NotificationCenter.removeListener(this.completeInflateListener);
+        NotificationCenter.removeListener(this.completeFlateListener);
+        NotificationCenter.removeListener(this.recvACKListener);
+        NotificationCenter.removeListener(this.readFCPListener);
     }
     componentDidUpdate () {
         if (!this.props.device_data.uuid) {//断开成功

@@ -7,11 +7,14 @@ import {
 import * as BleUUIDs from "../constants/BleUUIDs";
 import * as util from "../utils/InsoleUtils";
 import NotificationCenter from '../public/Com/NotificationCenter/NotificationCenter'
+import { stringToBytes } from 'convert-string';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 let instance = null;
+const sensorIndexCMDMap = ['01','02','03','04','05','06','07','08','09','0A','0B','0C','0D','0E','0F','10']
+//传感器校准，1~16个传感器的校准
 
 export default class PillowManager{
     loopTimer = 0;
@@ -48,24 +51,21 @@ export default class PillowManager{
             if (util.startWith(dataStr, "Batt")) {
                 var voltage = dataStr.substring(7, dataStr.length - 2)
                 NotificationCenter.post(NotificationCenter.name.deviceData.voltage, {voltage})
-                //TODO 测试下能不能收到
             } else if (util.startWith(dataStr, "Reached Side Line")) {//充气成功
-                //TODO this.props.actions.completeInflate()
-                //TODO this.props.actions.startFlate(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+                NotificationCenter.post(NotificationCenter.name.deviceData.completeInflate)
             } else if (util.startWith(dataStr, "Reached Flat Line")) {//放气成功
-                //TODO this.props.actions.completeFlate()
-                //TODO this.props.actions.stopManual(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+                NotificationCenter.post(NotificationCenter.name.deviceData.completeFlate)
             } else if (util.startWith(dataStr, "PUMP TH:")) {
                 var min = parseInt(dataStr.substring(8, 10), 16)
                 var max = parseInt(dataStr.substring(12, 14), 16)
-                //TODO this.props.actions.readFCP(max, min)
+                NotificationCenter.post(NotificationCenter.name.deviceData.readFCP, {max,min})
             } else if (util.startWith(dataStr, "\\*5S")) {
                 var index = indexMap[dataStr.substring(3,5)]
                 var isSuccess = indexMap[dataStr.substring(6,7)] === '1'
-                //TODO this.props.actions.successSensorAdjust(index, isSuccess)
+                NotificationCenter.post(NotificationCenter.name.deviceData.sensorAdjust, {index,isSuccess})
 
             } else if (util.startWith(dataStr, "Recv ACK")) {
-                //TODO 通知Recv ACK，并不用去管是什么，让外头处理就好了
+                NotificationCenter.post(NotificationCenter.name.deviceData.recvACK)
             }
         }
     }
@@ -95,63 +95,173 @@ export default class PillowManager{
     }
 
     //API
+    startReadVoltage() {
+        return new Promise((resolve, reject) => {
+            const data = stringToBytes('GHV');
+            this.writeData(data)
+
+            resolve()
+        });
+    }
+
+    startReadFAT() {
+        return new Promise((resolve, reject) => {
+            const data = stringToBytes('FAT');
+            this.writeData(data)
+
+            resolve()
+        });
+    }
+
+    startReadFCP() {
+        return new Promise((resolve, reject) => {
+            const data = stringToBytes('FCP');
+            this.writeData(data)
+
+            resolve()
+        });
+    }
+
+    startManual() {
+        return new Promise((resolve, reject) => {
+            const data = stringToBytes('HCM1');
+            this.writeData(data)
+
+            resolve()
+        });
+    }
+
+    stopManual() {
+        return new Promise((resolve, reject) => {
+            const data = stringToBytes('HCM0');
+            this.writeData(data)
+
+            resolve()
+        });
+    }
+
+    startInflate() {
+        return new Promise((resolve, reject) => {
+            const data = stringToBytes('HIM1');
+            this.writeData(data)
+
+            resolve()
+        });
+    }
+
+    startFlate() {
+        return new Promise((resolve, reject) => {
+            const data = stringToBytes('HDM1');
+            this.writeData(data)
+
+            resolve()
+        });
+    }
+
+    startAdjustSUB() {
+        return new Promise((resolve, reject) => {
+            const data = stringToBytes('SUB:1');
+            this.writeData(data)
+
+            resolve()
+        });
+    }
+
+    stopAdjustSUB() {
+        return new Promise((resolve, reject) => {
+            const data = stringToBytes('SUB:0');
+            this.writeData(data)
+
+            resolve()
+        });
+    }
+
+    startAdjust() {
+        return new Promise((resolve, reject) => {
+            const data = stringToBytes('SUC:AB003E');
+            this.writeData(data)
+
+            resolve()
+        });
+    }
+
+    stopAdjust() {
+        return new Promise((resolve, reject) => {
+            const data = stringToBytes('SUC:AB013E');
+            this.writeData(data)
+
+            resolve()
+        });
+    }
+
+    sensorAdjust(index) {
+        return new Promise((resolve, reject) => {
+            var cmd = 'SUC:AB'+sensorIndexCMDMap[index]+'5E'
+            console.log(cmd)
+            const data = stringToBytes(cmd);
+            this.writeData(data)
+
+            resolve()
+        });
+    }
+
     startSearchDevice() {
         return new Promise((resolve, reject) => {
-            if (!this.isSearching) {
-                // console.log("已经在搜索中")
+            if (this.isSearching) {
                 reject(new Error("已经在搜索中"))
-            }
-            this.lastUpdateTime = new Date().getTime();
-            if (Platform.OS === 'android') {
-                BleManager.scan([BleUUIDs.SEARCH_ANDROID_SERVICE_UUID], 0, true).then((results) => {
-                    console.log('Scanning...');
-                })
-            }
+            } else {
+                this.lastUpdateTime = new Date().getTime();
+                if (Platform.OS === 'android') {
+                    BleManager.scan([BleUUIDs.SEARCH_ANDROID_SERVICE_UUID], 0, true).then((results) => {
+                        console.log('Scanning...');
+                    })
+                }
 
-            if (Platform.OS === 'ios') {
-                BleManager.scan([BleUUIDs.SEARCH_IOS_SERVICE_UUID], 3, true).then((results) => {
-                    console.log('Scanning...');
-                })
-            }
-            NotificationCenter.post(NotificationCenter.name.search.startSearch)
-            resolve()
-
-            this.startTimer(() => {
                 if (Platform.OS === 'ios') {
                     BleManager.scan([BleUUIDs.SEARCH_IOS_SERVICE_UUID], 3, true).then((results) => {
                         console.log('Scanning...');
                     })
                 }
+                NotificationCenter.post(NotificationCenter.name.search.startSearch)
+                resolve()
 
-                BleManager.getDiscoveredPeripherals([])
-                    .then((peripheralsArray) => {
-                        var new_list = []
+                this.startTimer(() => {
+                    if (Platform.OS === 'ios') {
+                        BleManager.scan([BleUUIDs.SEARCH_IOS_SERVICE_UUID], 3, true).then((results) => {
+                            console.log('Scanning...');
+                        })
+                    }
 
-                        var current_list = this.device_list || []
-                        if (peripheralsArray ){
-                            for (var i = 0; i < peripheralsArray.length; i++) {
-                                var peripheral = peripheralsArray[i]
-                                var isExit = false;
-                                for (var j = 0; j < current_list.length; j++) {
-                                    var device = current_list[j]
-                                    if(device.uuid == peripheral.id) {
-                                        isExit = true
-                                        device.rssi = peripheral.rssi
-                                        break
+                    BleManager.getDiscoveredPeripherals([])
+                        .then((peripheralsArray) => {
+                            var new_list = []
+
+                            var current_list = this.device_list || []
+                            if (peripheralsArray ){
+                                for (var i = 0; i < peripheralsArray.length; i++) {
+                                    var peripheral = peripheralsArray[i]
+                                    var isExit = false;
+                                    for (var j = 0; j < current_list.length; j++) {
+                                        var device = current_list[j]
+                                        if(device.uuid == peripheral.id) {
+                                            isExit = true
+                                            device.rssi = peripheral.rssi
+                                            break
+                                        }
+                                    }
+                                    if (!isExit) {
+                                        var device = {name:peripheral.name,uuid:peripheral.id, rssi:peripheral.rssi}
+                                        new_list.push(device)
                                     }
                                 }
-                                if (!isExit) {
-                                    var device = {name:peripheral.name,uuid:peripheral.id, rssi:peripheral.rssi}
-                                    new_list.push(device)
-                                }
                             }
-                        }
 
-                        this.device_list = [...new_list,...current_list]
+                            this.device_list = [...new_list,...current_list]
 
-                        NotificationCenter.post(NotificationCenter.name.search.updateList, {data:this.device_list})
-                    });
-            });
+                            NotificationCenter.post(NotificationCenter.name.search.updateList, {data:this.device_list})
+                        });
+                });
+            }
         });
     }
 
@@ -191,30 +301,19 @@ export default class PillowManager{
                                         this.current_pillow = {...device, serviceUUID:BleUUIDs.ZT_SERVICE_UUID,
                                             noitfyUUID: notifyCharacteristic, writeUUID: writeCharacteristic}
                                         resolve(this.current_pillow)
-                                        //TODO
-                                        // dispatch({
-                                        //     type: types.SUCCESS_DEVICE_CONNECT,
-                                        //     uuid: device.uuid,
-                                        //     name: device.name,
-                                        //     serviceUUID:BleUUIDs.ZT_SERVICE_UUID,
-                                        //     noitfyUUID: notifyCharacteristic,
-                                        //     writeUUID: writeCharacteristic})
                                     })
                                     .catch((error) => {
                                         reject(new Error("startNotification失败"+error))
-                                        //TODO dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: "startNotification失败"+error})
                                     });
 
                             } else {
                                 reject(new Error("鞋垫特征初始化失败"))
-                                //TODO dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: "鞋垫特征初始化失败"})
                             }
                         });
 
                 })
                 .catch((error) => {
                     reject(error)
-                    //TODO dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: error})
                 });
         });
     }
@@ -235,16 +334,20 @@ export default class PillowManager{
         });
     }
 
-    writeData(device, command) {
-
+    writeData(command) {
+        let current_device = this.current_pillow
         return new Promise((resolve, reject) => {
-            BleManager.write(device.uuid, device.serviceUUID, device.writeUUID, command)
-                .then(() => {
-                    resolve()
-                })
-                .catch((error) => {
-                    reject(error)
-                });
+            if (current_device) {
+                BleManager.write(current_device.uuid, current_device.serviceUUID, current_device.writeUUID, command)
+                    .then(() => {
+                        resolve()
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    });
+            } else {
+                reject(new Error("未连接设备"))
+            }
         });
     }
 
