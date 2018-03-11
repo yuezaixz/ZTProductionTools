@@ -100,15 +100,6 @@ class HomeView extends Component {
 
     componentDidMount() {
         bleManagerEmitter.addListener(
-            'BleManagerDisconnectPeripheral',
-            ((args) => {
-                if(this.props.home_data.uuid && this.props.home_data.uuid == args.peripheral) {
-                    //TODO 断开时候，要先设置状态，让DeviceView和AdjustView显示重连中
-                    this.props.actions.startDeviceConnect({"uuid":this.props.home_data.uuid ,"name":this.props.home_data.name })
-                }
-            }).bind(this)
-        );
-        bleManagerEmitter.addListener(
             'BleManagerDidUpdateState',
             (args) => {
                 if (args.state === 'off') {

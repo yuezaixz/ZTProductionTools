@@ -53,6 +53,19 @@ export default class PillowManager{
 
     setUp() {
         this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
+        this.disconnectListener = bleManagerEmitter.addListener(
+            'BleManagerDisconnectPeripheral',
+            ((args) => {
+                if(this.current_pillow && this.current_pillow.uuid == args.peripheral) {
+                    //TODO 断开时候，要先设置状态，让DeviceView和AdjustView显示重连中
+                    NotificationCenter.post(NotificationCenter.name.deviceData.loseConnecting)
+
+                    this.startDeviceConnect(this.current_pillow).then((device)=>{
+                        NotificationCenter.post(NotificationCenter.name.deviceData.reconnect)
+                    })
+                }
+            }).bind(this)
+        );
         BleManager.start({showAlert: false})
             .then(() => {
                 // Success code

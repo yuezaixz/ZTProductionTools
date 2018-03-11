@@ -4,7 +4,9 @@ module.exports = {
     search:{
         startSearch: 'com.podoon.ztproduct.startSearch',
         updateList:'com.podoon.ztproduct.List',
-        stopSearch:'com.podoon.ztproduct.stopSearch'
+        stopSearch:'com.podoon.ztproduct.stopSearch',
+        loseConnecting:'com.podoon.ztproduct.loseConnecting',
+        reconnect:'com.podoon.ztproduct.reconnect'
     },
     deviceData: {
         voltage: 'com.podoon.ztproduct.voltage',                //读取到电量
