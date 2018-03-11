@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import * as BleUUIDs from "../constants/BleUUIDs";
 import * as util from "../utils/InsoleUtils";
+import NotificationCenter from '../public/Com/NotificationCenter/NotificationCenter'
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -30,6 +31,8 @@ export default class PillowManager{
     }
 
     handleUpdateValueForCharacteristic(data) {
+        //TODO 返回值用listener吧，电量的写好了，待测试
+
         console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
         var datas = data.value
         var dataStr = util.arrayBufferToBase64Str(datas)
@@ -37,7 +40,8 @@ export default class PillowManager{
         if (this.current_pillow.uuid == data.peripheral) {
             if (util.startWith(dataStr, "Batt")) {
                 var voltage = dataStr.substring(7, dataStr.length - 2)
-                //TODO
+                NotificationCenter.post(NotificationCenter.name.deviceData.voltage, {voltage})
+                //TODO 测试下能不能收到
             } else if (util.startWith(dataStr, "Reached Side Line")) {//充气成功
                 //TODO this.props.actions.completeInflate()
                 //TODO this.props.actions.startFlate(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)

@@ -12,6 +12,8 @@ import {Theme} from "../../styles";
 import * as util from "../../utils/InsoleUtils"
 import * as StorageKeys from '../../constants/StorageKeys'
 
+import NotificationCenter from '../public/Com/NotificationCenter/NotificationCenter'
+
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -70,11 +72,20 @@ class Main extends Component {
             }
         );
     }
-    componentDidMount() {
 
+    readVoltage(data) {
+        if (data.voltage) {
+            this.props.actions.readVoltage(data.voltage)
+        }
+        this.props.getLoading().dismiss()
+    }
+
+    componentDidMount() {
+        this.voltageListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.voltage, this.readVoltage.bind(this), '');
     }
     componentWillUnmount() {
         this.handlerUpdate.remove();
+        NotificationCenter.removeListener(this.voltageListener);
     }
     componentDidUpdate () {
         if (!this.props.device_data.uuid) {//断开成功
