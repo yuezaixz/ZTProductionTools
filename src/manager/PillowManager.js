@@ -1,4 +1,3 @@
-import {NativeModules} from 'react-native'
 import BleManager from 'react-native-ble-manager';
 import {
     Platform,
@@ -25,9 +24,17 @@ export default class PillowManager{
     constructor() {
         if (!instance) {
             instance = this;
-            this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
         }
         return instance;
+    }
+
+    setUp() {
+        this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
+        BleManager.start({showAlert: false})
+            .then(() => {
+                // Success code
+                console.log('Module initialized');
+            });
     }
 
     handleUpdateValueForCharacteristic(data) {
@@ -84,61 +91,67 @@ export default class PillowManager{
             this.lastUpdateTime = now;
             this.loopCallback()
         }
-        this.loopTimer = requestAnimationFrame(this.loopHandle);
+        this.loopTimer = requestAnimationFrame(this.loopHandle.bind(this));
     }
 
     //API
     startSearchDevice() {
-        if (this.isSearching) {
-            return false;
-        }
-        this.lastUpdateTime = new Date().getTime();
-        if (Platform.OS === 'android') {
-            BleManager.scan([BleUUIDs.SEARCH_ANDROID_SERVICE_UUID], 0, true).then((results) => {
-                console.log('Scanning...');
-            })
-        }
+        return new Promise((resolve, reject) => {
+            if (!this.isSearching) {
+                console.log("已经在搜索中")
+                // reject(new Error("已经在搜索中"))
+                //不能reject，否则就结束done了，resolve就没效果了
+            }
+            this.lastUpdateTime = new Date().getTime();
+            if (Platform.OS === 'android') {
+                BleManager.scan([BleUUIDs.SEARCH_ANDROID_SERVICE_UUID], 0, true).then((results) => {
+                    console.log('Scanning...');
+                })
+            }
 
-        if (Platform.OS === 'ios') {
-            BleManager.scan([BleUUIDs.SEARCH_IOS_SERVICE_UUID], 3, true).then((results) => {
-                console.log('Scanning...');
-            })
-        }
-
-        this.startTimer(function () {
             if (Platform.OS === 'ios') {
                 BleManager.scan([BleUUIDs.SEARCH_IOS_SERVICE_UUID], 3, true).then((results) => {
                     console.log('Scanning...');
                 })
             }
-            BleManager.getDiscoveredPeripherals([])
-                .then((peripheralsArray) => {
-                    var new_list = []
 
-                    var current_list = this.device_list || []
-                    if (peripheralsArray ){
-                        for (var i = 0; i < peripheralsArray.length; i++) {
-                            var peripheral = peripheralsArray[i]
-                            var isExit = false;
-                            for (var j = 0; j < current_list.length; j++) {
-                                var device = current_list[j]
-                                if(device.uuid == peripheral.id) {
-                                    isExit = true
-                                    device.rssi = peripheral.rssi
-                                    break
+            this.startTimer(() => {
+                if (Platform.OS === 'ios') {
+                    BleManager.scan([BleUUIDs.SEARCH_IOS_SERVICE_UUID], 3, true).then((results) => {
+                        console.log('Scanning...');
+                    })
+                }
+
+                BleManager.getDiscoveredPeripherals([])
+                    .then((peripheralsArray) => {
+                        var new_list = []
+
+                        var current_list = this.device_list || []
+                        if (peripheralsArray ){
+                            for (var i = 0; i < peripheralsArray.length; i++) {
+                                var peripheral = peripheralsArray[i]
+                                var isExit = false;
+                                for (var j = 0; j < current_list.length; j++) {
+                                    var device = current_list[j]
+                                    if(device.uuid == peripheral.id) {
+                                        isExit = true
+                                        device.rssi = peripheral.rssi
+                                        break
+                                    }
+                                }
+                                if (!isExit) {
+                                    var device = {name:peripheral.name,uuid:peripheral.id, rssi:peripheral.rssi}
+                                    new_list.push(device)
                                 }
                             }
-                            if (!isExit) {
-                                var device = {name:peripheral.name,uuid:peripheral.id, rssi:peripheral.rssi}
-                                new_list.push(device)
-                            }
                         }
-                    }
 
-                    this.device_list = [...new_list,...current_list]
+                        this.device_list = [...new_list,...current_list]
 
-                    //TODO 通知刷新？
-                });
+                        //TODO 通知刷新？
+                        resolve(this.device_list)
+                    });
+            });
         });
     }
 
@@ -151,77 +164,87 @@ export default class PillowManager{
 
     startDeviceConnect(device) {
         this.stopSearchDevice()//连接前停止搜索
-        BleManager.connect(device.uuid)
-            .then(() => {
-                //这里只是连上，还要notify和write
-                BleManager.retrieveServices(device.uuid)
-                    .then((peripheralInfo) => {
-                        console.log('Peripheral info:', peripheralInfo);
-                        var notifyCharacteristic = null
-                        var writeCharacteristic = null
-                        if (peripheralInfo.characteristics) {
-                            for (var i = 0; i < peripheralInfo.characteristics.length; i++) {
-                                var characteristic = peripheralInfo.characteristics[i]
-                                if (characteristic.characteristic.toUpperCase() == BleUUIDs.ZT_NOTIFICATION_CHARACTERISTIC_UUID) {
-                                    notifyCharacteristic = characteristic.characteristic
-                                } else if (characteristic.characteristic.toUpperCase() == BleUUIDs.ZT_WRITE_CHARACTERISTIC_UUID) {
-                                    writeCharacteristic = characteristic.characteristic
+
+        return new Promise((resolve, reject) => {
+            BleManager.connect(device.uuid)
+                .then(() => {
+                    //这里只是连上，还要notify和write
+                    BleManager.retrieveServices(device.uuid)
+                        .then((peripheralInfo) => {
+                            console.log('Peripheral info:', peripheralInfo);
+                            var notifyCharacteristic = null
+                            var writeCharacteristic = null
+                            if (peripheralInfo.characteristics) {
+                                for (var i = 0; i < peripheralInfo.characteristics.length; i++) {
+                                    var characteristic = peripheralInfo.characteristics[i]
+                                    if (characteristic.characteristic.toUpperCase() == BleUUIDs.ZT_NOTIFICATION_CHARACTERISTIC_UUID) {
+                                        notifyCharacteristic = characteristic.characteristic
+                                    } else if (characteristic.characteristic.toUpperCase() == BleUUIDs.ZT_WRITE_CHARACTERISTIC_UUID) {
+                                        writeCharacteristic = characteristic.characteristic
+                                    }
                                 }
                             }
-                        }
-                        if (notifyCharacteristic && writeCharacteristic) {
-                            BleManager.startNotification(device.uuid, BleUUIDs.ZT_SERVICE_UUID, notifyCharacteristic)
-                                .then(() => {
-                                    this.current_pillow = {...device, serviceUUID:BleUUIDs.ZT_SERVICE_UUID,
-                                        noitfyUUID: notifyCharacteristic, writeUUID: writeCharacteristic}
-                                    //TODO
-                                    // dispatch({
-                                    //     type: types.SUCCESS_DEVICE_CONNECT,
-                                    //     uuid: device.uuid,
-                                    //     name: device.name,
-                                    //     serviceUUID:BleUUIDs.ZT_SERVICE_UUID,
-                                    //     noitfyUUID: notifyCharacteristic,
-                                    //     writeUUID: writeCharacteristic})
-                                })
-                                .catch((error) => {
-                                    //TODO dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: "startNotification失败"+error})
-                                });
+                            if (notifyCharacteristic && writeCharacteristic) {
+                                BleManager.startNotification(device.uuid, BleUUIDs.ZT_SERVICE_UUID, notifyCharacteristic)
+                                    .then(() => {
+                                        this.current_pillow = {...device, serviceUUID:BleUUIDs.ZT_SERVICE_UUID,
+                                            noitfyUUID: notifyCharacteristic, writeUUID: writeCharacteristic}
+                                        resolve(this.current_pillow)
+                                        //TODO
+                                        // dispatch({
+                                        //     type: types.SUCCESS_DEVICE_CONNECT,
+                                        //     uuid: device.uuid,
+                                        //     name: device.name,
+                                        //     serviceUUID:BleUUIDs.ZT_SERVICE_UUID,
+                                        //     noitfyUUID: notifyCharacteristic,
+                                        //     writeUUID: writeCharacteristic})
+                                    })
+                                    .catch((error) => {
+                                        reject(new Error("startNotification失败"+error))
+                                        //TODO dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: "startNotification失败"+error})
+                                    });
 
-                        } else {
-                            //TODO dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: "鞋垫特征初始化失败"})
-                        }
-                    });
+                            } else {
+                                reject(new Error("鞋垫特征初始化失败"))
+                                //TODO dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: "鞋垫特征初始化失败"})
+                            }
+                        });
 
-            })
-            .catch((error) => {
-                //TODO dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: error})
-            });
+                })
+                .catch((error) => {
+                    reject(error)
+                    //TODO dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: error})
+                });
+        });
     }
 
     deviceDisconnect(uuid) {
-        BleManager.disconnect(uuid)
-            .then(() => {
-                //TODO dispatch({type: types.SUCCESS_DEVICE_DISCONNECT, uuid: uuid})
-            })
-            .catch((error) => {
-                //TODO dispatch({type: types.FAIL_DEVICE_DISCONNECT, errorMsg: error})
-            });
+
+        return new Promise((resolve, reject) => {
+            BleManager.disconnect(uuid)
+                .then(() => {
+                    resolve(uuid)
+                    //TODO dispatch({type: types.SUCCESS_DEVICE_DISCONNECT, uuid: uuid})
+                })
+                .catch((error) => {
+                    reject(error)
+                    //TODO dispatch({type: types.FAIL_DEVICE_DISCONNECT, errorMsg: error})
+                });
+
+        });
     }
 
-    writeData(device, command, func) {
-        BleManager.write(device.uuid, device.serviceUUID, device.writeUUID, command)
-            .then(() => {
-                //todo 写入成功
-                // if (func) {
-                //     func()
-                // }
-            })
-            .catch((error) => {
-                //todo 写入失败
-                console.log(error);
-            });
+    writeData(device, command) {
 
-        //TODO return {type: successType}
+        return new Promise((resolve, reject) => {
+            BleManager.write(device.uuid, device.serviceUUID, device.writeUUID, command)
+                .then(() => {
+                    resolve()
+                })
+                .catch((error) => {
+                    reject(error)
+                });
+        });
     }
 
 }

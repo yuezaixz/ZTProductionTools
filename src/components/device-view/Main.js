@@ -12,7 +12,7 @@ import {Theme} from "../../styles";
 import * as util from "../../utils/InsoleUtils"
 import * as StorageKeys from '../../constants/StorageKeys'
 
-import NotificationCenter from '../public/Com/NotificationCenter/NotificationCenter'
+import NotificationCenter from '../../public/Com/NotificationCenter/NotificationCenter'
 
 
 const BleManagerModule = NativeModules.BleManager;
