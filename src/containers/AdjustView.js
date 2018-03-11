@@ -21,25 +21,6 @@ let {height, width} = Dimensions.get('window');
 
 import NotificationCenter from '../public/Com/NotificationCenter/NotificationCenter'
 
-const indexMap = {
-    '01':0,
-    '02':1,
-    '03':2,
-    '04':3,
-    '05':4,
-    '06':5,
-    '07':6,
-    '08':7,
-    '09':8,
-    '0A':9,
-    '0B':10,
-    '0C':11,
-    '0D':12,
-    '0E':13,
-    '0F':14,
-    '10':15,
-}
-
 class AdjustView extends Component {
     static navigationOptions = ({ navigation }) => {
         const params = navigation.state.params || {};
@@ -68,7 +49,6 @@ class AdjustView extends Component {
         if (data.index) {
             this.props.actions.successSensorAdjust(data.index, data.isSuccess)
         }
-        this.props.getLoading().dismiss()
     }
 
     recvACK() {

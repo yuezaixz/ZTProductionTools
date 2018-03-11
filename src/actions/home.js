@@ -23,8 +23,8 @@ export function stopSearchDevice() {
 }
 
 export function startDeviceConnect(device) {
-    stopSearchDevice()//连接前停止搜索
     return async (dispatch, getState) =>{
+        dispatch({type: types.STOP_SEARCH_DEVICE})
         dispatch({type: types.START_DEVICE_CONNECT, uuid: device.uuid})
         PillowManager.ShareInstance().startDeviceConnect(device)
             .then((device)=>{

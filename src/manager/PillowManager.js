@@ -13,6 +13,26 @@ const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 let instance = null;
+
+const indexMap = {
+    '01':0,
+    '02':1,
+    '03':2,
+    '04':3,
+    '05':4,
+    '06':5,
+    '07':6,
+    '08':7,
+    '09':8,
+    '0A':9,
+    '0B':10,
+    '0C':11,
+    '0D':12,
+    '0E':13,
+    '0F':14,
+    '10':15,
+}
+
 const sensorIndexCMDMap = ['01','02','03','04','05','06','07','08','09','0A','0B','0C','0D','0E','0F','10']
 //传感器校准，1~16个传感器的校准
 
@@ -96,66 +116,38 @@ export default class PillowManager{
 
     //API
     startReadVoltage() {
-        return new Promise((resolve, reject) => {
-            const data = stringToBytes('GHV');
-            this.writeData(data)
-
-            resolve()
-        });
+        const data = stringToBytes('GHV');
+        return this.writeData(data)
     }
 
     startReadFAT() {
-        return new Promise((resolve, reject) => {
-            const data = stringToBytes('FAT');
-            this.writeData(data)
-
-            resolve()
-        });
+        const data = stringToBytes('FAT');
+        return this.writeData(data)
     }
 
     startReadFCP() {
-        return new Promise((resolve, reject) => {
-            const data = stringToBytes('FCP');
-            this.writeData(data)
-
-            resolve()
-        });
+        const data = stringToBytes('FCP');
+        return this.writeData(data)
     }
 
     startManual() {
-        return new Promise((resolve, reject) => {
-            const data = stringToBytes('HCM1');
-            this.writeData(data)
-
-            resolve()
-        });
+        const data = stringToBytes('HCM1');
+        return this.writeData(data)
     }
 
     stopManual() {
-        return new Promise((resolve, reject) => {
-            const data = stringToBytes('HCM0');
-            this.writeData(data)
-
-            resolve()
-        });
+        const data = stringToBytes('HCM0');
+        return this.writeData(data)
     }
 
     startInflate() {
-        return new Promise((resolve, reject) => {
-            const data = stringToBytes('HIM1');
-            this.writeData(data)
-
-            resolve()
-        });
+        const data = stringToBytes('HIM1');
+        return this.writeData(data)
     }
 
     startFlate() {
-        return new Promise((resolve, reject) => {
-            const data = stringToBytes('HDM1');
-            this.writeData(data)
-
-            resolve()
-        });
+        const data = stringToBytes('HDM1');
+        return this.writeData(data)
     }
 
     startAdjustSUB() {
@@ -324,11 +316,9 @@ export default class PillowManager{
             BleManager.disconnect(uuid)
                 .then(() => {
                     resolve(uuid)
-                    //TODO dispatch({type: types.SUCCESS_DEVICE_DISCONNECT, uuid: uuid})
                 })
                 .catch((error) => {
                     reject(error)
-                    //TODO dispatch({type: types.FAIL_DEVICE_DISCONNECT, errorMsg: error})
                 });
 
         });

@@ -5,14 +5,15 @@ import PillowManager from '../manager/PillowManager'
 export function deviceDisconnect(uuid) {
     return async (dispatch, getState) =>{
         dispatch({type: types.DEVICE_DISCONNECT, uuid: uuid})
-        BleManager.disconnect(uuid)
-            .then(() => {
+        PillowManager
+            .ShareInstance()
+            .deviceDisconnect(uuid)
+            .then(()=>{
                 dispatch({type: types.SUCCESS_DEVICE_DISCONNECT, uuid: uuid})
             })
             .catch((error) => {
                 dispatch({type: types.FAIL_DEVICE_DISCONNECT, errorMsg: error})
             });
-
     }
 
 
@@ -24,7 +25,7 @@ export function startReadVoltage(uuid, serviceUUID, writeUUID) {
     return async (dispatch, getState) =>{
         PillowManager.ShareInstance().startReadVoltage()
             .then(()=>{
-                dispatch(types.START_READ_VOLTAGE)
+                dispatch({type: types.START_READ_VOLTAGE})
             })
     }
 }
@@ -38,7 +39,7 @@ export function startReadFAT(uuid, serviceUUID, writeUUID) {
     return async (dispatch, getState) =>{
         PillowManager.ShareInstance().startReadFAT()
             .then(()=>{
-                dispatch(types.START_READ_FAT)
+                dispatch({type: types.START_READ_FAT})
             })
     }
 }
@@ -52,7 +53,7 @@ export function startReadFCP(uuid, serviceUUID, writeUUID) {
     return async (dispatch, getState) =>{
         PillowManager.ShareInstance().startReadFCP()
             .then(()=>{
-                dispatch(types.START_READ_FCP)
+                dispatch({type: types.START_READ_FCP})
             })
     }
 }
@@ -67,7 +68,7 @@ export function startManual(uuid, serviceUUID, writeUUID) {
     return async (dispatch, getState) =>{
         PillowManager.ShareInstance().startManual()
             .then(()=>{
-                dispatch(types.START_MANUAL)
+                dispatch({type: types.START_MANUAL})
             })
     }
 }
@@ -80,7 +81,7 @@ export function stopManual(uuid, serviceUUID, writeUUID) {
     return async (dispatch, getState) =>{
         PillowManager.ShareInstance().stopManual()
             .then(()=>{
-                dispatch(types.STOP_MANUAL)
+                dispatch({type: types.STOP_MANUAL})
             })
     }
 }
@@ -93,7 +94,7 @@ export function startInflate(uuid, serviceUUID, writeUUID) {
     return async (dispatch, getState) =>{
         PillowManager.ShareInstance().startInflate()
             .then(()=>{
-                dispatch(types.START_INFLATE)
+                dispatch({type: types.START_INFLATE})
             })
     }
 }
@@ -110,7 +111,7 @@ export function startFlate(uuid, serviceUUID, writeUUID) {
     return async (dispatch, getState) =>{
         PillowManager.ShareInstance().startFlate()
             .then(()=>{
-                dispatch(types.START_FLATE)
+                dispatch({type: types.START_FLATE})
             })
     }
 }
@@ -125,7 +126,7 @@ export function startAdjustSUB(uuid, serviceUUID, writeUUID) {
     return async (dispatch, getState) =>{
         PillowManager.ShareInstance().startAdjustSUB()
             .then(()=>{
-                dispatch(types.START_ADJUST_SUB)
+                dispatch({type: types.START_ADJUST_SUB})
             })
     }
 }
@@ -138,7 +139,7 @@ export function stopAdjustSUB(uuid, serviceUUID, writeUUID) {
     return async (dispatch, getState) =>{
         PillowManager.ShareInstance().stopAdjustSUB()
             .then(()=>{
-                dispatch(types.STOP_ADJUST_SUB)
+                dispatch({type: types.STOP_ADJUST_SUB})
             })
     }
 }
@@ -152,7 +153,7 @@ export function startAdjust(uuid, serviceUUID, writeUUID) {
     return async (dispatch, getState) =>{
         PillowManager.ShareInstance().startAdjust()
             .then(()=>{
-                dispatch(types.START_ADJUST)
+                dispatch({type: types.START_ADJUST})
             })
     }
 }
@@ -165,7 +166,7 @@ export function stopAdjust(uuid, serviceUUID, writeUUID) {
     return async (dispatch, getState) =>{
         PillowManager.ShareInstance().stopAdjust()
             .then(()=>{
-                dispatch(types.STOP_ADJUST)
+                dispatch({type: types.STOP_ADJUST})
             })
     }
 }
@@ -178,7 +179,7 @@ export function sensorAdjust(uuid, serviceUUID, writeUUID, index) {
     return async (dispatch, getState) =>{
         PillowManager.ShareInstance().sensorAdjust(index)
             .then(()=>{
-                dispatch(types.SENSOR_ADJUST)
+                dispatch({type: types.SENSOR_ADJUST})
             })
     }
 }

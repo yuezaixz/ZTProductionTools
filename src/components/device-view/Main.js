@@ -57,20 +57,6 @@ class Main extends Component {
                 this.airPressureThreshold = parseInt(result)
             }
         }.bind(this))
-
-        this.props.navigation.addListener(
-            'didFocus',
-            payload => {
-                this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
-            }
-        );
-        this.props.navigation.addListener(
-            'willBlur',
-            payload => {
-                bleManagerEmitter.removeAllListeners('BleManagerDidUpdateValueForCharacteristic')
-                // this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
-            }
-        );
     }
 
     readVoltage(data) {
@@ -127,7 +113,6 @@ class Main extends Component {
         this.recvACKListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.recvACK, this.recvACK.bind(this), '');
     }
     componentWillUnmount() {
-        this.handlerUpdate.remove();
         NotificationCenter.removeListener(this.voltageListener);
         NotificationCenter.removeListener(this.completeInflateListener);
         NotificationCenter.removeListener(this.completeFlateListener);
@@ -137,49 +122,6 @@ class Main extends Component {
     componentDidUpdate () {
         if (!this.props.device_data.uuid) {//断开成功
             this.props.navigation.goBack()
-        }
-    }
-    handleUpdateValueForCharacteristic(data) {
-        console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
-        var datas = data.value
-        var dataStr = util.arrayBufferToBase64Str(datas)
-        console.log(dataStr)
-        if (this.props.device_data.uuid == data.peripheral) {
-            if (util.startWith(dataStr, "Batt")) {
-                var voltage = dataStr.substring(7,dataStr.length-2)
-                this.props.actions.readVoltage(voltage)
-                this.props.getLoading().dismiss()
-            } else if (util.startWith(dataStr, "Reached Side Line")) {//充气成功
-                this.props.actions.completeInflate()
-                this.props.actions.startFlate(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-            } else if (util.startWith(dataStr, "Reached Flat Line")) {//放气成功
-                this.props.actions.completeFlate()
-                this.props.actions.stopManual(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-            } else if (util.startWith(dataStr, "PUMP TH:")) {
-                var min = parseInt(dataStr.substring(8,10), 16)
-                var max = parseInt(dataStr.substring(12,14), 16)
-                this.props.actions.readFCP(max, min)
-                this.props.getLoading().dismiss()
-            } else if (util.startWith(dataStr, "Recv ACK")) {
-                if (this.props.device_data.isReadingFAT) {
-                    this.props.actions.successReadRAT()
-                    this.props.getLoading().dismiss()
-                } else if (this.props.device_data.isStartingManual) {
-                    this.props.actions.successStartManual()
-                    this.props.actions.startInflate(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-                } else if (this.props.device_data.isStopingManual) {
-                    this.props.actions.successStopManual()
-                    this.props.getLoading().dismiss()
-                } else if (this.props.device_data.isStartAdjustSUB) {
-                    this.props.actions.successStartAdjustSUB()
-                    this.props.actions.startAdjust(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-                } else if (this.props.device_data.isStartAdjust) {
-                    this.props.actions.successStartAdjust()
-                    // 写命令去开始校准
-                    this.props.navigation.navigate('Adjust')
-                    setTimeout((()=>{this.props.getLoading().dismiss()}).bind(this),100)//100ms后在结束loading
-                }
-            }
         }
     }
     manualStatusStr(data) {
