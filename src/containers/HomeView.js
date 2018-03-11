@@ -24,6 +24,7 @@ import {
 } from '../components/home-view';
 import Actions from '../actions';
 import * as StorageKeys from "../constants/StorageKeys";
+import NotificationCenter from "../public/Com/NotificationCenter/NotificationCenter";
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -91,6 +92,14 @@ class HomeView extends Component {
                 this.setState({isVisible: false});
             }
         );
+
+        this.updateListListener = NotificationCenter.createListener(NotificationCenter.name.search.updateList, this.updateDeviceList.bind(this), '');
+    }
+
+    updateDeviceList(data) {
+        if (data.data) {
+            this.props.actions.updateDeviceList(data.data)
+        }
     }
 
     componentDidMount() {
@@ -153,6 +162,7 @@ class HomeView extends Component {
     componentWillUnmount(){
         bleManagerEmitter.removeAllListeners('BleManagerDidUpdateState')
         bleManagerEmitter.removeAllListeners('BleManagerDisconnectPeripheral')
+        NotificationCenter.removeListener(this.updateListListener);
         this.props.actions.stopSearchDevice()
     }
     bindEvents = ()=>{

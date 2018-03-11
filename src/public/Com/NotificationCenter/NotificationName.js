@@ -1,6 +1,11 @@
 'use strict';
 
 module.exports = {
+    search:{
+        startSearch: 'com.podoon.ztproduct.startSearch',
+        updateList:'com.podoon.ztproduct.List',
+        stopSearch:'com.podoon.ztproduct.stopSearch'
+    },
     deviceData: {
         voltage: 'com.podoon.ztproduct.voltage',                //读取到电量
         completeInflate: 'com.podoon.ztproduct.completeInflate',               //充气成功

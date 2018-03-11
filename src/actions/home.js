@@ -4,15 +4,17 @@ import PillowManager from '../manager/PillowManager'
 
 export function startSearchDevice() {
     return async (dispatch, getState) => {
-        dispatch({type: types.START_SEARCH_DEVICE})
-
-        PillowManager.ShareInstance().startSearchDevice().then((deviceList) => {
-            dispatch({type: types.UPDATE_DEVICE_LIST, devices: deviceList})
+        PillowManager.ShareInstance().startSearchDevice().then(() => {
+            dispatch({type: types.START_SEARCH_DEVICE})
         }).catch(error => {
             console.log(error)
-            //重复开始，不处理了吧。
+            //重复开始，暂不处理了
         })
     }
+}
+
+export function updateDeviceList(list) {
+    return {type: types.UPDATE_DEVICE_LIST, devices: list}
 }
 
 export function stopSearchDevice() {

@@ -98,9 +98,8 @@ export default class PillowManager{
     startSearchDevice() {
         return new Promise((resolve, reject) => {
             if (!this.isSearching) {
-                console.log("已经在搜索中")
-                // reject(new Error("已经在搜索中"))
-                //不能reject，否则就结束done了，resolve就没效果了
+                // console.log("已经在搜索中")
+                reject(new Error("已经在搜索中"))
             }
             this.lastUpdateTime = new Date().getTime();
             if (Platform.OS === 'android') {
@@ -114,6 +113,8 @@ export default class PillowManager{
                     console.log('Scanning...');
                 })
             }
+            NotificationCenter.post(NotificationCenter.name.search.startSearch)
+            resolve()
 
             this.startTimer(() => {
                 if (Platform.OS === 'ios') {
@@ -148,8 +149,7 @@ export default class PillowManager{
 
                         this.device_list = [...new_list,...current_list]
 
-                        //TODO 通知刷新？
-                        resolve(this.device_list)
+                        NotificationCenter.post(NotificationCenter.name.search.updateList, {data:this.device_list})
                     });
             });
         });
@@ -159,6 +159,7 @@ export default class PillowManager{
         this.isSearching = false
         this.endTimer()
         BleManager.stopScan()
+        NotificationCenter.post(NotificationCenter.name.search.stopSearch)
         return true
     }
 
