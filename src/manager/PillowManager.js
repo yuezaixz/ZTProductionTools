@@ -44,11 +44,26 @@ export default class PillowManager{
     device_list = [];
     current_pillow = null
 
+    isLoseConnecting = false;
+
     constructor() {
         if (!instance) {
             instance = this;
         }
         return instance;
+    }
+
+    reconnect() {
+        console.log('开始重连')
+        if (this.isLoseConnecting){
+            this.startDeviceConnect(this.current_pillow).then((device)=>{
+                this.isLoseConnecting = true
+                NotificationCenter.post(NotificationCenter.name.search.reconnect)
+            }).catch((error)=>{
+                console.log('重连失败')
+                setTimeout(this.reconnect.bind(this),3000)
+            })
+        }
     }
 
     setUp() {
@@ -58,11 +73,11 @@ export default class PillowManager{
             ((args) => {
                 if(this.current_pillow && this.current_pillow.uuid == args.peripheral) {
                     //TODO 断开时候，要先设置状态，让DeviceView和AdjustView显示重连中
-                    NotificationCenter.post(NotificationCenter.name.deviceData.loseConnecting)
 
-                    this.startDeviceConnect(this.current_pillow).then((device)=>{
-                        NotificationCenter.post(NotificationCenter.name.deviceData.reconnect)
-                    })
+                    this.isLoseConnecting = true
+                    NotificationCenter.post(NotificationCenter.name.search.loseConnecting)
+
+                    this.reconnect()
                 }
             }).bind(this)
         );
@@ -280,7 +295,7 @@ export default class PillowManager{
 
     startDeviceConnect(device) {
         this.stopSearchDevice()//连接前停止搜索
-
+        this.isLoseConnecting = false
         return new Promise((resolve, reject) => {
             BleManager.connect(device.uuid)
                 .then(() => {
@@ -326,13 +341,21 @@ export default class PillowManager{
     deviceDisconnect(uuid) {
 
         return new Promise((resolve, reject) => {
-            BleManager.disconnect(uuid)
-                .then(() => {
-                    resolve(uuid)
-                })
-                .catch((error) => {
-                    reject(error)
-                });
+            if (!this.current_pillow) {
+                reject(new Error('无当前设备'))
+            } else if(this.isLoseConnecting) {
+                resolve(uuid)
+                this.isLoseConnecting = false
+            } else {
+                this.isLoseConnecting = false
+                BleManager.disconnect(uuid)
+                    .then(() => {
+                        resolve(uuid)
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    });
+            }
 
         });
     }

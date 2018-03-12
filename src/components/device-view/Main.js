@@ -105,12 +105,24 @@ class Main extends Component {
         }
     }
 
+    disconnectHandle(){
+        console.log('recive loseConnecting')
+        this.props.getLoading().show('重连中')
+    }
+
+    reconnectHandle(){
+        console.log('recive reconnect')
+        this.props.getLoading().dismiss()
+    }
+
     componentDidMount() {
         this.voltageListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.voltage, this.readVoltage.bind(this), '');
         this.readFCPListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.readFCP, this.readFCP.bind(this), '');
         this.completeInflateListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.completeInflate, this.completeInflate.bind(this), '');
         this.completeFlateListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.completeFlate, this.completeFlate.bind(this), '');
         this.recvACKListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.recvACK, this.recvACK.bind(this), '');
+        this.disconnectListener = NotificationCenter.createListener(NotificationCenter.name.search.loseConnecting, this.disconnectHandle.bind(this), '');
+        this.reconnectListener = NotificationCenter.createListener(NotificationCenter.name.search.reconnect, this.reconnectHandle.bind(this), '');
     }
     componentWillUnmount() {
         NotificationCenter.removeListener(this.voltageListener);
@@ -118,6 +130,8 @@ class Main extends Component {
         NotificationCenter.removeListener(this.completeFlateListener);
         NotificationCenter.removeListener(this.recvACKListener);
         NotificationCenter.removeListener(this.readFCPListener);
+        NotificationCenter.removeListener(this.disconnectListener);
+        NotificationCenter.removeListener(this.reconnectListener);
     }
     componentDidUpdate () {
         if (!this.props.device_data.uuid) {//断开成功

@@ -16,6 +16,7 @@ import {
 import Actions from '../actions';
 import * as util from "../utils/InsoleUtils";
 import StatusBarLeftButton from '../components/common/StatusBarLeftButton'
+import Loading from '../components/common/WLoading'
 
 let {height, width} = Dimensions.get('window');
 
@@ -45,6 +46,10 @@ class AdjustView extends Component {
         this.props.navigation.setParams({ backAction: this._backAction.bind(this) });
     }
 
+    getLoading() {
+        return this.refs['loading'];
+    }
+
     sensorAdjust(data) {
         if (data.index) {
             this.props.actions.successSensorAdjust(data.index, data.isSuccess)
@@ -66,13 +71,25 @@ class AdjustView extends Component {
         }
     }
 
+    disconnectHandle(){
+        this.getLoading().show('重连中')
+    }
+
+    reconnectHandle(){
+        this.getLoading().dismiss()
+    }
+
     componentDidMount() {
         this.sensorAdjustListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.sensorAdjust, this.sensorAdjust.bind(this), '');
         this.recvACKListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.recvACK, this.recvACK.bind(this), '');
+        this.disconnectListener = NotificationCenter.createListener(NotificationCenter.name.search.loseConnecting, this.disconnectHandle.bind(this), '');
+        this.reconnectListener = NotificationCenter.createListener(NotificationCenter.name.search.reconnect, this.reconnectHandle.bind(this), '');
     }
     componentWillUnmount(){
         NotificationCenter.removeListener(this.sensorAdjustListener);
         NotificationCenter.removeListener(this.recvACKListener);
+        NotificationCenter.removeListener(this.disconnectListener);
+        NotificationCenter.removeListener(this.reconnectListener);
     }
     render() {
         return (
@@ -80,6 +97,7 @@ class AdjustView extends Component {
                 {/*<Header {...this.props}/>*/}
                 <Main {...this.props}/>
                 <Footer {...this.props}/>
+                <Loading ref={'loading'} text={'重连中...'} />
             </View>
         );
     }
