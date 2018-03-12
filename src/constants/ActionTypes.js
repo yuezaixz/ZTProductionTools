@@ -16,6 +16,8 @@ export const FAIL_DEVICE_DISCONNECT = 'FAIL_DEVICE_DISCONNECT';
 
 export const CLEAR_DEVICE_DATA = 'CLEAR_DEVICE_DATA';
 
+export const ERROR = 'ERROR';
+
 /****************读取电压****************/
 export const START_READ_VOLTAGE = 'START_READ_VOLTAGE';
 export const READ_VOLTAGE = 'READ_VOLTAGE';

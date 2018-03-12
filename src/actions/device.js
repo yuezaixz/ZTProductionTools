@@ -1,40 +1,19 @@
 import * as types from '../constants/ActionTypes';
-import {
-    NativeAppEventEmitter,
-    NativeEventEmitter,
-    NativeModules,
-} from 'react-native';
 import BleManager from 'react-native-ble-manager';
-
-function writeData(uuid, serviceUUID, writeUUID, successType, command, func) {
-    BleManager.write(uuid, serviceUUID, writeUUID, command)
-        .then(() => {
-            //todo 写入成功
-            if (func) {
-                func()
-            }
-        })
-        .catch((error) => {
-            //todo 写入失败
-            console.log(error);
-        });
-
-    return {type: successType}
-}
-
-import { stringToBytes } from 'convert-string';
+import PillowManager from '../manager/PillowManager'
 
 export function deviceDisconnect(uuid) {
     return async (dispatch, getState) =>{
         dispatch({type: types.DEVICE_DISCONNECT, uuid: uuid})
-        BleManager.disconnect(uuid)
-            .then(() => {
+        PillowManager
+            .ShareInstance()
+            .deviceDisconnect(uuid)
+            .then(()=>{
                 dispatch({type: types.SUCCESS_DEVICE_DISCONNECT, uuid: uuid})
             })
             .catch((error) => {
                 dispatch({type: types.FAIL_DEVICE_DISCONNECT, errorMsg: error})
             });
-
     }
 
 
@@ -43,9 +22,12 @@ export function deviceDisconnect(uuid) {
 }
 
 export function startReadVoltage(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('GHV');
-
-    return writeData(uuid, serviceUUID, writeUUID, types.START_READ_VOLTAGE, data);
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().startReadVoltage()
+            .then(()=>{
+                dispatch({type: types.START_READ_VOLTAGE})
+            })
+    }
 }
 
 export function readVoltage(voltage) {
@@ -54,9 +36,12 @@ export function readVoltage(voltage) {
 
 /****************板级功能测试****************/
 export function startReadFAT(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('FAT');
-
-    return writeData(uuid, serviceUUID, writeUUID, types.START_READ_FAT, data);
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().startReadFAT()
+            .then(()=>{
+                dispatch({type: types.START_READ_FAT})
+            })
+    }
 }
 
 export function successReadRAT() {
@@ -65,9 +50,12 @@ export function successReadRAT() {
 
 /****************气压校准，读取电流ADC****************/
 export function startReadFCP(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('FCP');
-
-    return writeData(uuid, serviceUUID, writeUUID, types.START_READ_FCP, data);
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().startReadFCP()
+            .then(()=>{
+                dispatch({type: types.START_READ_FCP})
+            })
+    }
 }
 
 export function readFCP(max, min) {
@@ -77,9 +65,12 @@ export function readFCP(max, min) {
 /****************充放气测试****************/
 //进入手控模式
 export function startManual(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('HCM1');
-
-    return writeData(uuid, serviceUUID, writeUUID, types.START_MANUAL, data);
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().startManual()
+            .then(()=>{
+                dispatch({type: types.START_MANUAL})
+            })
+    }
 }
 
 export function successStartManual() {
@@ -87,9 +78,12 @@ export function successStartManual() {
 }
 //退出手控模式
 export function stopManual(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('HCM0');
-
-    return writeData(uuid, serviceUUID, writeUUID, types.STOP_MANUAL, data);
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().stopManual()
+            .then(()=>{
+                dispatch({type: types.STOP_MANUAL})
+            })
+    }
 }
 
 export function successStopManual() {
@@ -97,9 +91,12 @@ export function successStopManual() {
 }
 //充气
 export function startInflate(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('HIM1');
-
-    return writeData(uuid, serviceUUID, writeUUID, types.START_INFLATE, data);
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().startInflate()
+            .then(()=>{
+                dispatch({type: types.START_INFLATE})
+            })
+    }
 }
 
 export function clearDeviceData() {
@@ -111,9 +108,12 @@ export function completeInflate() {
 }
 //放气
 export function startFlate(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('HDM1');
-
-    return writeData(uuid, serviceUUID, writeUUID, types.START_FLATE, data);
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().startFlate()
+            .then(()=>{
+                dispatch({type: types.START_FLATE})
+            })
+    }
 }
 
 export function completeFlate() {
@@ -123,9 +123,12 @@ export function completeFlate() {
 /****************传感器校准****************/
 //开始校准,进入退出透传模式
 export function startAdjustSUB(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('SUB:1');
-
-    return writeData(uuid, serviceUUID, writeUUID, types.START_ADJUST_SUB, data);
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().startAdjustSUB()
+            .then(()=>{
+                dispatch({type: types.START_ADJUST_SUB})
+            })
+    }
 }
 
 export function successStartAdjustSUB() {
@@ -133,9 +136,12 @@ export function successStartAdjustSUB() {
 }
 
 export function stopAdjustSUB(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('SUB:0');
-
-    return writeData(uuid, serviceUUID, writeUUID, types.STOP_ADJUST_SUB, data);
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().stopAdjustSUB()
+            .then(()=>{
+                dispatch({type: types.STOP_ADJUST_SUB})
+            })
+    }
 }
 
 export function successStopAdjustSUB() {
@@ -144,9 +150,12 @@ export function successStopAdjustSUB() {
 
 //开始校准,进入退出校准模式
 export function startAdjust(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('SUC:AB003E');
-
-    return writeData(uuid, serviceUUID, writeUUID, types.START_ADJUST, data);
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().startAdjust()
+            .then(()=>{
+                dispatch({type: types.START_ADJUST})
+            })
+    }
 }
 
 export function successStartAdjust() {
@@ -154,23 +163,25 @@ export function successStartAdjust() {
 }
 
 export function stopAdjust(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('SUC:AB013E');
-
-    return writeData(uuid, serviceUUID, writeUUID, types.STOP_ADJUST, data);
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().stopAdjust()
+            .then(()=>{
+                dispatch({type: types.STOP_ADJUST})
+            })
+    }
 }
 
 export function successStopAdjust() {
     return {type: types.SUCCESS_STOP_ADJUST}
 }
 
-const sensorIndexCMDMap = ['01','02','03','04','05','06','07','08','09','0A','0B','0C','0D','0E','0F','10']
-//传感器校准，1~16个传感器的校准
 export function sensorAdjust(uuid, serviceUUID, writeUUID, index) {
-    var cmd = 'SUC:AB'+sensorIndexCMDMap[index]+'5E'
-    console.log(cmd)
-    const data = stringToBytes(cmd);
-
-    return writeData(uuid, serviceUUID, writeUUID, types.SENSOR_ADJUST, data);
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().sensorAdjust(index)
+            .then(()=>{
+                dispatch({type: types.SENSOR_ADJUST})
+            })
+    }
 }
 
 export function successSensorAdjust(index, isSuccess) {

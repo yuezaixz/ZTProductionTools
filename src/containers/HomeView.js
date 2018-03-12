@@ -24,6 +24,7 @@ import {
 } from '../components/home-view';
 import Actions from '../actions';
 import * as StorageKeys from "../constants/StorageKeys";
+import NotificationCenter from "../public/Com/NotificationCenter/NotificationCenter";
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -74,7 +75,8 @@ class HomeView extends Component {
             'didFocus',
             payload => {
                 setTimeout(() => {
-                    this.props.actions.startSearchDevice();
+                    setTimeout(() => {this.props.actions.startSearchDevice()}, 500)
+                    this.isFirst = false
                     this.setState({isVisible: true});
                 }, 500)
             }
@@ -86,18 +88,17 @@ class HomeView extends Component {
                 this.setState({isVisible: false});
             }
         );
+
+        this.updateListListener = NotificationCenter.createListener(NotificationCenter.name.search.updateList, this.updateDeviceList.bind(this), '');
+    }
+
+    updateDeviceList(data) {
+        if (data.data) {
+            this.props.actions.updateDeviceList(data.data)
+        }
     }
 
     componentDidMount() {
-        bleManagerEmitter.addListener(
-            'BleManagerDisconnectPeripheral',
-            ((args) => {
-                if(this.props.home_data.uuid && this.props.home_data.uuid == args.peripheral) {
-                    //TODO 断开时候，要先设置状态，让DeviceView和AdjustView显示重连中
-                    this.props.actions.startDeviceConnect({"uuid":this.props.home_data.uuid ,"name":this.props.home_data.name })
-                }
-            }).bind(this)
-        );
         bleManagerEmitter.addListener(
             'BleManagerDidUpdateState',
             (args) => {
@@ -148,6 +149,7 @@ class HomeView extends Component {
     componentWillUnmount(){
         bleManagerEmitter.removeAllListeners('BleManagerDidUpdateState')
         bleManagerEmitter.removeAllListeners('BleManagerDisconnectPeripheral')
+        NotificationCenter.removeListener(this.updateListListener);
         this.props.actions.stopSearchDevice()
     }
     bindEvents = ()=>{

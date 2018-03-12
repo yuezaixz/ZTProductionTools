@@ -12,6 +12,8 @@ import {Theme} from "../../styles";
 import * as util from "../../utils/InsoleUtils"
 import * as StorageKeys from '../../constants/StorageKeys'
 
+import NotificationCenter from '../../public/Com/NotificationCenter/NotificationCenter'
+
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -55,72 +57,85 @@ class Main extends Component {
                 this.airPressureThreshold = parseInt(result)
             }
         }.bind(this))
-
-        this.props.navigation.addListener(
-            'didFocus',
-            payload => {
-                this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
-            }
-        );
-        this.props.navigation.addListener(
-            'willBlur',
-            payload => {
-                this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
-            }
-        );
     }
-    componentDidMount() {
 
+    readVoltage(data) {
+        if (data.voltage) {
+            this.props.actions.readVoltage(data.voltage)
+        }
+        this.props.getLoading().dismiss()
+    }
+
+    readFCP(data) {
+        if (data.max && data.min) {
+            this.props.actions.readFCP(data.max, data.min)
+        }
+        this.props.getLoading().dismiss()
+    }
+
+    completeInflate() {
+        this.props.actions.completeInflate()
+        this.props.getLoading().dismiss()
+    }
+
+    completeFlate() {
+        this.props.actions.completeFlate()
+        this.props.getLoading().dismiss()
+    }
+
+    recvACK() {
+        //根据当前状态判断是什么操作的接受成功
+        if (this.props.device_data.isReadingFAT) {
+            this.props.actions.successReadRAT()
+            this.props.getLoading().dismiss()
+        } else if (this.props.device_data.isStartingManual) {
+            this.props.actions.successStartManual()
+            this.props.actions.startInflate(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+        } else if (this.props.device_data.isStopingManual) {
+            this.props.actions.successStopManual()
+            this.props.getLoading().dismiss()
+        } else if (this.props.device_data.isStartAdjustSUB) {
+            this.props.actions.successStartAdjustSUB()
+            this.props.actions.startAdjust(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+        } else if (this.props.device_data.isStartAdjust) {
+            this.props.actions.successStartAdjust()
+            // 写命令去开始校准
+            this.props.navigation.navigate('Adjust')
+            setTimeout((()=>{this.props.getLoading().dismiss()}).bind(this),100)//100ms后在结束loading
+        }
+    }
+
+    disconnectHandle(){
+        console.log('recive loseConnecting')
+        this.props.getLoading().show('重连中')
+    }
+
+    reconnectHandle(){
+        console.log('recive reconnect')
+        this.props.getLoading().dismiss()
+    }
+
+    componentDidMount() {
+        this.voltageListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.voltage, this.readVoltage.bind(this), '');
+        this.readFCPListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.readFCP, this.readFCP.bind(this), '');
+        this.completeInflateListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.completeInflate, this.completeInflate.bind(this), '');
+        this.completeFlateListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.completeFlate, this.completeFlate.bind(this), '');
+        this.recvACKListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.recvACK, this.recvACK.bind(this), '');
+        this.disconnectListener = NotificationCenter.createListener(NotificationCenter.name.search.loseConnecting, this.disconnectHandle.bind(this), '');
+        this.reconnectListener = NotificationCenter.createListener(NotificationCenter.name.search.reconnect, this.reconnectHandle.bind(this), '');
     }
     componentWillUnmount() {
-        this.handlerUpdate.remove();
+        NotificationCenter.removeListener(this.voltageListener);
+        NotificationCenter.removeListener(this.completeInflateListener);
+        NotificationCenter.removeListener(this.completeFlateListener);
+        NotificationCenter.removeListener(this.recvACKListener);
+        NotificationCenter.removeListener(this.readFCPListener);
+        NotificationCenter.removeListener(this.disconnectListener);
+        NotificationCenter.removeListener(this.reconnectListener);
     }
     componentDidUpdate () {
         if (!this.props.device_data.uuid) {//断开成功
             this.props.navigation.goBack()
-        }
-    }
-    handleUpdateValueForCharacteristic(data) {
-        console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
-        var datas = data.value
-        var dataStr = util.arrayBufferToBase64Str(datas)
-        console.log(dataStr)
-        if (this.props.device_data.uuid == data.peripheral) {
-            if (util.startWith(dataStr, "Batt")) {
-                var voltage = dataStr.substring(7,dataStr.length-2)
-                this.props.actions.readVoltage(voltage)
-                this.props.getLoading().dismiss()
-            } else if (util.startWith(dataStr, "Reached Side Line")) {//充气成功
-                this.props.actions.completeInflate()
-                this.props.actions.startFlate(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-            } else if (util.startWith(dataStr, "Reached Flat Line")) {//放气成功
-                this.props.actions.completeFlate()
-                this.props.actions.stopManual(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-            } else if (util.startWith(dataStr, "PUMP TH:")) {
-                var min = parseInt(dataStr.substring(8,10), 16)
-                var max = parseInt(dataStr.substring(12,14), 16)
-                this.props.actions.readFCP(max, min)
-                this.props.getLoading().dismiss()
-            } else if (util.startWith(dataStr, "Recv ACK")) {
-                if (this.props.device_data.isReadingFAT) {
-                    this.props.actions.successReadRAT()
-                    this.props.getLoading().dismiss()
-                } else if (this.props.device_data.isStartingManual) {
-                    this.props.actions.successStartManual()
-                    this.props.actions.startInflate(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-                } else if (this.props.device_data.isStopingManual) {
-                    this.props.actions.successStopManual()
-                    this.props.getLoading().dismiss()
-                } else if (this.props.device_data.isStartAdjustSUB) {
-                    this.props.actions.successStartAdjustSUB()
-                    this.props.actions.startAdjust(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-                } else if (this.props.device_data.isStartAdjust) {
-                    this.props.actions.successStartAdjust()
-                    // 写命令去开始校准
-                    this.props.navigation.navigate('Adjust')
-                    setTimeout((()=>{this.props.getLoading().dismiss()}).bind(this),100)//100ms后在结束loading
-                }
-            }
         }
     }
     manualStatusStr(data) {

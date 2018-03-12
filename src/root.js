@@ -8,8 +8,8 @@ import { Provider } from 'react-redux';
 
 import App from './containers/App';
 import configureStore from './store/configureStore';
-import BleManager from 'react-native-ble-manager';
 import * as StorageKeys from './constants/StorageKeys'
+import PillowManager from './manager/PillowManager'
 
 class Root extends Component {
     componentWillMount() {
@@ -23,11 +23,7 @@ class Root extends Component {
                 }
             }
         })
-        BleManager.start({showAlert: false})
-            .then(() => {
-                // Success code
-                console.log('Module initialized');
-            });
+        PillowManager.ShareInstance().setUp()
     }
     componentDidMount() {
         if (Platform.OS === 'android' && Platform.Version >= 23) {

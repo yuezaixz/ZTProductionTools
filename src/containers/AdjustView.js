@@ -6,7 +6,7 @@ import {
     View,
     Text,
     TouchableOpacity,
-    Dimensions, NativeEventEmitter, NativeModules
+    Dimensions
 } from 'react-native';
 import {
     Header,
@@ -16,29 +16,11 @@ import {
 import Actions from '../actions';
 import * as util from "../utils/InsoleUtils";
 import StatusBarLeftButton from '../components/common/StatusBarLeftButton'
+import Loading from '../components/common/WLoading'
 
 let {height, width} = Dimensions.get('window');
-const BleManagerModule = NativeModules.BleManager;
-const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
-const indexMap = {
-    '01':0,
-    '02':1,
-    '03':2,
-    '04':3,
-    '05':4,
-    '06':5,
-    '07':6,
-    '08':7,
-    '09':8,
-    '0A':9,
-    '0B':10,
-    '0C':11,
-    '0D':12,
-    '0E':13,
-    '0F':14,
-    '10':15,
-}
+import NotificationCenter from '../public/Com/NotificationCenter/NotificationCenter'
 
 class AdjustView extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -62,57 +44,52 @@ class AdjustView extends Component {
     }
     componentWillMount() {
         this.props.navigation.setParams({ backAction: this._backAction.bind(this) });
-        this.props.navigation.addListener(
-            'didFocus',
-            payload => {
-                this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
-            }
-        );
-        this.props.navigation.addListener(
-            'willBlur',
-            payload => {
-                this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic.bind(this) );
-            }
-        );
     }
-    componentDidMount() {
 
+    getLoading() {
+        return this.refs['loading'];
+    }
+
+    sensorAdjust(data) {
+        if (data.index) {
+            this.props.actions.successSensorAdjust(data.index, data.isSuccess)
+        }
+    }
+
+    recvACK() {
+        //根据当前状态判断是什么操作的接受成功
+        if (this.props.device_data.isStopAdjustSUB) {
+            this.props.actions.successStopAdjustSUB()
+            //返回主界面,断开连接
+            this.props.actions.deviceDisconnect(this.props.device_data.uuid)
+            this.props.actions.clearDeviceData()
+            //延迟点点
+            setTimeout(()=>{this.props.navigation.popToTop()},100)
+        } else if (this.props.device_data.isStopAdjust) {
+            this.props.actions.successStopAdjust()
+            this.props.actions.stopAdjustSUB(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+        }
+    }
+
+    disconnectHandle(){
+        this.getLoading().show('重连中')
+    }
+
+    reconnectHandle(){
+        this.getLoading().dismiss()
+    }
+
+    componentDidMount() {
+        this.sensorAdjustListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.sensorAdjust, this.sensorAdjust.bind(this), '');
+        this.recvACKListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.recvACK, this.recvACK.bind(this), '');
+        this.disconnectListener = NotificationCenter.createListener(NotificationCenter.name.search.loseConnecting, this.disconnectHandle.bind(this), '');
+        this.reconnectListener = NotificationCenter.createListener(NotificationCenter.name.search.reconnect, this.reconnectHandle.bind(this), '');
     }
     componentWillUnmount(){
-
-    }
-    handleUpdateValueForCharacteristic(data) {
-        console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
-        var datas = data.value
-        var dataStr = util.arrayBufferToBase64Str(datas)
-        console.log(dataStr)
-        if (this.props.device_data.uuid == data.peripheral) {
-            if (util.startWith(dataStr, "\\*5S")) {
-                var index = indexMap[dataStr.substring(3,5)]
-                var isSuccess = indexMap[dataStr.substring(6,7)] === '1'
-                this.props.actions.successSensorAdjust(index, isSuccess)
-                if (index == 15) {
-                    // 不能自动去结束，要等他手动操作
-                    // this.props.actions.stopAdjust(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-                } else {
-                    //不需要自动校准下一个
-                    // this.props.actions.sensorAdjust(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID,index+1)//校准下一个
-                }
-
-            } else if (util.startWith(dataStr, "Recv ACK")) {
-                if (this.props.device_data.isStopAdjustSUB) {
-                    this.props.actions.successStopAdjustSUB()
-                    //返回主界面,断开连接
-                    this.props.actions.deviceDisconnect(this.props.device_data.uuid)
-                    this.props.actions.clearDeviceData()
-                    //延迟点点
-                    setTimeout(()=>{this.props.navigation.popToTop()},100)
-                } else if (this.props.device_data.isStopAdjust) {
-                    this.props.actions.successStopAdjust()
-                    this.props.actions.stopAdjustSUB(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-                }
-            }
-        }
+        NotificationCenter.removeListener(this.sensorAdjustListener);
+        NotificationCenter.removeListener(this.recvACKListener);
+        NotificationCenter.removeListener(this.disconnectListener);
+        NotificationCenter.removeListener(this.reconnectListener);
     }
     render() {
         return (
@@ -120,6 +97,7 @@ class AdjustView extends Component {
                 {/*<Header {...this.props}/>*/}
                 <Main {...this.props}/>
                 <Footer {...this.props}/>
+                <Loading ref={'loading'} text={'重连中...'} />
             </View>
         );
     }
