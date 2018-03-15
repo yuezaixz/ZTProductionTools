@@ -45,6 +45,7 @@ export default class PillowManager{
     current_pillow = null
 
     isLoseConnecting = false;
+    log_list = []
 
     constructor() {
         if (!instance) {
@@ -94,6 +95,11 @@ export default class PillowManager{
         console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
         var datas = data.value
         var dataStr = util.arrayBufferToBase64Str(datas)
+        this.log_list.push(dataStr)
+        if (this.log_list.length > 9) {
+            this.log_list.shift()
+        }
+        NotificationCenter.post(NotificationCenter.name.deviceData.log_list, {log_list:this.log_list})
         console.log(dataStr)
         if (this.current_pillow.uuid == data.peripheral) {
             if (util.startWith(dataStr, "Batt")) {
@@ -296,6 +302,7 @@ export default class PillowManager{
     startDeviceConnect(device) {
         this.stopSearchDevice()//连接前停止搜索
         this.isLoseConnecting = false
+        this.log_list = []
         return new Promise((resolve, reject) => {
             BleManager.connect(device.uuid)
                 .then(() => {

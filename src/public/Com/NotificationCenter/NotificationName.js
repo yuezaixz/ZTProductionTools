@@ -9,6 +9,7 @@ module.exports = {
         reconnect:'com.podoon.ztproduct.reconnect'
     },
     deviceData: {
+        log_list: 'com.podoon.ztproduct.log_list',                //读取到电量
         voltage: 'com.podoon.ztproduct.voltage',                //读取到电量
         readFCP: 'com.podoon.ztproduct.readFCP',                //读取到电量
         completeInflate: 'com.podoon.ztproduct.completeInflate',               //充气成功

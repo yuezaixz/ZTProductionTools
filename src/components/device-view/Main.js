@@ -13,14 +13,14 @@ import * as util from "../../utils/InsoleUtils"
 import * as StorageKeys from '../../constants/StorageKeys'
 
 import NotificationCenter from '../../public/Com/NotificationCenter/NotificationCenter'
-
-
-const BleManagerModule = NativeModules.BleManager;
-const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+import PillowManager from '../../manager/PillowManager'
 
 let {height, width} = Dimensions.get('window');
 
 class Main extends Component {
+    state = {
+        logList:[]
+    }
     stdVoltage = 3.8
     airPressureThreshold = 10
 
@@ -64,6 +64,12 @@ class Main extends Component {
             this.props.actions.readVoltage(data.voltage)
         }
         this.props.getLoading().dismiss()
+    }
+
+    readLogList(data) {
+        if (data.log_list) {
+            this.setState({logList:data.log_list})
+        }
     }
 
     readFCP(data) {
@@ -116,6 +122,7 @@ class Main extends Component {
     }
 
     componentDidMount() {
+        this.voltageListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.log_list, this.readLogList.bind(this), '');
         this.voltageListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.voltage, this.readVoltage.bind(this), '');
         this.readFCPListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.readFCP, this.readFCP.bind(this), '');
         this.completeInflateListener = NotificationCenter.createListener(NotificationCenter.name.deviceData.completeInflate, this.completeInflate.bind(this), '');
@@ -150,6 +157,12 @@ class Main extends Component {
         } else if(data.hadInflateTest) {
             return "已测试"
         }
+    }
+    renderLogList(){
+        if(!this.state.logList){ return null}
+        return this.state.logList.map((item, idx) => {
+            return <Text key={"key"+idx} style={styles.log_text}>{""+(idx+1)+"."+item}</Text>;
+        });
     }
 
     render() {
@@ -209,22 +222,25 @@ class Main extends Component {
                         </TouchableHighlight>
                     </View>
                 </View>
-                <View style={styles.inout_flate_block}>
-                    <View style={styles.block_line} />
-                    <Text style={[styles.block_title,styles.block_title_middle]}>充放气功能测试</Text>
-                    <View style={styles.block_main} >
-                        <Text style={styles.block_main_text}>{this.manualStatusStr(this.props.device_data)}</Text>
-                        <TouchableHighlight
-                            activeOpacity={Theme.active.opacity}
-                            underlayColor='transparent'
-                            style={[styles.block_main_button,styles.block_main_button_right,{width:140}]}
-                            onPress={this.handleTestInflat}>
-                            <Text style={[styles.block_main_button_text]}>
-                                充放气测试
-                            </Text>
-                        </TouchableHighlight>
-                    </View>
+                <View style={styles.log_block} >
+                    {this.renderLogList()}
                 </View>
+                {/*<View style={styles.inout_flate_block}>*/}
+                    {/*<View style={styles.block_line} />*/}
+                    {/*<Text style={[styles.block_title,styles.block_title_middle]}>充放气功能测试</Text>*/}
+                    {/*<View style={styles.block_main} >*/}
+                        {/*<Text style={styles.block_main_text}>{this.manualStatusStr(this.props.device_data)}</Text>*/}
+                        {/*<TouchableHighlight*/}
+                            {/*activeOpacity={Theme.active.opacity}*/}
+                            {/*underlayColor='transparent'*/}
+                            {/*style={[styles.block_main_button,styles.block_main_button_right,{width:140}]}*/}
+                            {/*onPress={this.handleTestInflat}>*/}
+                            {/*<Text style={[styles.block_main_button_text]}>*/}
+                                {/*充放气测试*/}
+                            {/*</Text>*/}
+                        {/*</TouchableHighlight>*/}
+                    {/*</View>*/}
+                {/*</View>*/}
             </View>
         );
     }
@@ -245,6 +261,9 @@ const styles = StyleSheet.create({
     },
     inout_flate_block: {
         flex:2
+    },
+    log_block: {
+        flex:4
     },
     block_title: {
         flex:1,
@@ -279,6 +298,9 @@ const styles = StyleSheet.create({
     },
     block_main_text: {
         fontSize:17
+    },
+    log_text: {
+        fontSize:14
     },
     block_main_button: {
         backgroundColor:'#D8D8D8',
