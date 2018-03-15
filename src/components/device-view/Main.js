@@ -112,13 +112,13 @@ class Main extends Component {
     }
 
     disconnectHandle(){
-        console.log('recive loseConnecting')
-        this.props.getLoading().show('重连中')
+        // console.log('recive loseConnecting')
+        // this.props.getLoading().show('重连中')
     }
 
     reconnectHandle(){
-        console.log('recive reconnect')
-        this.props.getLoading().dismiss()
+        // console.log('recive reconnect')
+        // this.props.getLoading().dismiss()
     }
 
     componentDidMount() {

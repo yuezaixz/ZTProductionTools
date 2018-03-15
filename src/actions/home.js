@@ -3,6 +3,9 @@ import * as BleUUIDs from '../constants/BleUUIDs';
 import PillowManager from '../manager/PillowManager'
 
 export function startSearchDevice() {
+    if (PillowManager.ShareInstance().isSearching) {
+        return {type: types.START_SEARCH_DEVICE}
+    }
     return async (dispatch, getState) => {
         PillowManager.ShareInstance().startSearchDevice().then(() => {
             dispatch({type: types.START_SEARCH_DEVICE})

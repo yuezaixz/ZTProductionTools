@@ -55,16 +55,16 @@ export default class PillowManager{
     }
 
     reconnect() {
-        console.log('开始重连')
-        if (this.isLoseConnecting){
-            this.startDeviceConnect(this.current_pillow).then((device)=>{
-                this.isLoseConnecting = true
-                NotificationCenter.post(NotificationCenter.name.search.reconnect)
-            }).catch((error)=>{
-                console.log('重连失败')
-                setTimeout(this.reconnect.bind(this),3000)
-            })
-        }
+        // console.log('开始重连')
+        // if (this.isLoseConnecting){
+        //     this.startDeviceConnect(this.current_pillow).then((device)=>{
+        //         this.isLoseConnecting = true
+        //         NotificationCenter.post(NotificationCenter.name.search.reconnect)
+        //     }).catch((error)=>{
+        //         console.log('重连失败')
+        //         setTimeout(this.reconnect.bind(this),3000)
+        //     })
+        // }
     }
 
     setUp() {
@@ -236,6 +236,7 @@ export default class PillowManager{
             if (this.isSearching) {
                 reject(new Error("已经在搜索中"))
             } else {
+                this.isSearching = true
                 this.lastUpdateTime = new Date().getTime();
                 if (Platform.OS === 'android') {
                     BleManager.scan([BleUUIDs.SEARCH_ANDROID_SERVICE_UUID], 0, true).then((results) => {
@@ -293,6 +294,7 @@ export default class PillowManager{
 
     stopSearchDevice() {
         this.isSearching = false
+        this.device_list = []
         this.endTimer()
         BleManager.stopScan()
         NotificationCenter.post(NotificationCenter.name.search.stopSearch)
