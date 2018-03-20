@@ -115,7 +115,8 @@ export default class PillowManager{
                 NotificationCenter.post(NotificationCenter.name.deviceData.readFCP, {max,min})
             } else if (util.startWith(dataStr, "\\*5S")) {
                 var index = indexMap[dataStr.substring(3,5)]
-                var isSuccess = indexMap[dataStr.substring(6,7)] === '1'
+                var isSuccess = dataStr.substring(5,6) === '1'
+                console.log("sensorAdjust:"+index+","+isSuccess)
                 NotificationCenter.post(NotificationCenter.name.deviceData.sensorAdjust, {index,isSuccess})
 
             } else if (util.startWith(dataStr, "Recv ACK")) {

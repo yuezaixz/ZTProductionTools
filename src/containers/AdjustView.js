@@ -51,9 +51,7 @@ class AdjustView extends Component {
     }
 
     sensorAdjust(data) {
-        if (data.index) {
-            this.props.actions.successSensorAdjust(data.index, data.isSuccess)
-        }
+        this.props.actions.successSensorAdjust(data.index, data.isSuccess)
     }
 
     recvACK() {
