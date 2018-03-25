@@ -1,5 +1,4 @@
 import * as types from '../constants/ActionTypes';
-import BleManager from 'react-native-ble-manager';
 import PillowManager from '../manager/PillowManager'
 
 export function deviceDisconnect(uuid) {
@@ -21,7 +20,7 @@ export function deviceDisconnect(uuid) {
     return {type: types.DEVICE_DISCONNECT}
 }
 
-export function startReadVoltage(uuid, serviceUUID, writeUUID) {
+export function startReadVoltage() {
     return async (dispatch, getState) =>{
         PillowManager.ShareInstance().startReadVoltage()
             .then(()=>{
