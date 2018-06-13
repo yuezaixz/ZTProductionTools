@@ -33,9 +33,9 @@ class HomeView extends Component {
 
         return {
             title:"Deeper护颈枕",
-            headerLeft: (
-                <StatusBarLeftButton onPress={params.settingAction} textStyle={{color:"white"}} title="设置" ></StatusBarLeftButton>
-            ),
+            // headerLeft: (
+            //     <StatusBarLeftButton onPress={params.settingAction} textStyle={{color:"white"}} title="设置" ></StatusBarLeftButton>
+            // ),
         };
     };
     isFirst = true
@@ -151,12 +151,10 @@ class HomeView extends Component {
         // this.willFocusSubscription.remove();
         // this.didFocusSubscription.remove();
     }
-    render() {
-        return (
-            <ImageBackground source={require('../statics/images/bg.jpg')} style={styles.container}>
-                {/*<Header {...this.props}/>*/}
-                <Main {...this.props} lastDeviceId={"TODO"} isVisible={this.state.isVisible}/>
 
+    renderBleAlert = () => {
+        if (this.state.open) 
+            return (
                 <View style={{position:'absolute',width: width, height: height}}>
                     <View  style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <Modal
@@ -176,6 +174,17 @@ class HomeView extends Component {
                         </Modal>
                     </View>
                 </View>
+            )
+        return null
+    }
+
+    render() {
+        return (
+            <ImageBackground source={require('../statics/images/bg.jpg')} style={styles.container}>
+                {/*<Header {...this.props}/>*/}
+                <Main {...this.props} lastDeviceId={"TODO"} isVisible={this.state.isVisible}/>
+                {this.renderBleAlert()}
+                
             </ImageBackground>
         );
     }

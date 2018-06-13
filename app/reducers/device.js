@@ -1,7 +1,9 @@
 import * as types from '../constants/ActionTypes';
 
 const initialState = {
-    index: 0
+    index: 0,
+    processingStr: '搜索中',
+    isProcessing: true
 }
 
 export default function(state = initialState, action) {
