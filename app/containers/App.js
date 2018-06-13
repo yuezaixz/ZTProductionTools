@@ -20,13 +20,14 @@ const RootStack = StackNavigator(
         initialRouteName: 'Home',
         /* The header config from HomeScreen is now here */
         navigationOptions: {
-            // headerStyle: {
-            //     backgroundColor: '#f4511e',
-            // },
-            headerTintColor: '#000',
+            headerStyle: {
+                backgroundColor: '#368877',
+            },
+            headerTintColor: '#368877',
             headerTitleStyle: {
-                fontWeight: 'bold',
-                fontSize:17
+                fontWeight: 'normal',
+                fontSize:17,
+                color:'white'
             },
         },
     }

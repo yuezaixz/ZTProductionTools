@@ -8,7 +8,7 @@ import {
 import { Provider } from 'react-redux';
 
 import App from './containers/App';
-import configureStore from '../src/store/configureStore';
+import configureStore from './store/configureStore';
 import * as StorageKeys from '../src/constants/StorageKeys'
 import PillowManager from '../src/manager/PillowManager'
 

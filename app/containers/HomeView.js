@@ -5,6 +5,7 @@ import {
     StyleSheet,
     View,
     Text,
+    ImageBackground,
     TouchableOpacity,
     Platform,
     PermissionsAndroid,
@@ -32,9 +33,9 @@ class HomeView extends Component {
         const params = navigation.state.params || {};
 
         return {
-            title:"枕头固件测试",
+            title:"Deeper护颈枕",
             headerLeft: (
-                <StatusBarLeftButton onPress={params.settingAction} title="设置" ></StatusBarLeftButton>
+                <StatusBarLeftButton onPress={params.settingAction} textStyle={{color:"white"}} title="设置" ></StatusBarLeftButton>
             ),
         };
     };
@@ -153,7 +154,7 @@ class HomeView extends Component {
     }
     render() {
         return (
-            <View style={styles.container}>
+            <ImageBackground source={require('../statics/images/bg.jpg')} style={styles.container}>
                 {/*<Header {...this.props}/>*/}
                 <Main {...this.props} lastDeviceId={"TODO"} isVisible={this.state.isVisible}/>
                 <Footer {...this.props}/>
@@ -177,14 +178,14 @@ class HomeView extends Component {
                         </Modal>
                     </View>
                 </View>
-            </View>
+            </ImageBackground>
         );
     }
 }
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFF'
+        alignSelf: 'stretch',
     }
 });
 

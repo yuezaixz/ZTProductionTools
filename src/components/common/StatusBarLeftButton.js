@@ -10,7 +10,7 @@ export default class StatusBarLeftButton extends Component{
 
     render (){
         return (
-            <Button onPress={this.props.onPress} style={[{width:60},this.props.style]} textStyle={{fontSize:14,textAlign:'center'}} title={this.props.title || "返回"} />
+            <Button onPress={this.props.onPress} style={[{width:60},this.props.style]} textStyle={[{fontSize:14,textAlign:'center'},this.props.textStyle || {}]} title={this.props.title || "返回"} />
         );
     }
 }
