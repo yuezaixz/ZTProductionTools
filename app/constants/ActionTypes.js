@@ -1,0 +1,32 @@
+export const SWITCH_MAIN_TAB = 'SWITCH_MAIN_TAB';
+
+/****************搜索连接相关****************/
+//HOME ACTION TYPES
+export const START_SEARCH_DEVICE = 'START_SEARCH_DEVICE';
+export const STOP_SEARCH_DEVICE = 'STOP_SEARCH_DEVICE';
+export const UPDATE_DEVICE_LIST = 'UPDATE_DEVICE_LIST';
+export const START_DEVICE_CONNECT = 'START_DEVICE_CONNECT';
+export const SUCCESS_DEVICE_CONNECT = 'SUCCESS_DEVICE_CONNECT';
+export const FAIL_DEVICE_CONNECT = 'FAIL_DEVICE_CONNECT';
+
+//DEVICE ACTION TYPE
+export const DEVICE_DISCONNECT = 'DEVICE_DISCONNECT';
+export const SUCCESS_DEVICE_DISCONNECT = 'SUCCESS_DEVICE_DISCONNECT';
+export const FAIL_DEVICE_DISCONNECT = 'FAIL_DEVICE_DISCONNECT';
+
+export const CLEAR_DEVICE_DATA = 'CLEAR_DEVICE_DATA';
+
+export const ERROR = 'ERROR';
+
+/****************读取电压****************/
+export const START_READ_VOLTAGE = 'START_READ_VOLTAGE';
+export const READ_VOLTAGE = 'READ_VOLTAGE';
+
+/****************充放气测试****************/
+//进入手控模式
+export const START_MANUAL = 'START_MANUAL';
+export const SUCCESS_START_MANUAL = 'SUCCESS_START_MANUAL';
+
+//退出手控模式
+export const STOP_MANUAL = 'STOP_MANUAL';
+export const SUCCESS_STOP_MANUAL = 'SUCCESS_STOP_MANUAL';
