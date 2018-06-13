@@ -19,8 +19,7 @@ import BleManager from 'react-native-ble-manager';
 let {height, width} = Dimensions.get('window');
 
 import {
-    Main,
-    Footer,
+    Main
 } from '../components/home-view';
 import Actions from '../actions';
 import NotificationCenter from "../../src/public/Com/NotificationCenter/NotificationCenter";
@@ -157,7 +156,6 @@ class HomeView extends Component {
             <ImageBackground source={require('../statics/images/bg.jpg')} style={styles.container}>
                 {/*<Header {...this.props}/>*/}
                 <Main {...this.props} lastDeviceId={"TODO"} isVisible={this.state.isVisible}/>
-                <Footer {...this.props}/>
 
                 <View style={{position:'absolute',width: width, height: height}}>
                     <View  style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -191,7 +189,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        home_data: state.home
+        device_data: state.device
     };
 }
 
