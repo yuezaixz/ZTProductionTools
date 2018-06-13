@@ -1,5 +1,49 @@
+import * as BleUUIDs from '../../src/constants/BleUUIDs';
 import * as types from '../../src/constants/ActionTypes';
 import PillowManager from '../../src/manager/PillowManager'
+
+export function startSearchDevice() {
+    if (PillowManager.ShareInstance().isSearching) {
+        return {type: types.START_SEARCH_DEVICE}
+    }
+    return async (dispatch, getState) => {
+        PillowManager.ShareInstance().startSearchDevice().then(() => {
+            dispatch({type: types.START_SEARCH_DEVICE})
+        }).catch(error => {
+            console.log(error)
+            //重复开始，暂不处理了
+        })
+    }
+}
+
+export function updateDeviceList(list) {
+    return {type: types.UPDATE_DEVICE_LIST, devices: list}
+}
+
+export function stopSearchDevice() {
+    PillowManager.ShareInstance().stopSearchDevice()
+    return {type: types.STOP_SEARCH_DEVICE}
+}
+
+export function startDeviceConnect(device) {
+    return async (dispatch, getState) =>{
+        dispatch({type: types.STOP_SEARCH_DEVICE})
+        dispatch({type: types.START_DEVICE_CONNECT, uuid: device.uuid})
+        PillowManager.ShareInstance().startDeviceConnect(device)
+            .then((device)=>{
+                dispatch({
+                    type: types.SUCCESS_DEVICE_CONNECT,
+                    uuid: device.uuid,
+                    name: device.name,
+                    serviceUUID:BleUUIDs.ZT_SERVICE_UUID,
+                    noitfyUUID: device.noitfyUUID,
+                    writeUUID: device.writeUUID})
+            }).catch(error => {
+                dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: error})
+
+        })
+    }
+}
 
 export function deviceDisconnect(uuid) {
     return async (dispatch, getState) =>{
@@ -31,34 +75,6 @@ export function startReadVoltage() {
 
 export function readVoltage(voltage) {
     return {type: types.READ_VOLTAGE, voltage}
-}
-
-/****************板级功能测试****************/
-export function startReadFAT(uuid, serviceUUID, writeUUID) {
-    return async (dispatch, getState) =>{
-        PillowManager.ShareInstance().startReadFAT()
-            .then(()=>{
-                dispatch({type: types.START_READ_FAT})
-            })
-    }
-}
-
-export function successReadRAT() {
-    return {type: types.SUCCESS_READ_FAT}
-}
-
-/****************气压校准，读取电流ADC****************/
-export function startReadFCP(uuid, serviceUUID, writeUUID) {
-    return async (dispatch, getState) =>{
-        PillowManager.ShareInstance().startReadFCP()
-            .then(()=>{
-                dispatch({type: types.START_READ_FCP})
-            })
-    }
-}
-
-export function readFCP(max, min) {
-    return {type: types.READ_FCP, max, min}
 }
 
 /****************充放气测试****************/
