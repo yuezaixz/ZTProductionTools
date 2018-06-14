@@ -50,6 +50,9 @@ class HomeView extends Component {
     _logAction(){
         this.props.navigation.navigate('Log')
     }
+    _disconnectAction() {
+        console.log('_disconnectAction TODO')
+    }
     componentWillMount() {
         this.props.navigation.setParams({ adjustAction: this._adjustAction.bind(this) });
         this.props.navigation.setParams({ logAction: this._logAction.bind(this) });
@@ -182,7 +185,7 @@ class HomeView extends Component {
         return (
             <ImageBackground source={require('../statics/images/bg.jpg')} style={styles.container}>
                 {/*<Header {...this.props}/>*/}
-                <Main {...this.props} lastDeviceId={"TODO"} isVisible={this.state.isVisible}/>
+                <Main {...this.props} onDisconnect={this._disconnectAction} lastDeviceId={"TODO"} isVisible={this.state.isVisible}/>
                 {this.renderBleAlert()}
                 
             </ImageBackground>

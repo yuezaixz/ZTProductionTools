@@ -33,10 +33,16 @@ export default class StatusView extends Component{
 
     renderDisconnect = () => {
         return (
-            <View style={styles.disconnect} >
-                <Image style={styles.disconnectImage} source={require('../statics/images/main_disconnect_device.png')} ></Image>
-                <Text style={styles.disconnectText}>断开</Text>
-            </View>
+            <TouchableHighlight
+                    activeOpacity={Theme.active.opacity}
+                    underlayColor='transparent'
+                    style={styles.disconnectTouchContainer}
+                    onPress={this.actionDisconnect.bind(this)}>
+                <View style={styles.disconnect} >
+                    <Image style={styles.disconnectImage} source={require('../statics/images/main_disconnect_device.png')} ></Image>
+                    <Text style={styles.disconnectText}>断开</Text>
+                </View>
+            </TouchableHighlight>
         )
     }
 
@@ -77,6 +83,13 @@ export default class StatusView extends Component{
                     <Image style={styles.bottomViewRight} source={require('../statics/images/main_processed.png')} ></Image>
                 </View>
             )
+        }
+    }
+
+    actionDisconnect() {
+        console.log(this.props)
+        if (this.props.onDisconnect) {
+            this.props.onDisconnect()
         }
     }
 
@@ -128,15 +141,17 @@ const styles = StyleSheet.create({
         right:7,
         marginTop: 3
     },
-    disconnect: {
+    disconnectTouchContainer: {
         position: 'absolute',
         left: Theme.constant.topPadding,
         top: Theme.constant.leftRightPadding,
-        flexDirection:'row',
         borderWidth:1,
         borderColor: '#FFFFFF',
         padding : 4,
         borderRadius: 6
+    },
+    disconnect: {
+        flexDirection:'row',
     },
     disconnectText: {
         ...Theme.font.common

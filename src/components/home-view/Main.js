@@ -76,7 +76,7 @@ class Main extends Component {
             }
         }
     }
-    render() {z
+    render() {
         return (
             <View style={styles.container}>
                 {this.renderLoading()}
