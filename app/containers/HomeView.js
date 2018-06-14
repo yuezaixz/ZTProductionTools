@@ -23,6 +23,7 @@ import {
 } from '../components/home-view';
 import Actions from '../actions';
 import NotificationCenter from "../../src/public/Com/NotificationCenter/NotificationCenter";
+import {Theme} from '../styles';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -232,6 +233,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignSelf: 'stretch',
+        backgroundColor: Theme.color.bgColor
     }
 });
 

@@ -31,9 +31,9 @@ class Main extends Component {
 
     renderBody = () => {
         const { device_data } = this.props;
-        // if (device_data.isSearching) {
-        //     return this.renderList()
-        // } else {
+        if (device_data.isSearching) {
+            return this.renderList()
+        } else {
             return (
                 <View style={styles.device} >
                     <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]} >
@@ -95,7 +95,7 @@ class Main extends Component {
 
                 </View>
             )
-        // }
+        }
     }
 
     renderDevice = () => {

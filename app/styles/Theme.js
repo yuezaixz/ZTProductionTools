@@ -6,7 +6,8 @@ const color = {
     green: '#00551e',
     brown: '#693504',
     red: '#db2828',
-    separatorColor: '#3E9583'
+    separatorColor: '#3E9583',
+    bgColor:'#368877'
 }
 
 const font = {

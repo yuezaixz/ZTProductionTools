@@ -3,6 +3,7 @@ import {StackNavigator} from 'react-navigation'
 import HomeView from './HomeView';
 import LogView from './LogView';
 import AdjustView from './AdjustView';
+import {Theme} from '../styles';
 
 const RootStack = StackNavigator(
     {
@@ -21,9 +22,9 @@ const RootStack = StackNavigator(
         /* The header config from HomeScreen is now here */
         navigationOptions: {
             headerStyle: {
-                backgroundColor: '#368877',
+                backgroundColor: Theme.color.bgColor,
             },
-            headerTintColor: '#368877',
+            headerTintColor: Theme.color.bgColor,
             headerTitleStyle: {
                 fontWeight: 'normal',
                 fontSize:17,
