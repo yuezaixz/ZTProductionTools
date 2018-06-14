@@ -45,10 +45,16 @@ class HomeView extends Component {
         this.state = {isVisible: true}
     }
     _adjustAction(){
-        this.props.navigation.navigate('Adjust')
+        // this.props.navigation.navigate('Adjust')
     }
     _logAction(){
-        this.props.navigation.navigate('Log')
+        // this.props.navigation.navigate('Log')
+    }
+    _rebootAction(){
+        
+    }
+    _clearDataAction(){
+        
     }
     _disconnectAction() {
         console.log('_disconnectAction TODO')
@@ -69,6 +75,8 @@ class HomeView extends Component {
     componentWillMount() {
         this.props.navigation.setParams({ adjustAction: this._adjustAction.bind(this) });
         this.props.navigation.setParams({ logAction: this._logAction.bind(this) });
+        this.props.navigation.setParams({ rebootAction: this._rebootAction.bind(this) });
+        this.props.navigation.setParams({ clearDataAction: this._clearDataAction.bind(this) });
 
         this.props.navigation.addListener(
             'didFocus',

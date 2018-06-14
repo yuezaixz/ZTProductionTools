@@ -3,10 +3,14 @@ import React, {Component} from 'react';
 import {
     StyleSheet,
     View,
-    ScrollView
+    ScrollView,
+    Image,
+    TouchableHighlight,
+    Text
 } from 'react-native';
 import StatusView from '../../common/StatusView';
 import DeviceListItem from '../../base/ListItem/DeviceListItem';
+import {Theme, BasicStyle} from '../../styles';
 
 class Main extends Component {
 
@@ -27,15 +31,71 @@ class Main extends Component {
 
     renderBody = () => {
         const { device_data } = this.props;
-        if (device_data.isSearching) {
-            return this.renderList()
-        } else {
+        // if (device_data.isSearching) {
+        //     return this.renderList()
+        // } else {
             return (
-                <View>
-                
+                <View style={styles.device} >
+                    <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]} >
+                        <Text style={styles.deviceItemTitle}>仰卧时长</Text>
+                        <Text style={styles.deviceItemContent}>3小时23分</Text>
+                    </View>
+                    <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
+                        <Text style={styles.deviceItemTitle}>侧卧时长</Text>
+                        <Text style={styles.deviceItemContent}>3小时23分</Text>
+                    </View>
+                    <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
+                        <Text style={styles.deviceItemTitle}>翻身次数</Text>
+                        <Text style={styles.deviceItemContent}>13次</Text>
+                    </View>
+                    <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
+                        <Text style={styles.deviceItemTitle}>睡眠习惯</Text>
+                        <Text style={styles.deviceItemContent}>侧睡</Text>
+                    </View>
+                    <TouchableHighlight 
+                        activeOpacity={Theme.active.opacity}
+                        underlayColor='transparent'
+                        onPress={this.adjustAction}
+                        style={[styles.deviceItem, BasicStyle.flexAllCenter]}>
+                        <View style={[BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
+                            <Text style={styles.deviceItemTitle}>调整侧卧高度</Text>
+                            <Image style={styles.deviceItemArrow} source={require('../../statics/images/arrow_right.png')} ></Image>
+                        </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight 
+                        activeOpacity={Theme.active.opacity}
+                        underlayColor='transparent'
+                        onPress={this.props.rebootAction}
+                        style={[styles.deviceItem, BasicStyle.flexAllCenter]}>
+                        <View style={[BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
+                            <Text style={styles.deviceItemTitle}>重启枕头</Text>
+                            <Image style={styles.deviceItemArrow} source={require('../../statics/images/arrow_right.png')} ></Image>
+                        </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight 
+                        activeOpacity={Theme.active.opacity}
+                        underlayColor='transparent'
+                        onPress={this.clearDataAction}
+                        style={[styles.deviceItem, BasicStyle.flexAllCenter]}>
+                        <View style={[BasicStyle.rowFlex, BasicStyle.flexAllCenter]} >
+                            <Text style={styles.deviceItemTitle}>数据清零</Text>
+                            <Image style={styles.deviceItemArrow} source={require('../../statics/images/arrow_right.png')} ></Image>
+                        </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight 
+                        activeOpacity={Theme.active.opacity}
+                        underlayColor='transparent'
+                        onPress={this.logAction}
+                        style={[styles.deviceItem, BasicStyle.flexAllCenter]}>
+                        <View style={[BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
+                            <Text style={styles.deviceItemTitle}>日志(协助研发)</Text>
+                            <Image style={styles.deviceItemArrow} source={require('../../statics/images/arrow_right.png')} ></Image>
+                        </View>
+                    </TouchableHighlight>
+
                 </View>
             )
-        }
+        // }
     }
 
     renderDevice = () => {
@@ -74,6 +134,34 @@ const styles = StyleSheet.create({
         flex: 1
     },
     body: {
+    },
+    deviceItem: {
+        height: 60,
+        marginLeft: 5,
+        marginRight: 5,
+        paddingTop: 5,
+        paddingBottom: 5,
+        borderBottomWidth: 1,
+        borderBottomColor: Theme.color.separatorColor,
+    },
+    deviceItemTitle: {
+        flex: 3,
+        paddingLeft: Theme.constant.leftRightPadding,
+        textAlign: 'left',
+        ...Theme.font.common,
+    },
+    deviceItemContent: {
+        paddingRight: Theme.constant.leftRightPadding,
+        flex: 1,
+        textAlign: 'right',
+        ...Theme.font.common
+
+    },
+    deviceItemArrow: {
+        marginRight: Theme.constant.leftRightPadding,
+        width: 14,
+        height: 30,
+        resizeMode: 'stretch',
     }
 });
 

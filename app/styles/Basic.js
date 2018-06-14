@@ -6,6 +6,13 @@ const Basic = StyleSheet.create({
     },
     down: {
         transform: [{rotateX:'180deg'}]
+    },
+    rowFlex: {
+        flexDirection: 'row'
+    },
+    flexAllCenter: {
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 });
 export default Basic;
