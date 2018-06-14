@@ -6,23 +6,23 @@ import {
     ScrollView
 } from 'react-native';
 import StatusView from '../../common/StatusView';
+import DeviceListItem from '../../base/ListItem/DeviceListItem';
 
 class Main extends Component {
 
-
     renderList  = () =>{
-        return null
-        // const { device_data } = this.props;
-        // if(!device_data || !device_data.device_list){ return null}
-        // return device_data.device_list.map((item, idx) => {
-        //     return <ListItem {...this.props}
-        //                      name={item.name}
-        //                      uuid={item.uuid}
-        //                      key={item.uuid}
-        //                      rssi={item.rssi}
-        //                      data={item}
-        //                      isLast={idx==device_data.device_list.length-1}/>;
-        // });
+        const { device_data } = this.props;
+        if(!device_data || !device_data.device_list){ return null}
+
+        return device_data.device_list.map((item, idx) => {
+            return <DeviceListItem {...this.props}
+                             name={item.name}
+                             uuid={item.uuid}
+                             key={item.uuid+idx}
+                             rssi={item.rssi}
+                             data={item}
+                             isLast={idx==device_data.device_list.length-1}/>;
+        });
     }
 
     renderBody = () => {
@@ -59,9 +59,8 @@ class Main extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <StatusView {...this.props} >
+                <StatusView {...this.props}></StatusView>
 
-                </StatusView>
                 <ScrollView style={styles.body}>
                     {this.renderBody()}
                 </ScrollView>

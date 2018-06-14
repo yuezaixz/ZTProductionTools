@@ -1,4 +1,7 @@
 //colors
+import { Dimensions } from 'react-native';
+let winSize = Dimensions.get('window');
+
 const color = {
     green: '#00551e',
     brown: '#693504',
@@ -8,7 +11,7 @@ const color = {
 
 const font = {
     common: {
-        fontSize: 16,
+        fontSize: 32/winSize.scale,
         color: '#FFFFFF',
     }
 }

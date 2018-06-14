@@ -1,6 +1,7 @@
 import * as types from '../constants/ActionTypes';
 
 const initialState = {
+    debug: true,
     index: 0,
     processingStr: '搜索中',
     isProcessing: true

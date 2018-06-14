@@ -53,6 +53,19 @@ class HomeView extends Component {
     _disconnectAction() {
         console.log('_disconnectAction TODO')
     }
+    _connectAction(deviceId) {
+        // 防止重复点击，停止搜索
+        // if (this.props.device_data.isConnecting) {
+        //     //todo 提示连接中，请稍等
+        //     return;
+        // }
+        // if (this.props.device_data.uuid == this.props.data.uuid) {
+        //     return;
+        // }
+
+
+        console.log('_connectAction', deviceId)
+    }
     componentWillMount() {
         this.props.navigation.setParams({ adjustAction: this._adjustAction.bind(this) });
         this.props.navigation.setParams({ logAction: this._logAction.bind(this) });
@@ -84,7 +97,16 @@ class HomeView extends Component {
         }
     }
 
+    loadTestData() {
+        if (!this.props.device_data.debug) {
+            return
+        }
+        
+
+    }
+
     componentDidMount() {
+        this.loadTestData()
         bleManagerEmitter.addListener(
             'BleManagerDidUpdateState',
             (args) => {
@@ -185,7 +207,12 @@ class HomeView extends Component {
         return (
             <ImageBackground source={require('../statics/images/bg.jpg')} style={styles.container}>
                 {/*<Header {...this.props}/>*/}
-                <Main {...this.props} onDisconnect={this._disconnectAction} lastDeviceId={"TODO"} isVisible={this.state.isVisible}/>
+                <Main {...this.props} 
+                    onDisconnect={this._disconnectAction} 
+                    onConnect={this._connectAction}
+                    lastDeviceId={"TODO"} 
+                    isVisible={this.state.isVisible}
+                />
                 {this.renderBleAlert()}
                 
             </ImageBackground>

@@ -51,7 +51,23 @@ export default class PillowManager{
         if (!instance) {
             instance = this;
         }
+        // this.initTestData()
         return instance;
+    }
+
+    initTestData() {
+        setTimeout(() => {
+            this.device_list = [
+                {name:'测试',uuid:'DF-FDAF-FSDF-FASD-FSDF-VD-EF', rssi:-34},
+                {name:'测试',uuid:'DF-FDAF-FSDF-FASD-FSDF-VD-EF', rssi:-34},
+                {name:'测试',uuid:'DF-FDAF-FSDF-FASD-FSDF-VD-EF', rssi:-34},
+                {name:'测试',uuid:'DF-FDAF-FSDF-FASD-FSDF-VD-EF', rssi:-34},
+                {name:'测试',uuid:'DF-FDAF-FSDF-FASD-FSDF-VD-EF', rssi:-34},
+                {name:'测试',uuid:'DF-FDAF-FSDF-FASD-FSDF-VD-EF', rssi:-34},
+                {name:'测试',uuid:'DF-FDAF-FSDF-FASD-FSDF-VD-EF', rssi:-34},
+                {name:'测试',uuid:'DF-FDAF-FSDF-FASD-FSDF-VD-EF', rssi:-34}
+            ]
+        }, 2000);
     }
 
     reconnect() {
@@ -278,7 +294,12 @@ export default class PillowManager{
                                         }
                                     }
                                     if (!isExit) {
-                                        var device = {name:peripheral.name,uuid:peripheral.id, rssi:peripheral.rssi}
+                                        var device = {
+                                            name:peripheral.name,
+                                            localName:'Deeper护颈枕' + peripheral.id.substring(peripheral.id.length - 5, peripheral.id.length),
+                                            uuid:peripheral.id, 
+                                            rssi:peripheral.rssi
+                                        }
                                         new_list.push(device)
                                     }
                                 }
