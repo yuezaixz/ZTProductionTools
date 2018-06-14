@@ -45,16 +45,19 @@ class HomeView extends Component {
         this.state = {isVisible: true}
     }
     _adjustAction(){
+        console.log('_adjustAction');
+        
         // this.props.navigation.navigate('Adjust')
     }
     _logAction(){
+        console.log('_logAction');
         // this.props.navigation.navigate('Log')
     }
     _rebootAction(){
-        
+        console.log('_rebootAction');
     }
     _clearDataAction(){
-        
+        console.log('_clearDataAction');
     }
     _disconnectAction() {
         console.log('_disconnectAction TODO')
@@ -73,11 +76,6 @@ class HomeView extends Component {
         console.log('_connectAction', deviceId)
     }
     componentWillMount() {
-        this.props.navigation.setParams({ adjustAction: this._adjustAction.bind(this) });
-        this.props.navigation.setParams({ logAction: this._logAction.bind(this) });
-        this.props.navigation.setParams({ rebootAction: this._rebootAction.bind(this) });
-        this.props.navigation.setParams({ clearDataAction: this._clearDataAction.bind(this) });
-
         this.props.navigation.addListener(
             'didFocus',
             payload => {
@@ -217,12 +215,15 @@ class HomeView extends Component {
                 {/*<Header {...this.props}/>*/}
                 <Main {...this.props} 
                     onDisconnect={this._disconnectAction} 
-                    onConnect={this._connectAction}
+                    onConnect={this._connectAction} 
+                    adjustAction={this._adjustAction.bind(this)} 
+                    logAction={this._logAction.bind(this)} 
+                    rebootAction={this._rebootAction.bind(this).bind(this)} 
+                    clearDataAction={this._clearDataAction}
                     lastDeviceId={"TODO"} 
                     isVisible={this.state.isVisible}
                 />
                 {this.renderBleAlert()}
-                
             </ImageBackground>
         );
     }

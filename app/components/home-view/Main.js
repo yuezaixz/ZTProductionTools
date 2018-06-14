@@ -55,7 +55,7 @@ class Main extends Component {
                     <TouchableHighlight 
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        onPress={this.adjustAction}
+                        onPress={this.props.adjustAction}
                         style={[styles.deviceItem, BasicStyle.flexAllCenter]}>
                         <View style={[BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
                             <Text style={styles.deviceItemTitle}>调整侧卧高度</Text>
@@ -75,7 +75,7 @@ class Main extends Component {
                     <TouchableHighlight 
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        onPress={this.clearDataAction}
+                        onPress={this.props.clearDataAction}
                         style={[styles.deviceItem, BasicStyle.flexAllCenter]}>
                         <View style={[BasicStyle.rowFlex, BasicStyle.flexAllCenter]} >
                             <Text style={styles.deviceItemTitle}>数据清零</Text>
@@ -85,7 +85,7 @@ class Main extends Component {
                     <TouchableHighlight 
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        onPress={this.logAction}
+                        onPress={this.props.logAction}
                         style={[styles.deviceItem, BasicStyle.flexAllCenter]}>
                         <View style={[BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
                             <Text style={styles.deviceItemTitle}>日志(协助研发)</Text>
