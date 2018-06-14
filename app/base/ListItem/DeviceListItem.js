@@ -11,21 +11,20 @@ import {Theme, BasicStyle} from '../../styles';
 class DeviceListItem extends Component {
     handleConnect = ()=>{
         if (this.props.onConnect) {
-            this.props.onConnect(this.props.data.uuid)
+            this.props.onConnect(this.props.data)
         }
     }
     render() {
         return (
-            <View style={[styles.container, {borderBottomWidth: this.props.isLast?0:1}]}>
-                <Text style={styles.name}>{this.props.data.localName || this.props.data.name}📡  {this.props.data.rssi}</Text>
-                <TouchableHighlight
-                    activeOpacity={Theme.active.opacity}
-                    underlayColor='transparent'
-                    style={styles.body}
-                    onPress={this.handleConnect}>
-                    <Text style={styles.timer}>点击连接</Text>
-                </TouchableHighlight>
-            </View>
+            <TouchableHighlight
+                activeOpacity={Theme.active.opacity}
+                underlayColor='transparent'
+                onPress={this.handleConnect}>
+                <View style={[styles.container, {borderBottomWidth: this.props.isLast?0:1}]}>
+                    <Text style={styles.name}>{this.props.data.localName || this.props.data.name}📡  {this.props.data.rssi+130}</Text>
+                    <Text style={[styles.body, styles.timer]}>点击连接</Text>
+                </View>
+            </TouchableHighlight>
         );
     }
 }

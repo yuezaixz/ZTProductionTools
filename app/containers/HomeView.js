@@ -13,7 +13,6 @@ import {
     AsyncStorage,
     NativeModules, Dimensions
 } from 'react-native';
-import StatusBarLeftButton from '../../src/components/common/StatusBarLeftButton'
 import Modal from 'react-native-simple-modal';
 import BleManager from 'react-native-ble-manager';
 let {height, width} = Dimensions.get('window');
@@ -24,6 +23,7 @@ import {
 import Actions from '../actions';
 import NotificationCenter from "../../src/public/Com/NotificationCenter/NotificationCenter";
 import {Theme} from '../styles';
+import PillowManager from '../../src/manager/PillowManager';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -61,20 +61,23 @@ class HomeView extends Component {
         console.log('_clearDataAction');
     }
     _disconnectAction() {
-        console.log('_disconnectAction TODO')
+        if (this.props.device_data.uuid) {
+            this.props.actions.deviceDisconnect(this.props.device_data.uuid)
+        }
+        this.props.actions.startSearchDevice()
     }
-    _connectAction(deviceId) {
+    _connectAction(device) {
         // 防止重复点击，停止搜索
-        // if (this.props.device_data.isConnecting) {
-        //     //todo 提示连接中，请稍等
-        //     return;
-        // }
-        // if (this.props.device_data.uuid == this.props.data.uuid) {
-        //     return;
-        // }
-
-
-        console.log('_connectAction', deviceId)
+        if (this.props.device_data.isConnecting) {
+            //todo 提示连接中，请稍等
+            return;
+        }
+        if (this.props.device_data.uuid == device.uuid) {
+            return;
+        }
+        //TODO 提示开始连接
+        this.props.actions.stopSearchDevice()
+        this.props.actions.startDeviceConnect(device)
     }
     componentWillMount() {
         this.props.navigation.addListener(
@@ -215,8 +218,8 @@ class HomeView extends Component {
             <ImageBackground source={require('../statics/images/bg.jpg')} style={styles.container}>
                 {/*<Header {...this.props}/>*/}
                 <Main {...this.props} 
-                    onDisconnect={this._disconnectAction} 
-                    onConnect={this._connectAction} 
+                    onDisconnect={this._disconnectAction.bind(this)} 
+                    onConnect={this._connectAction.bind(this)} 
                     adjustAction={this._adjustAction.bind(this)} 
                     logAction={this._logAction.bind(this)} 
                     rebootAction={this._rebootAction.bind(this).bind(this)} 

@@ -284,6 +284,9 @@ export default class PillowManager{
                             if (peripheralsArray ){
                                 for (var i = 0; i < peripheralsArray.length; i++) {
                                     var peripheral = peripheralsArray[i]
+                                    if (peripheral.rssi === 127) {
+                                        continue
+                                    }
                                     var isExit = false;
                                     for (var j = 0; j < current_list.length; j++) {
                                         var device = current_list[j]
