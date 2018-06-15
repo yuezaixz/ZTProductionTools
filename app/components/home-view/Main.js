@@ -38,19 +38,19 @@ class Main extends Component {
                 <View style={styles.device} >
                     <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]} >
                         <Text style={styles.deviceItemTitle}>仰卧时长</Text>
-                        <Text style={styles.deviceItemContent}>3小时23分</Text>
+                        <Text style={styles.deviceItemContent}>{device_data.flatTime}</Text>
                     </View>
                     <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
                         <Text style={styles.deviceItemTitle}>侧卧时长</Text>
-                        <Text style={styles.deviceItemContent}>3小时23分</Text>
+                        <Text style={styles.deviceItemContent}>{device_data.slideTime}</Text>
                     </View>
                     <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
                         <Text style={styles.deviceItemTitle}>翻身次数</Text>
-                        <Text style={styles.deviceItemContent}>13次</Text>
+                        <Text style={styles.deviceItemContent}>{device_data.rollCount+'次'}</Text>
                     </View>
                     <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
                         <Text style={styles.deviceItemTitle}>睡眠习惯</Text>
-                        <Text style={styles.deviceItemContent}>侧睡</Text>
+                        <Text style={styles.deviceItemContent}>{device_data.sleepPose}</Text>
                     </View>
                     <TouchableHighlight 
                         activeOpacity={Theme.active.opacity}

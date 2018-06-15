@@ -99,6 +99,71 @@ class HomeView extends Component {
         );
 
         this.updateListListener = NotificationCenter.createListener(NotificationCenter.name.search.updateList, this.updateDeviceList.bind(this), '');
+        this.voltageListener = NotificationCenter
+                                .createListener(
+                                    NotificationCenter.name.deviceData.voltage, 
+                                    this.readVoltage.bind(this), 
+                                    ''
+                                );
+        this.versionListener = NotificationCenter
+                                .createListener(
+                                    NotificationCenter.name.deviceData.version, 
+                                    this.readVersion.bind(this), 
+                                    ''
+                                );
+
+        this.voltageListener = NotificationCenter
+                                .createListener(
+                                    NotificationCenter.name.deviceData.voltage, 
+                                    this.readVoltage.bind(this), 
+                                    ''
+                                );
+
+        this.macAddressListener = NotificationCenter
+                                .createListener(
+                                    NotificationCenter.name.deviceData.macAddress, 
+                                    this.readMacAddress.bind(this), 
+                                    ''
+                                );
+
+        this.sleepDataListener = NotificationCenter
+                                .createListener(
+                                    NotificationCenter.name.deviceData.sleepData, 
+                                    this.readSleepData.bind(this), 
+                                    ''
+                                );
+
+        this.sleepStatusListener = NotificationCenter
+                                .createListener(
+                                    NotificationCenter.name.deviceData.sleepStatus, 
+                                    this.readSleepStatus.bind(this), 
+                                    ''
+                                );
+    }
+
+    readVoltage(data) {
+        console.log(data)
+        this.props.actions.readVoltage(data)
+    }
+
+    readVersion(data) {
+        console.log(data)
+        this.props.actions.readVersion(data)
+    }
+
+    readMacAddress(data) {
+        console.log(data.macAddress)
+        this.props.actions.readMacAddress(data.macAddress)
+    }
+
+    readSleepData(data) {
+        console.log(data)
+        this.props.actions.readSleepData(data)
+    }
+
+    readSleepStatus(data) {
+        console.log(data.status)
+        this.props.actions.readSleepStatus(data.status)
     }
 
     updateDeviceList(data) {

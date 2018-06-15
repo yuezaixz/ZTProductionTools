@@ -112,15 +112,62 @@ export default class PillowManager{
         var datas = data.value
         var dataStr = util.arrayBufferToBase64Str(datas)
         this.log_list.push(dataStr)
-        if (this.log_list.length > 9) {
+        if (this.log_list.length > 200) {
             this.log_list.shift()
         }
         NotificationCenter.post(NotificationCenter.name.deviceData.log_list, {log_list:this.log_list})
         console.log(dataStr)
         if (this.current_pillow.uuid == data.peripheral) {
-            if (util.startWith(dataStr, "Batt")) {
-                var voltage = dataStr.substring(7, dataStr.length - 2)
-                NotificationCenter.post(NotificationCenter.name.deviceData.voltage, {voltage})
+            if (util.startWith(dataStr, "BattV")) {
+                if (dataStr.substring(6, 7) != ":") {//防止旧数据
+                    return
+                }
+            
+                var responseStr1 = dataStr.substring(7, dataStr.length - 2)
+                console.log('电量:' + responseStr1 + 'mV')
+                let voltage = parseInt(responseStr1)
+            
+                var responseStr2 = dataStr.substring(5, 6)
+                console.log('用电模式:' + responseStr2)
+            
+                var percent = voltagePercent(parseFloat(responseStr1) / 1000, parseInt(responseStr2))
+
+                NotificationCenter.post(NotificationCenter.name.deviceData.voltage, {voltage, percent})
+            } else if (util.startWith(dataStr, 'P:') && dataStr.indexOf('A:') === -1) {
+                var responseStr1 = dataStr.substring(2, dataStr.length)
+                var splitted = responseStr1.split(",");
+                var data = {
+                    rollCount: parseInt(splitted[0]),
+                    flatTime: timeStr(parseInt(splitted[1])) || "暂无统计",
+                    slideTime: timeStr(parseInt(splitted[2])) || "暂无统计",
+                    slidePercent: parseInt(splitted[3]),
+                    sleepPose: parseInt(splitted[1]) >= parseInt(splitted[2])?'侧睡':'仰睡',
+                }
+                NotificationCenter.post(NotificationCenter.name.deviceData.sleepData, data)
+
+            } else if (util.startWith(dataStr, 'MC:')) {
+                var responseStr1 = dataStr.substring(3, dataStr.length)
+                NotificationCenter.post(NotificationCenter.name.deviceData.macAddress, {macAddress:responseStr1})
+            } else if (util.startWith(dataStr, 'FW Ver')) {
+                var responseStr1 = dataStr.substring(9, dataStr.length)
+                var splitted = responseStr1.split(".");
+                let majorVersion = parseInt(splitted[0])
+                let minorVersion = parseInt(splitted[1])
+                let reVersion = parseInt(splitted[2])
+                var data = {
+                    majorVersion, minorVersion, reVersion, version: responseStr1
+                }
+                NotificationCenter.post(NotificationCenter.name.deviceData.version, data)
+            } else if (~dataStr.indexOf('$SP')) {
+                let status = 0
+                var responseStr1 = dataStr.substring(4, 6)
+                var responseStr2 = dataStr.substring(9, 11)
+                if (responseStr2 === '0') {
+                    status = parseInt(responseStr1)
+                } else {
+                    status = 2 + parseInt(responseStr2)
+                }
+                NotificationCenter.post(NotificationCenter.name.deviceData.sleepStatus, {status})
             } else if (util.startWith(dataStr, "Reached Side Line")) {//充气成功
                 NotificationCenter.post(NotificationCenter.name.deviceData.completeInflate)
             } else if (util.startWith(dataStr, "Reached Flat Line")) {//放气成功
@@ -171,6 +218,31 @@ export default class PillowManager{
         return this.writeData(data)
     }
 
+    startReadVersion() {
+        const data = stringToBytes('GVN');
+        return this.writeData(data)
+    }
+
+    startReadSleepData() {
+        const data = stringToBytes('GLS');
+        return this.writeData(data)
+    }
+
+    startReadMacaddress() {
+        const data = stringToBytes('GMAC');
+        return this.writeData(data)
+    }
+
+    startDfu() {
+        const data = stringToBytes('dfu');
+        return this.writeData(data)
+    }
+
+    startClearSleepData() {
+        const data = stringToBytes('GLS');
+        return this.writeData(data)
+    }
+
     startReadFAT() {
         const data = stringToBytes('FAT');
         return this.writeData(data)
@@ -188,6 +260,26 @@ export default class PillowManager{
 
     stopManual() {
         const data = stringToBytes('HCM0');
+        return this.writeData(data)
+    }
+
+    startRising() {
+        const data = stringToBytes('HIM1');
+        return this.writeData(data)
+    }
+
+    startFalling() {
+        const data = stringToBytes('HDM1');
+        return this.writeData(data)
+    }
+
+    startPausing() {
+        const data = stringToBytes('HAM0');
+        return this.writeData(data)
+    }
+
+    startSaveHeight() {
+        const data = stringToBytes('HCD');
         return this.writeData(data)
     }
 
@@ -355,6 +447,8 @@ export default class PillowManager{
                                         this.current_pillow = {...device, serviceUUID:BleUUIDs.ZT_SERVICE_UUID,
                                             noitfyUUID: notifyCharacteristic, writeUUID: writeCharacteristic}
                                         resolve(this.current_pillow)
+
+                                        NotificationCenter.post(NotificationCenter.name.search.connected, {currentPillow:this.current_pillow})
                                     })
                                     .catch((error) => {
                                         reject(new Error("startNotification失败"+error))

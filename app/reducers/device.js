@@ -57,7 +57,16 @@ export default function(state = initialState, action) {
         case types.START_READ_VOLTAGE:
             return {...state, isReadingVoltage: true};
         case types.READ_VOLTAGE:
-            return {...state, isReadingVoltage: false, voltage: action.voltage};
+            return {...state, isReadingVoltage: false, ...action.data};
+        case types.READ_VERSION:
+            return {...state, ...action.data};
+        case types.READ_MACADDRESS:
+            return {...state, madAddress: action.macAddress};
+        case types.READ_SLEEPDATA:
+            return {...state, ...action.data};
+        case types.READ_SLEEPSTATUS:
+            return {...state, sleepStatus: action.status};
+
         /****************充放气测试****************/
         case types.START_MANUAL:
             return {...state, isStartingManual: true};

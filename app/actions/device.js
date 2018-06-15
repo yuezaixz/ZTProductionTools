@@ -73,8 +73,24 @@ export function startReadVoltage() {
     }
 }
 
-export function readVoltage(voltage) {
-    return {type: types.READ_VOLTAGE, voltage}
+export function readVoltage(data) {
+    return {type: types.READ_VOLTAGE, data}
+}
+
+export function readVersion(data) {
+    return {type: types.READ_VERSION, data}
+}
+
+export function readMacAddress(macAddress) {
+    return {type: types.READ_MACADDRESS, macAddress}
+}
+
+export function readSleepData(data) {
+    return {type: types.READ_SLEEPDATA, data}
+}
+
+export function readSleepStatus(status) {
+    return {type: types.READ_SLEEPSTATUS, status}
 }
 
 /****************充放气测试****************/

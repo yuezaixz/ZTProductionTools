@@ -21,6 +21,10 @@ export const ERROR = 'ERROR';
 /****************读取电压****************/
 export const START_READ_VOLTAGE = 'START_READ_VOLTAGE';
 export const READ_VOLTAGE = 'READ_VOLTAGE';
+export const READ_VERSION = 'READ_VERSION';
+export const READ_SLEEPDATA = 'READ_SLEEPDATA';
+export const READ_MACADDRESS = 'READ_MACADDRESS';
+export const READ_SLEEPSTATUS = 'READ_SLEEPSTATUS';
 
 /****************板级功能测试****************/
 export const START_READ_FAT = 'START_READ_FAT';
