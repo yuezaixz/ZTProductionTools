@@ -130,19 +130,20 @@ export default class PillowManager{
                 var responseStr2 = dataStr.substring(5, 6)
                 console.log('用电模式:' + responseStr2)
             
-                var percent = voltagePercent(parseFloat(responseStr1) / 1000, parseInt(responseStr2))
-
+                var percent = util.voltagePercent(parseFloat(responseStr1) / 1000, parseInt(responseStr2))
+                this.startReadVersion()
                 NotificationCenter.post(NotificationCenter.name.deviceData.voltage, {voltage, percent})
             } else if (util.startWith(dataStr, 'P:') && dataStr.indexOf('A:') === -1) {
                 var responseStr1 = dataStr.substring(2, dataStr.length)
                 var splitted = responseStr1.split(",");
                 var data = {
                     rollCount: parseInt(splitted[0]),
-                    flatTime: timeStr(parseInt(splitted[1])) || "暂无统计",
-                    slideTime: timeStr(parseInt(splitted[2])) || "暂无统计",
+                    flatTime: util.timeStr(parseInt(splitted[1])) || "暂无统计",
+                    slideTime: util.timeStr(parseInt(splitted[2])) || "暂无统计",
                     slidePercent: parseInt(splitted[3]),
                     sleepPose: parseInt(splitted[1]) >= parseInt(splitted[2])?'侧睡':'仰睡',
                 }
+                this.startReadMacaddress()
                 NotificationCenter.post(NotificationCenter.name.deviceData.sleepData, data)
 
             } else if (util.startWith(dataStr, 'MC:')) {
@@ -157,6 +158,8 @@ export default class PillowManager{
                 var data = {
                     majorVersion, minorVersion, reVersion, version: responseStr1
                 }
+                this.current_pillow = {...this.current_pillow, ...data}
+                this.startReadSleepData()
                 NotificationCenter.post(NotificationCenter.name.deviceData.version, data)
             } else if (~dataStr.indexOf('$SP')) {
                 let status = 0
@@ -447,8 +450,10 @@ export default class PillowManager{
                                         this.current_pillow = {...device, serviceUUID:BleUUIDs.ZT_SERVICE_UUID,
                                             noitfyUUID: notifyCharacteristic, writeUUID: writeCharacteristic}
                                         resolve(this.current_pillow)
-
-                                        NotificationCenter.post(NotificationCenter.name.search.connected, {currentPillow:this.current_pillow})
+                                        setTimeout(() => {
+                                            this.startReadVoltage()
+                                            NotificationCenter.post(NotificationCenter.name.search.connected, {currentPillow:this.current_pillow})
+                                        }, 500);
                                     })
                                     .catch((error) => {
                                         reject(new Error("startNotification失败"+error))

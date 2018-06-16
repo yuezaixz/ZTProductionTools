@@ -58,7 +58,7 @@ export default class StatusView extends Component{
         } else {
             return (
                 <View style={styles.pillow} >
-                <Image style={[device_data.isDown?BasicStyle.down:{}, styles.arrowImage]} source={device_data.isProcessing?require('../statics/images/arrow_animation_up.gif'):{}} ></Image>
+                <Image style={[device_data.isDown?BasicStyle.down:{}, styles.arrowImage]} source={false?require('../statics/images/arrow_animation_up.gif'):{}} ></Image>
                     <Image style={styles.pillowImage} source={require('../statics/images/main_pillow_flat.png')}></Image>
                 </View>
             )

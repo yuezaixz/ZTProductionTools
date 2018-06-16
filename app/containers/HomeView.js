@@ -99,6 +99,7 @@ class HomeView extends Component {
         );
 
         this.updateListListener = NotificationCenter.createListener(NotificationCenter.name.search.updateList, this.updateDeviceList.bind(this), '');
+        this.onConnectedListener = NotificationCenter.createListener(NotificationCenter.name.search.connected, this.onConnected.bind(this), '');
         this.voltageListener = NotificationCenter
                                 .createListener(
                                     NotificationCenter.name.deviceData.voltage, 
@@ -141,6 +142,10 @@ class HomeView extends Component {
                                 );
     }
 
+    onConnected() {
+        
+    }
+
     readVoltage(data) {
         console.log(data)
         this.props.actions.readVoltage(data)
@@ -176,7 +181,6 @@ class HomeView extends Component {
         if (!this.props.device_data.debug) {
             return
         }
-        
 
     }
 

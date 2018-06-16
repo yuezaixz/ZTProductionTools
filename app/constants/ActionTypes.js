@@ -21,6 +21,10 @@ export const ERROR = 'ERROR';
 /****************读取电压****************/
 export const START_READ_VOLTAGE = 'START_READ_VOLTAGE';
 export const READ_VOLTAGE = 'READ_VOLTAGE';
+export const READ_VERSION = 'READ_VERSION';
+export const READ_SLEEPDATA = 'READ_SLEEPDATA';
+export const READ_MACADDRESS = 'READ_MACADDRESS';
+export const READ_SLEEPSTATUS = 'READ_SLEEPSTATUS';
 
 /****************充放气测试****************/
 //进入手控模式
