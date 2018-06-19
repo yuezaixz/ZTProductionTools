@@ -4,7 +4,8 @@ const initialState = {
     debug: true,
     index: 0,
     processingStr: '搜索中',
-    isProcessing: true
+    isProcessing: true,
+    isSearching: true,
 }
 
 export default function(state = initialState, action) {

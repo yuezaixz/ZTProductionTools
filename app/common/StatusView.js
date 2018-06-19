@@ -15,11 +15,11 @@ export default class StatusView extends Component{
 
     renderBattery = () => {
         const { device_data } = this.props;
-        const voltage = (device_data.voltage || 100)
-        // const voltage = 50
-        const voltageStr = voltage + '%'
         
-        if (device_data.isSearching) {
+        if (device_data.uuid) {
+            const voltage = (parseInt(device_data.percent) || 100)
+            // const voltage = 50
+            const voltageStr = voltage + '%'
             return (
                 <View style={styles.battery} >
                     <Text style={styles.batteryText} >{voltageStr}</Text>
@@ -32,18 +32,21 @@ export default class StatusView extends Component{
     }
 
     renderDisconnect = () => {
-        return (
-            <TouchableHighlight
-                    activeOpacity={Theme.active.opacity}
-                    underlayColor='transparent'
-                    style={styles.disconnectTouchContainer}
-                    onPress={this.actionDisconnect.bind(this)}>
-                <View style={styles.disconnect} >
-                    <Image style={styles.disconnectImage} source={require('../statics/images/main_disconnect_device.png')} ></Image>
-                    <Text style={styles.disconnectText}>断开</Text>
-                </View>
-            </TouchableHighlight>
-        )
+        const { device_data } = this.props;
+        if (device_data.uuid) {
+            return (
+                <TouchableHighlight
+                        activeOpacity={Theme.active.opacity}
+                        underlayColor='transparent'
+                        style={styles.disconnectTouchContainer}
+                        onPress={this.actionDisconnect.bind(this)}>
+                    <View style={styles.disconnect} >
+                        <Image style={styles.disconnectImage} source={require('../statics/images/main_disconnect_device.png')} ></Image>
+                        <Text style={styles.disconnectText}>断开</Text>
+                    </View>
+                </TouchableHighlight>
+            )
+        }
     }
 
     renderPillow = () => {

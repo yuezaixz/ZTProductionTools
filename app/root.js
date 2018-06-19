@@ -2,8 +2,7 @@ import React, { Component,  } from 'react';
 import {
     Platform,
     PermissionsAndroid,
-    AsyncStorage,
-    View
+    AsyncStorage
 } from 'react-native';
 import { Provider } from 'react-redux';
 
