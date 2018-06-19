@@ -46,7 +46,7 @@ class Main extends Component {
                     </View>
                     <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
                         <Text style={styles.deviceItemTitle}>翻身次数</Text>
-                        <Text style={styles.deviceItemContent}>{device_data.rollCount || '--'+'次'}</Text>
+                        <Text style={styles.deviceItemContent}>{device_data.rollCount || '0'+'次'}</Text>
                     </View>
                     <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
                         <Text style={styles.deviceItemTitle}>睡眠习惯</Text>
