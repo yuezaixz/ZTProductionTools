@@ -39,6 +39,7 @@ const sensorIndexCMDMap = ['01','02','03','04','05','06','07','08','09','0A','0B
 export default class PillowManager{
     loopTimer = 0;
     isSearching = false;
+    isDfu = false;
     lastUpdateTime = 0;
     loopCallback = null;
     device_list = [];
@@ -71,6 +72,10 @@ export default class PillowManager{
     }
 
     reconnect() {
+        if (this.isDfu) {
+            return
+        }
+
         // console.log('开始重连')
         // if (this.isLoseConnecting){
         //     this.startDeviceConnect(this.current_pillow).then((device)=>{
@@ -138,8 +143,8 @@ export default class PillowManager{
                 var splitted = responseStr1.split(",");
                 var data = {
                     rollCount: parseInt(splitted[0]),
-                    flatTime: util.timeStr(parseInt(splitted[1])) || "暂无统计",
-                    slideTime: util.timeStr(parseInt(splitted[2])) || "暂无统计",
+                    flatTime: util.timeStr(parseInt(splitted[1])) || "0分",
+                    slideTime: util.timeStr(parseInt(splitted[2])) || "0分",
                     slidePercent: parseInt(splitted[3]),
                     sleepPose: parseInt(splitted[1]) >= parseInt(splitted[2])?'侧睡':'仰睡',
                 }
@@ -219,6 +224,24 @@ export default class PillowManager{
     startReadVoltage() {
         const data = stringToBytes('GHV');
         return this.writeData(data)
+    }
+
+    startDfu() {
+        this.isDfu = true
+        const data = stringToBytes('dfu');
+        return this.writeData(data)
+    }
+
+    clearData() {
+        const data = stringToBytes('GLC');
+        return this.writeData(data).then(() => {
+            setTimeout(() => {
+                const data2 = stringToBytes('GLS');
+                this.writeData(data2)
+            }, 1000);
+        }).catch((err) => {
+            console.log('clearData', err)
+        });
     }
 
     startReadVersion() {
@@ -423,6 +446,7 @@ export default class PillowManager{
 
     startDeviceConnect(device) {
         this.stopSearchDevice()//连接前停止搜索
+        this.isDfu = false
         this.isLoseConnecting = false
         this.log_list = []
         return new Promise((resolve, reject) => {

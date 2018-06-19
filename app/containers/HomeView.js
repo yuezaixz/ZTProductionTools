@@ -56,9 +56,20 @@ class HomeView extends Component {
     }
     _rebootAction(){
         console.log('_rebootAction');
+        PillowManager.ShareInstance().startDfu().then(() => {
+            //TODO 提示 稍等需要1分钟
+        }).catch(error => {
+            console.log(error)
+            //TODO 提示重启失败
+        })
     }
     _clearDataAction(){
-        console.log('_clearDataAction');
+        PillowManager.ShareInstance().clearData().then(() => {
+            //TODO 提示 清除成功
+        }).catch(error => {
+            console.log(error)
+            //TODO 提示清除失败
+        })
     }
     _disconnectAction() {
         if (this.props.device_data.uuid) {
@@ -291,8 +302,8 @@ class HomeView extends Component {
                     onConnect={this._connectAction.bind(this)} 
                     adjustAction={this._adjustAction.bind(this)} 
                     logAction={this._logAction.bind(this)} 
-                    rebootAction={this._rebootAction.bind(this).bind(this)} 
-                    clearDataAction={this._clearDataAction}
+                    rebootAction={this._rebootAction.bind(this)} 
+                    clearDataAction={this._clearDataAction.bind(this)}
                     lastDeviceId={"TODO"} 
                     isVisible={this.state.isVisible}
                 />
