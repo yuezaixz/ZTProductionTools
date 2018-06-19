@@ -67,6 +67,10 @@ export default function(state = initialState, action) {
             return {...state, ...action.data};
         case types.READ_SLEEPSTATUS:
             return {...state, sleepStatus: action.status};
+        case types.READ_LOG:
+            return {...state, logList: action.logList};
+        case types.CLEAR_LOG:
+            return {...state, logList: []};
 
         /****************充放气测试****************/
         case types.START_MANUAL:

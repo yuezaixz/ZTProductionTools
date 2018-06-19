@@ -52,7 +52,7 @@ class HomeView extends Component {
     }
     _logAction(){
         console.log('_logAction');
-        // this.props.navigation.navigate('Log')
+        this.props.navigation.navigate('Log')
     }
     _rebootAction(){
         console.log('_rebootAction');
@@ -245,9 +245,15 @@ class HomeView extends Component {
         }
     }
     componentWillUnmount(){
+        NotificationCenter.removeListener(this.updateListListener)
+        NotificationCenter.removeListener(this.onConnectedListener)
+        NotificationCenter.removeListener(this.voltageListener)
+        NotificationCenter.removeListener(this.versionListener)
+        NotificationCenter.removeListener(this.voltageListener)
+        NotificationCenter.removeListener(this.macAddressListener)
+        NotificationCenter.removeListener(this.sleepDataListener)
+        NotificationCenter.removeListener(this.sleepStatusListener)
         bleManagerEmitter.removeAllListeners('BleManagerDidUpdateState')
-        bleManagerEmitter.removeAllListeners('BleManagerDisconnectPeripheral')
-        NotificationCenter.removeListener(this.updateListListener);
         this.props.actions.stopSearchDevice()
     }
     bindEvents = ()=>{

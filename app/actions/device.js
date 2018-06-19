@@ -1,5 +1,5 @@
 import * as BleUUIDs from '../../src/constants/BleUUIDs';
-import * as types from '../../src/constants/ActionTypes';
+import * as types from '../constants/ActionTypes';
 import PillowManager from '../../src/manager/PillowManager'
 
 export function startSearchDevice() {
@@ -91,6 +91,14 @@ export function readSleepData(data) {
 
 export function readSleepStatus(status) {
     return {type: types.READ_SLEEPSTATUS, status}
+}
+
+export function readLog(logList) {
+    return {type: types.READ_LOG, logList}
+}
+
+export function clearLog() {
+    return {type: types.CLEAR_LOG}
 }
 
 /****************充放气测试****************/

@@ -116,7 +116,8 @@ export default class PillowManager{
         console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
         var datas = data.value
         var dataStr = util.arrayBufferToBase64Str(datas)
-        this.log_list.push(dataStr)
+        this.log_list.unshift(dataStr)
+        // this.log_list.push(dataStr)
         if (this.log_list.length > 200) {
             this.log_list.shift()
         }
@@ -163,6 +164,7 @@ export default class PillowManager{
                 var data = {
                     majorVersion, minorVersion, reVersion, version: responseStr1
                 }
+                this.log_list.push('版本:'+responseStr1)
                 this.current_pillow = {...this.current_pillow, ...data}
                 this.startReadSleepData()
                 NotificationCenter.post(NotificationCenter.name.deviceData.version, data)
@@ -220,6 +222,17 @@ export default class PillowManager{
         this.loopTimer = requestAnimationFrame(this.loopHandle.bind(this));
     }
 
+    enableLog() {
+        this.clearLog()
+        const data = stringToBytes('SDI:5');
+        return this.writeData(data)
+    }
+
+    disableLog() {
+        const data = stringToBytes('SDI:0');
+        return this.writeData(data)
+    }
+
     //API
     startReadVoltage() {
         const data = stringToBytes('GHV');
@@ -242,6 +255,12 @@ export default class PillowManager{
         }).catch((err) => {
             console.log('clearData', err)
         });
+    }
+
+    clearLog() {
+        this.log_list = []
+        this.log_list.push('版本:'+this.current_pillow.version)
+        NotificationCenter.post(NotificationCenter.name.deviceData.log_list, {log_list:this.log_list})
     }
 
     startReadVersion() {

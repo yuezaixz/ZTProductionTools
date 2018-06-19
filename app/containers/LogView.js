@@ -3,181 +3,84 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
     StyleSheet,
-    View,
     Text,
-    TouchableOpacity,
-    Platform,
-    PermissionsAndroid,
-    NativeEventEmitter,
-    AsyncStorage,
-    NativeModules, Dimensions
+    ImageBackground,
+    ScrollView
 } from 'react-native';
 import StatusBarLeftButton from '../../src/components/common/StatusBarLeftButton'
-import Modal from 'react-native-simple-modal';
-import BleManager from 'react-native-ble-manager';
-let {height, width} = Dimensions.get('window');
+import {Theme} from '../styles';
 
-import {
-    Main,
-    Footer,
-} from '../components/home-view';
-import Actions from '../actions';
 import NotificationCenter from "../../src/public/Com/NotificationCenter/NotificationCenter";
-
-const BleManagerModule = NativeModules.BleManager;
-const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+import PillowManager from '../../src/manager/PillowManager';
+import Actions from '../actions';
 
 class LogView extends Component {
+    logList = []
+
     static navigationOptions = ({ navigation }) => {
         const params = navigation.state.params || {};
 
         return {
-            title:"枕头固件测试",
+            title:"日志获取",
             headerLeft: (
-                <StatusBarLeftButton onPress={params.settingAction} title="设置" ></StatusBarLeftButton>
+                <StatusBarLeftButton textStyle={Theme.font.common} onPress={params.backAction} title="返回" ></StatusBarLeftButton>
             ),
         };
     };
-    isFirst = true
-    state = {open: true}
+
+    _backAction(){
+        console.log('backAction')
+        //TODO 清除日志
+        setTimeout(()=>{this.props.navigation.pop()},100)
+    }
+
     constructor(props){
         super(props)
-        this.state = {isVisible: true}
-    }
-    _adjustAction(){
-        this.props.navigation.navigate('Adjust')
-    }
-    _logAction(){
-        this.props.navigation.navigate('Log')
     }
     componentWillMount() {
-        this.props.navigation.setParams({ adjustAction: this._adjustAction.bind(this) });
-        this.props.navigation.setParams({ logAction: this._logAction.bind(this) });
+        this.props.navigation.setParams({ backAction: this._backAction.bind(this) });
+        PillowManager.ShareInstance().enableLog()
 
-        this.props.navigation.addListener(
-            'didFocus',
-            payload => {
-                setTimeout(() => {
-                    setTimeout(() => {this.props.actions.startSearchDevice()}, 500)
-                    this.isFirst = false
-                    this.setState({isVisible: true});
-                }, 500)
-            }
-        );
-        this.props.navigation.addListener(
-            'willBlur',
-            payload => {
-                this.props.actions.stopSearchDevice();
-                this.setState({isVisible: false});
-            }
-        );
-
-        this.updateListListener = NotificationCenter.createListener(NotificationCenter.name.search.updateList, this.updateDeviceList.bind(this), '');
+        this.handleLogListener = NotificationCenter
+                                .createListener(
+                                    NotificationCenter.name.deviceData.log_list, 
+                                    this.handleLog.bind(this), 
+                                    ''
+                                );
     }
 
-    updateDeviceList(data) {
-        if (data.data) {
-            this.props.actions.updateDeviceList(data.data)
+    handleLog(data) {
+        if (data && data.log_list && data.log_list.length ) {
+            this.props.actions.readLog(data.log_list)
         }
     }
 
     componentDidMount() {
-        bleManagerEmitter.addListener(
-            'BleManagerDidUpdateState',
-            (args) => {
-                if (args.state === 'off') {
-                    if (Platform.OS === 'android' ) {
-                        BleManager.enableBluetooth()
-                            .then(() => {
-                                // Success code
-                                console.log('The bluetooh is already enabled or the user confirm');
-                            })
-                            .catch((error) => {
-                                // Failure code
-                                console.log('The user refuse to enable bluetooth');
-                            });
-                    } else {
-                        this.setState({open: true})
-                    }
-                } else {
-                    if (this.isFirst) {
-                        setTimeout(() => {this.props.actions.startSearchDevice()}, 500)
-                        this.isFirst = false
-                    } else {
-                        //TODO 刷新？
-                    }
-                    console.log('bluetooth state:'+args.state)
-                }
-            }
-        );
-
-        BleManager.checkState();
-        if (Platform.OS === 'android' && Platform.Version >= 23) {
-            PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
-                if (result) {
-
-                    console.log("Permission is OK");
-                } else {
-                    PermissionsAndroid.requestPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
-                        if (result) {
-                            console.log("User accept");
-                        } else {
-                            console.log("User refuse");
-                        }
-                    });
-                }
-            });
-        }
+        PillowManager.ShareInstance().clearLog()
     }
     componentWillUnmount(){
-        bleManagerEmitter.removeAllListeners('BleManagerDidUpdateState')
-        bleManagerEmitter.removeAllListeners('BleManagerDisconnectPeripheral')
-        NotificationCenter.removeListener(this.updateListListener);
-        this.props.actions.stopSearchDevice()
+        PillowManager.ShareInstance().disableLog()
+        console.log('日志已清除')
+        this.props.actions.clearLog()
+        NotificationCenter.removeListener(this.handleLogListener)
     }
-    bindEvents = ()=>{
-        // this.willFocusSubscription  = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
-        //     if (this.currentRoute !== event.data.route) {//切换会当前页面，开始搜索，列表显示
-        //         this.setState({isVisible: false});
-        //     }
-        // });
-        // this.didFocusSubscription  = this.props.navigator.navigationContext.addListener('didfocus', (event) => {
-        //     if (this.currentRoute === event.data.route) {
-        //         this.setState({isVisible: true});
-        //     }
-        // });
+
+    renderList  = () =>{
+        const { device_data } = this.props;
+        if(!device_data || !device_data.logList){ return null}
+
+        return device_data.logList.map((item, idx) => {
+            return <Text style={styles.logText} key={'logText'+idx}>{item}</Text>
+        });
     }
-    unBindEvents = ()=>{
-        // this.willFocusSubscription.remove();
-        // this.didFocusSubscription.remove();
-    }
+
     render() {
         return (
-            <View style={styles.container}>
-                {/*<Header {...this.props}/>*/}
-                <Main {...this.props} lastDeviceId={"TODO"} isVisible={this.state.isVisible}/>
-                <Footer {...this.props}/>
-
-                <View style={{position:'absolute',width: width, height: height}}>
-                    <View  style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                        <Modal
-                            offset={0}
-                            open={this.state.open}
-                            modalDidOpen={() => console.log('蓝牙提示框开启')}
-                            modalDidClose={() => this.setState({open: false})}
-                            style={{alignItems: 'center'}}>
-                            <View>
-                                <Text style={{fontSize: 20, marginBottom: 10}}>蓝牙未开启，请开启蓝牙!</Text>
-                                <TouchableOpacity
-                                    style={{margin: 5}}
-                                    onPress={() => this.setState({open: false})}>
-                                    <Text>好的</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </Modal>
-                    </View>
-                </View>
-            </View>
+            <ImageBackground source={require('../statics/images/bg.jpg')} style={styles.container}>
+                <ScrollView style={styles.body}>
+                    {this.renderList()}
+                </ScrollView>
+            </ImageBackground>
         );
     }
 }
@@ -185,12 +88,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFF'
+    },
+    body: {
+        flex: 1
+    },
+    logText: {
+        textAlign: 'left',
+        ...Theme.font.common,
+        paddingLeft: Theme.constant.leftRightPadding,
     }
 });
 
 function mapStateToProps(state) {
     return {
-        home_data: state.home
+        device_data: state.device
     };
 }
 

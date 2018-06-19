@@ -25,6 +25,8 @@ export const READ_VERSION = 'READ_VERSION';
 export const READ_SLEEPDATA = 'READ_SLEEPDATA';
 export const READ_MACADDRESS = 'READ_MACADDRESS';
 export const READ_SLEEPSTATUS = 'READ_SLEEPSTATUS';
+export const READ_LOG = 'READ_LOG';
+export const CLEAR_LOG = 'CLEAR_LOG';
 
 /****************充放气测试****************/
 //进入手控模式
