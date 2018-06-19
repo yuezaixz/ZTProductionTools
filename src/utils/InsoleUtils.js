@@ -85,3 +85,37 @@ export const timeStr = function (time) {
   console.log(seconds)
   return (hours ? (hours + "时") : "") + (minutes ? (minutes + "分") : "") + (seconds ? (seconds + "秒") : "")
 }
+
+export function curentTimeStr() {
+  var now = new Date();
+
+  var year = now.getFullYear();       //年
+  var month = now.getMonth() + 1;     //月
+  var day = now.getDate();            //日
+
+  var hh = now.getHours();            //时
+  var mm = now.getMinutes();          //分
+  var ss = now.getSeconds();          //分
+
+  var clock = year + "_";
+
+  if (month < 10)
+    clock += "0";
+
+  clock += month + "_";
+
+  if (day < 10)
+    clock += "0";
+
+  clock += day + "_";
+
+  if (hh < 10)
+    clock += "0";
+
+  clock += hh + "_";
+  if (mm < 10) clock += '0';
+  clock += mm + "_";
+  if (ss < 10) clock += '0';
+  clock += ss;
+  return (clock);
+}

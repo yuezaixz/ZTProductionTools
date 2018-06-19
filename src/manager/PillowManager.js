@@ -116,7 +116,7 @@ export default class PillowManager{
         console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
         var datas = data.value
         var dataStr = util.arrayBufferToBase64Str(datas)
-        this.log_list.unshift(dataStr)
+        this.log_list.unshift(util.curentTimeStr()+'||' + dataStr)
         // this.log_list.push(dataStr)
         if (this.log_list.length > 200) {
             this.log_list.shift()
