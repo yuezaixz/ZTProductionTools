@@ -40,10 +40,10 @@ class HomeView extends Component {
         };
     };
     isFirst = true
-    state = {open: true}
+    state = {}
     constructor(props){
         super(props)
-        this.state = {isVisible: true}
+        this.state = {isVisible: true, open: false}
     }
     _adjustAction(){
         console.log('_adjustAction');
@@ -273,32 +273,6 @@ class HomeView extends Component {
         // this.didFocusSubscription.remove();
     }
 
-    renderBleAlert = () => {
-        if (this.state.open) 
-            return (
-                <View style={{position:'absolute',width: width, height: height}}>
-                    <View  style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                        <Modal
-                            offset={0}
-                            open={this.state.open}
-                            modalDidOpen={() => console.log('蓝牙提示框开启')}
-                            modalDidClose={() => this.setState({open: false})}
-                            style={{alignItems: 'center'}}>
-                            <View>
-                                <Text style={{fontSize: 20, marginBottom: 10}}>蓝牙未开启，请开启蓝牙!</Text>
-                                <TouchableOpacity
-                                    style={{margin: 5}}
-                                    onPress={() => this.setState({open: false})}>
-                                    <Text>好的</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </Modal>
-                    </View>
-                </View>
-            )
-        return null
-    }
-
     render() {
         return (
             <ImageBackground source={require('../statics/images/bg.jpg')} style={styles.container}>
@@ -313,7 +287,6 @@ class HomeView extends Component {
                     lastDeviceId={"TODO"} 
                     isVisible={this.state.isVisible}
                 />
-                {this.renderBleAlert()}
             </ImageBackground>
         );
     }
