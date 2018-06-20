@@ -278,8 +278,10 @@ export default class PillowManager{
 
     clearLog() {
         this.log_list = []
-        this.log_list.push('版本:'+this.current_pillow.version)
-        NotificationCenter.post(NotificationCenter.name.deviceData.log_list, {log_list:this.log_list})
+        if (this.current_pillow && this.current_pillow.version) {
+            this.log_list.push('版本:'+this.current_pillow.version)
+            NotificationCenter.post(NotificationCenter.name.deviceData.log_list, {log_list:this.log_list})
+        }
     }
 
     startReadVersion() {
