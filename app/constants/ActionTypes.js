@@ -1,6 +1,8 @@
 export const SWITCH_MAIN_TAB = 'SWITCH_MAIN_TAB';
 export const SHOW_MODAL = 'SHOW_MODAL';
 export const HIDDEN_MODAL = 'HIDDEN_MODAL';
+export const SHOW_TOAST = 'SHOW_TOAST';
+export const HIDDEN_TOAST = 'HIDDEN_TOAST';
 
 /****************搜索连接相关****************/
 //HOME ACTION TYPES

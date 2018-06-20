@@ -66,8 +66,8 @@ class App extends Component {
             <Modal
                 offset={0}
                 open={this.props.global_data.openModal}
-                modalDidOpen={() => console.log('蓝牙提示框开启')}
-                modalDidClose={() => console.log('关闭')}
+                modalDidOpen={() => console.log('Modal开启')}
+                modalDidClose={() => console.log('Modal关闭')}
                 style={styles.modal}>
                 <View>
                     <Text style={styles.modalText}>{this.props.global_data.modalContent}</Text>
@@ -76,8 +76,30 @@ class App extends Component {
                     </View>
                 </View>
             </Modal>
+
+            <Modal
+                offset={0}
+                open={this.props.global_data.openToast}
+                modalDidOpen={() => console.log('Toast开启')}
+                modalDidClose={() => console.log('Toast关闭')}
+                closeOnTouchOutside={false}
+                style={styles.modal}>
+                <View>
+                    <Text style={styles.toastText}>{this.props.global_data.toastContent}</Text>
+                </View>
+            </Modal>
         </View>);
     }
+
+    // 全局Modal的用法
+    // this.props.actions.showModal('','我是测试内容', [
+    //     {keyTitle:'好的', callBack:()=>this.props.actions.hiddenModal()},
+    //     {keyTitle:'不好', callBack:()=>{
+                    // 全局Toast的用法
+    //             this.props.actions.showToast('我是测试内容', 3000);
+    //         }
+    //     }
+    // ])
 }
 
 const styles = StyleSheet.create({
@@ -102,7 +124,12 @@ const styles = StyleSheet.create({
     },
     modalKeyText: {
         textAlign: 'center'
-    }
+    },
+    toastText: {
+        textAlign: 'center',
+        fontSize: 20, 
+        margin: 10
+    },
 });
 
 function mapStateToProps(state) {
