@@ -48,9 +48,9 @@ class App extends Component {
                 keys.push(
                     <TouchableOpacity
                         key={'modalKey'+index}
-                        style={{flex:1}}
+                        style={styles.modalKey}
                         onPress={() => element.callBack()}>
-                        <Text>{element.keyTitle}</Text>
+                        <Text style={styles.modalKeyText} >{element.keyTitle}</Text>
                     </TouchableOpacity>
                 )
                 index++
@@ -70,13 +70,8 @@ class App extends Component {
                 modalDidClose={() => console.log('关闭')}
                 style={styles.modal}>
                 <View>
-                    <Text style={{fontSize: 20, marginBottom: 10}}>{this.props.global_data.modalTitle}</Text>
-                    {/* <TouchableOpacity
-                        style={{margin: 5}}
-                        onPress={() => this.props.actions.hiddenModal()}>
-                        <Text>好的</Text>
-                    </TouchableOpacity> */}
-                    <View style={{flexDirection:'row', margin: 5, height: 20}} >
+                    <Text style={styles.modalText}>{this.props.global_data.modalContent}</Text>
+                    <View style={styles.modalKeyContainer} >
                         {this.renderModalKeys()}
                     </View>
                 </View>
@@ -91,6 +86,22 @@ const styles = StyleSheet.create({
     },
     modal: {
         alignItems: 'center'
+    },
+    modalText: {
+        textAlign: 'center',
+        fontSize: 20, 
+        marginBottom: 10
+    },
+    modalKeyContainer: {
+        flexDirection:'row', 
+        margin: 5, 
+        height: 20
+    },
+    modalKey: {
+        flex:1
+    },
+    modalKeyText: {
+        textAlign: 'center'
     }
 });
 
