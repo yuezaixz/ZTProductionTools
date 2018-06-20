@@ -151,10 +151,32 @@ class HomeView extends Component {
                                     this.readSleepStatus.bind(this), 
                                     ''
                                 );
+
+        this.foundLastDeviceListener = NotificationCenter
+                                .createListener(
+                                    NotificationCenter.name.search.foundLastDevice, 
+                                    this.foundLastDevice.bind(this), 
+                                    ''
+                                );
     }
 
     onConnected() {
         this.props.actions.showLoading('连接成功', 2000);
+    }
+
+    foundLastDevice(data) {
+        let device = data.device
+        // 防止重复点击，停止搜索
+        if (this.props.device_data.isConnecting) {
+            //todo 提示连接中，请稍等
+            return;
+        }
+        if (this.props.device_data.uuid == device.uuid) {
+            return;
+        }
+        this.props.actions.showLoading('自动连接中');
+        this.props.actions.stopSearchDevice()
+        this.props.actions.startDeviceConnect(device)
     }
 
     readVoltage(data) {
@@ -253,6 +275,7 @@ class HomeView extends Component {
         NotificationCenter.removeListener(this.macAddressListener)
         NotificationCenter.removeListener(this.sleepDataListener)
         NotificationCenter.removeListener(this.sleepStatusListener)
+        NotificationCenter.removeListener(this.foundLastDeviceListener)
         bleManagerEmitter.removeAllListeners('BleManagerDidUpdateState')
         this.props.actions.stopSearchDevice()
     }

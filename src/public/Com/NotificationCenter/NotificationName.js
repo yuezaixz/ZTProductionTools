@@ -21,7 +21,7 @@ module.exports = {
         macAddress: 'com.podoon.ztproduct.macAddress',
         version: 'com.podoon.ztproduct.version',
         sleepData: 'com.podoon.ztproduct.sleepData',
-        sleepStatus: 'com.podoon.ztproduct.sleepStatus'
-        
+        sleepStatus: 'com.podoon.ztproduct.sleepStatus',
+        foundLastDevice: 'com.podoon.ztproduct.foundLastDevice',
     }
 };

@@ -1,5 +1,6 @@
 import BleManager from 'react-native-ble-manager';
 import {
+    AsyncStorage,
     Platform,
     NativeEventEmitter,
     NativeModules
@@ -8,6 +9,7 @@ import * as BleUUIDs from "../constants/BleUUIDs";
 import * as util from "../utils/InsoleUtils";
 import NotificationCenter from '../public/Com/NotificationCenter/NotificationCenter'
 import { stringToBytes } from 'convert-string';
+import * as StorageKeys from '../constants/StorageKeys'
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -48,9 +50,16 @@ export default class PillowManager{
     isLoseConnecting = false;
     log_list = []
 
+    lastConnectUUID = null
+
     constructor() {
         if (!instance) {
             instance = this;
+            AsyncStorage.getItem(StorageKeys.LAST_CONNECT_UUID, function (error, result) {
+                if (!error && result) {
+                    this.lastConnectUUID = result ? JSON.parse(result) : null
+                }
+            }.bind(this))
         }
         // this.initTestData()
         return instance;
@@ -440,6 +449,10 @@ export default class PillowManager{
                                             uuid:peripheral.id, 
                                             rssi:peripheral.rssi
                                         }
+
+                                        if (this.lastConnectUUID && this.lastConnectUUID === device.uuid ) {
+                                            NotificationCenter.post(NotificationCenter.name.search.foundLastDevice, {device})
+                                        }
                                         new_list.push(device)
                                     }
                                 }
@@ -464,6 +477,8 @@ export default class PillowManager{
     }
 
     startDeviceConnect(device) {
+        this.lastConnectUUID = device.uuid
+        AsyncStorage.setItem(StorageKeys.LAST_CONNECT_UUID, JSON.stringify(device.uuid))
         this.stopSearchDevice()//连接前停止搜索
         this.isDfu = false
         this.isLoseConnecting = false
@@ -515,6 +530,8 @@ export default class PillowManager{
     }
 
     deviceDisconnect(uuid) {
+        this.lastConnectUUID = null
+        AsyncStorage.removeItem(StorageKeys.LAST_CONNECT_UUID)
 
         return new Promise((resolve, reject) => {
             if (!this.current_pillow) {
