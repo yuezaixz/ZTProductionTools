@@ -207,6 +207,16 @@ export default class PillowManager{
         }
     }
 
+    static reinit() {
+        if (instance && instance.current_pillow) {
+            instance.deviceDisconnect(instance.current_pillow.uuid, true).then(()=>{
+                instance = null
+            })
+        } else {
+            instance = null
+        }
+    }
+
     static ShareInstance(){
         let singleton = new PillowManager();
         return singleton;
@@ -529,9 +539,11 @@ export default class PillowManager{
         });
     }
 
-    deviceDisconnect(uuid) {
-        this.lastConnectUUID = null
-        AsyncStorage.removeItem(StorageKeys.LAST_CONNECT_UUID)
+    deviceDisconnect(uuid, isKeepLast) {
+        if (isKeepLast) {
+            this.lastConnectUUID = null
+            AsyncStorage.removeItem(StorageKeys.LAST_CONNECT_UUID)
+        }
 
         return new Promise((resolve, reject) => {
             if (!this.current_pillow) {

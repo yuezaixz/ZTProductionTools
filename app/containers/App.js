@@ -161,6 +161,17 @@ const styles = StyleSheet.create({
         fontSize: 16, 
         margin: 5
     }
+    // loading: {
+    //     backgroundColor: 'rgba(0, 0, 0, 0.25)',
+    //     alignSelf: 'center',
+    //     alignItems: 'center'
+    // },
+    // loadingText: {
+    //     textAlign: 'center',
+    //     fontSize: 16, 
+    //     margin: 5,
+    //     color: '#FFFFFF'
+    // }
 });
 
 function mapStateToProps(state) {

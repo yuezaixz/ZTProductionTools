@@ -30,7 +30,7 @@ class LogView extends Component {
 
     _backAction(){
         console.log('backAction')
-        //TODO 清除日志
+        PillowManager.ShareInstance().clearLog()
         setTimeout(()=>{this.props.navigation.pop()},100)
     }
 

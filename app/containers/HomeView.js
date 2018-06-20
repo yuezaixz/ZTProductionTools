@@ -55,20 +55,29 @@ class HomeView extends Component {
         this.props.navigation.navigate('Log')
     }
     _rebootAction(){
+        this.props.actions.showToast('准备重启')
         console.log('_rebootAction');
         PillowManager.ShareInstance().startDfu().then(() => {
-            //TODO 提示 稍等需要1分钟
+            this.props.actions.showLoading('稍等需要1分钟', 60*1000);
+            setTimeout(() => {
+                this.props.actions.reinitApp()
+                this.props.actions.startSearchDevice()
+            }, 60*1000);
         }).catch(error => {
-            console.log(error)
-            //TODO 提示重启失败
+            this.props.actions.showLoading('稍等需要1分钟', 60*1000);
+            setTimeout(() => {
+                this.props.actions.reinitApp()
+                this.props.actions.startSearchDevice()
+            }, 60*1000);
         })
     }
     _clearDataAction(){
+        this.props.actions.showToast('准备清除')
         PillowManager.ShareInstance().clearData().then(() => {
-            //TODO 提示 清除成功
+            this.props.actions.showToast('清除成功', 2000)
         }).catch(error => {
             console.log(error)
-            //TODO 提示清除失败
+            this.props.actions.showToast('提示清除失败', 2000);
         })
     }
     _disconnectAction() {
@@ -80,7 +89,7 @@ class HomeView extends Component {
     _connectAction(device) {
         // 防止重复点击，停止搜索
         if (this.props.device_data.isConnecting) {
-            //todo 提示连接中，请稍等
+            this.props.actions.showLoading('连接中');
             return;
         }
         if (this.props.device_data.uuid == device.uuid) {
@@ -168,7 +177,7 @@ class HomeView extends Component {
         let device = data.device
         // 防止重复点击，停止搜索
         if (this.props.device_data.isConnecting) {
-            //todo 提示连接中，请稍等
+            this.props.actions.showLoading('连接中');
             return;
         }
         if (this.props.device_data.uuid == device.uuid) {

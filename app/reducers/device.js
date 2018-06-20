@@ -81,6 +81,8 @@ export default function(state = initialState, action) {
             return {...state, isStopingManual: true, hadInflateTest: true};
         case types.SUCCESS_STOP_MANUAL:
             return {...state, isStopingManual: false};
+        case types.REINIT_APP:
+            return {...initialState}
     }
 
     return state;

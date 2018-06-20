@@ -2,6 +2,11 @@ import * as BleUUIDs from '../../src/constants/BleUUIDs';
 import * as types from '../constants/ActionTypes';
 import PillowManager from '../../src/manager/PillowManager'
 
+export function reinitApp() {
+    PillowManager.reinit()
+    return {type: types.REINIT_APP}
+}
+
 export function startSearchDevice() {
     if (PillowManager.ShareInstance().isSearching) {
         return {type: types.START_SEARCH_DEVICE}

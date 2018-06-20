@@ -5,6 +5,7 @@ export const SHOW_TOAST = 'SHOW_TOAST';
 export const HIDDEN_TOAST = 'HIDDEN_TOAST';
 export const SHOW_LOADING = 'SHOW_LOADING';
 export const HIDDEN_LOADING = 'HIDDEN_LOADING';
+export const REINIT_APP = 'REINIT_APP';
 
 /****************搜索连接相关****************/
 //HOME ACTION TYPES
