@@ -11,13 +11,31 @@ export function hiddenModal() {
 export function showToast(content, duration) {
     return async (dispatch, getState) =>{
         dispatch({type: types.SHOW_TOAST, content})
-        setTimeout(() => {
-            dispatch({type: types.HIDDEN_TOAST})
-        }, duration);
+        if (duration > 0) {
+            setTimeout(() => {
+                dispatch({type: types.HIDDEN_TOAST})
+            }, duration);
+        }
     }
 }
 
 export function hiddenToast() {
     console.log('隐藏')
     return {type: types.HIDDEN_TOAST}
+}
+
+export function showLoading(content, duration) {
+    return async (dispatch, getState) =>{
+        dispatch({type: types.SHOW_LOADING, content})
+        if (duration > 0) {
+            setTimeout(() => {
+                dispatch({type: types.HIDDEN_LOADING})
+            }, duration);
+        }
+    }
+}
+
+export function hiddenLoading() {
+    console.log('隐藏')
+    return {type: types.HIDDEN_LOADING}
 }

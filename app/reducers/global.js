@@ -2,7 +2,8 @@ import * as types from '../constants/ActionTypes';
 
 const initialState = {
     openModal: false,
-    openToase: false
+    openToast: false,
+    openLoading: false
 }
 
 export default function(state = initialState, action) {
@@ -28,6 +29,16 @@ export default function(state = initialState, action) {
             return temp;
         case types.HIDDEN_TOAST:
             var temp = {...state, ...initialState, openToast: false};
+            return temp;
+        case types.SHOW_LOADING:
+            var temp = {...state, 
+                ...initialState, 
+                openLoading: true,  
+                loadingContent: action.content
+            };
+            return temp;
+        case types.HIDDEN_LOADING:
+            var temp = {...state, ...initialState, openLoading: false};
             return temp;
 
     }

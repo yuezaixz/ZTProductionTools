@@ -7,7 +7,7 @@ import LogView from './LogView';
 import AdjustView from './AdjustView';
 import {Theme} from '../styles';
 import Actions from '../actions';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Modal from 'react-native-simple-modal';
 
 const RootStack = StackNavigator(
@@ -88,6 +88,19 @@ class App extends Component {
                     <Text style={styles.toastText}>{this.props.global_data.toastContent}</Text>
                 </View>
             </Modal>
+
+            <Modal
+                offset={0}
+                open={this.props.global_data.openLoading}
+                modalDidOpen={() => console.log('Loading开启')}
+                modalDidClose={() => console.log('Loading关闭')}
+                closeOnTouchOutside={false}
+                overlayBackground='rgba(0, 0, 0, 0.25)'
+                modalStyle={styles.loading}
+                style={styles.modal}>
+                <Image style={styles.loadingImage} source={require('../statics/images/loading9.gif')} ></Image>
+                <Text style={styles.loadingText}>{this.props.global_data.loadingContent}</Text>
+            </Modal>
         </View>);
     }
 
@@ -100,6 +113,9 @@ class App extends Component {
     //         }
     //     }
     // ])
+
+    // 全局Loading的用法
+    // this.props.actions.showLoading('连接中', 30000);
 }
 
 const styles = StyleSheet.create({
@@ -130,6 +146,21 @@ const styles = StyleSheet.create({
         fontSize: 20, 
         margin: 10
     },
+    loading: {
+        backgroundColor: '#FFFFFF',
+        alignSelf: 'center',
+        alignItems: 'center'
+    },
+    loadingImage: {
+        width: 30,
+        height: 30,
+        resizeMode: 'stretch',
+    },
+    loadingText: {
+        textAlign: 'center',
+        fontSize: 16, 
+        margin: 5
+    }
 });
 
 function mapStateToProps(state) {

@@ -86,7 +86,7 @@ class HomeView extends Component {
         if (this.props.device_data.uuid == device.uuid) {
             return;
         }
-        //TODO 提示开始连接
+        this.props.actions.showLoading('连接中');
         this.props.actions.stopSearchDevice()
         this.props.actions.startDeviceConnect(device)
     }
@@ -154,7 +154,7 @@ class HomeView extends Component {
     }
 
     onConnected() {
-        
+        this.props.actions.showLoading('连接成功', 2000);
     }
 
     readVoltage(data) {
