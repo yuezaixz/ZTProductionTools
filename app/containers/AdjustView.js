@@ -5,6 +5,7 @@ import {
     StyleSheet,
     Text,
     ImageBackground,
+    Image,
     TouchableHighlight,
     View
 } from 'react-native';
@@ -18,7 +19,7 @@ import StatusView from '../common/StatusView';
 
 class AdjustView extends Component {
     logList = []
-    state = {isSlidePrompt:true, adjusting:false}
+    state = {isSlidePrompt:false, adjusting:false}
     static navigationOptions = ({ navigation }) => {
         const params = navigation.state.params || {};
 
@@ -59,6 +60,14 @@ class AdjustView extends Component {
     componentWillUnmount(){
         PillowManager.ShareInstance().stopManual()
         NotificationCenter.removeListener(this.sleepStatusListener)
+    }
+
+    saveAction() {
+
+    }
+
+    closePromptAction() {
+
     }
 
     renderAdjustButton() {
@@ -114,41 +123,29 @@ class AdjustView extends Component {
                     <TouchableHighlight 
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        onPress={this.props.saveAction}
+                        onPress={this.saveAction}
                         style={styles.saveButton}>
                         <Text style={styles.saveButtonText}>调整侧卧高度</Text>
                     </TouchableHighlight>
                 </View>
-                {/* <view class="body">
-                    <view style='position:relative;height:100%;width:100%;' >
-                        <view  bindtap="actionRising" class="circle_button rising_button {{isAdjusting?'hidden':''}}" >
-                        <image class="circle_img" src='/images/circle_button_border.png' />
-                        <text class="circle_text" >上升</text>
-                        </view>
-                        <view bindtap="actionFalling" class="circle_button falling_button {{isAdjusting?'hidden':''}}" >
-                        <image class="circle_img" src='/images/circle_button_border.png' />
-                        <text class="circle_text" >下降</text>
-                        </view>
-
-                        <view bindtap="actionPause" class="circle_button pause_button {{!isAdjusting?'hidden':''}}" >
-                        <image class="circle_img" src='/images/circle_button_border.png' />
-                        <text class="circle_text" >暂停</text>
-                        </view>
-
-                        <view bindtap="actionSave" class="save_button {{!hadChange?'disable_button':''}}" >
-                        <image class="circle_img" src="{{!hadChange?'/images/radius_border_disable.png':'/images/radius_border.png'}}" />
-                        <text class="save_text" style="color:{{!hadChange?'#bbbbbb':'#fff'}}" >保存设置</text>
-                        </view>
-                    
-                    </view>
-
-                </view> */}
             </ImageBackground>
         );
     }
 
     renderPrompt() {
-        return null
+        return (
+            <ImageBackground source={require('../statics/images/bg.jpg')} style={[styles.container,styles.promptContainer]}>
+                <Image style={styles.promptImage} source={require('../statics/images/adjust_slide_prompt.png')} ></Image>
+                <Text style={styles.promptText}>请调整睡姿到侧卧</Text>
+                <TouchableHighlight 
+                    activeOpacity={Theme.active.opacity}
+                    underlayColor='transparent'
+                    onPress={this.closePromptAction}
+                    style={styles.saveButton}>
+                    <Text style={styles.saveButtonText}>{this.props.device_data.pillowStatus >= 2 ? '确定' : '请侧卧'}</Text>
+                </TouchableHighlight>
+            </ImageBackground>
+        )
     }
 
     render() {
@@ -211,21 +208,26 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    risingAdjustButton: {
-        
-    },
-    pauseAdjustButton: {
-        
-    },
-    fallingAdjustButton: {
-        
-    },
     adjustButtonText: {
         ...Theme.font.common,
         textAlign: 'center',
         fontSize: 30,
         color: '#417505'
     },
+    promptContainer:{
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    promptImage:{
+        width: 300,
+        height: 300
+    },
+    promptText:{
+        marginTop: 50,
+        textAlign: 'center',
+        ...Theme.font.common,
+        fontSize: 18
+    }
 });
 
 function mapStateToProps(state) {
