@@ -73,7 +73,7 @@ class AdjustView extends Component {
         }
 
         PillowManager.ShareInstance().startSaveHeight().then(_ => {
-            _backAction()
+            this._backAction()
         })
     }
 
