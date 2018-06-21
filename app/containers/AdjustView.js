@@ -18,7 +18,7 @@ import StatusView from '../common/StatusView';
 
 class AdjustView extends Component {
     logList = []
-    state = {isSlidePrompt:true}
+    state = {isSlidePrompt:true, adjusting:false}
     static navigationOptions = ({ navigation }) => {
         const params = navigation.state.params || {};
 
@@ -61,14 +61,55 @@ class AdjustView extends Component {
         NotificationCenter.removeListener(this.sleepStatusListener)
     }
 
+    renderAdjustButton() {
+        if (this.state.adjusting) {
+            return (<View style={styles.adjustButtonContainer} >
+                <TouchableHighlight 
+                    activeOpacity={Theme.active.opacity}
+                    underlayColor='transparent'
+                    onPress={this.props.risingAction}
+                    style={[styles.adjustButton, styles.risingAdjustButton]}>
+                    <ImageBackground 
+                        source={require('../statics/images/circle_button_border.png')} 
+                        style={styles.adjustContainer}>
+                        <Text style={styles.adjustButtonText}>上升</Text>
+                    </ImageBackground>
+                </TouchableHighlight>
+                <TouchableHighlight 
+                    activeOpacity={Theme.active.opacity}
+                    underlayColor='transparent'
+                    onPress={this.props.fallingAction}
+                    style={[styles.adjustButton, styles.fallingAdjustButton]}>
+                    <ImageBackground 
+                        source={require('../statics/images/circle_button_border.png')} 
+                        style={styles.adjustContainer}>
+                        <Text style={styles.adjustButtonText}>下降</Text>
+                    </ImageBackground>
+                </TouchableHighlight>
+            </View>)
+        } else {
+            return (<View style={styles.adjustButtonContainer} >
+                <TouchableHighlight 
+                    activeOpacity={Theme.active.opacity}
+                    underlayColor='transparent'
+                    onPress={this.props.pauseAction}
+                    style={[styles.adjustButton, styles.pauseAdjustButton]}>
+                    <ImageBackground 
+                        source={require('../statics/images/circle_button_border.png')} 
+                        style={styles.adjustContainer}>
+                        <Text style={styles.adjustButtonText}>暂停</Text>
+                    </ImageBackground>
+                </TouchableHighlight>
+            </View>)
+        }
+    }
+
     renderBody() {
         return (
             <ImageBackground source={require('../statics/images/bg.jpg')} style={styles.container}>
                 <StatusView {...this.props}></StatusView>
                 <View style={styles.body} >
-                    <View style={styles.adjustButtonContainer} >
-                        
-                    </View>
+                    {this.renderAdjustButton()}
                     <Text style={styles.adjustPromptText} >点击暂停调整</Text>
                     <TouchableHighlight 
                         activeOpacity={Theme.active.opacity}
@@ -128,10 +169,12 @@ const styles = StyleSheet.create({
         flex: 1
     },
     adjustButtonContainer: {
-        paddingTop: 70,
-        paddingBottom: 70,
-        height: 200,
+        paddingTop: 50,
+        paddingBottom: 50,
+        height: 230,
         width: '100%',
+        flexDirection:'row',
+        justifyContent: 'space-around'
     },
     adjustPromptText: {
         width: '100%',
@@ -156,7 +199,33 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         ...Theme.font.common,
         fontSize: 18,
-    }
+    },
+    adjustContainer:{
+        flex: 1,
+        alignSelf: 'stretch',
+        justifyContent: 'center'
+    },
+    adjustButton:{
+        width: 130,
+        height: 130,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    risingAdjustButton: {
+        
+    },
+    pauseAdjustButton: {
+        
+    },
+    fallingAdjustButton: {
+        
+    },
+    adjustButtonText: {
+        ...Theme.font.common,
+        textAlign: 'center',
+        fontSize: 30,
+        color: '#417505'
+    },
 });
 
 function mapStateToProps(state) {

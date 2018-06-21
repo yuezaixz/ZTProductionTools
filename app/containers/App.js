@@ -23,7 +23,7 @@ const RootStack = StackNavigator(
         },
     },
     {
-        initialRouteName: 'Home',
+        initialRouteName: 'Adjust',
         /* The header config from HomeScreen is now here */
         navigationOptions: {
             headerStyle: {
