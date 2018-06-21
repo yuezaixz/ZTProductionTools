@@ -19,7 +19,12 @@ import StatusView from '../common/StatusView';
 
 class AdjustView extends Component {
     logList = []
-    state = {isSlidePrompt:false, adjusting:false}
+    state = {
+        isSlidePrompt:false, 
+        isAdjusting:false, 
+        hadChange:false,
+        hiddenBattery: true
+    }
     static navigationOptions = ({ navigation }) => {
         const params = navigation.state.params || {};
 
@@ -51,7 +56,7 @@ class AdjustView extends Component {
     }
 
     sleepStatus(data) {
-        
+        this.props.actions.readSleepStatus(data.status)
     }
 
     componentDidMount() {
@@ -63,20 +68,51 @@ class AdjustView extends Component {
     }
 
     saveAction() {
+        if (!this.state.hadChange) {
+            return
+        }
 
+        PillowManager.ShareInstance().startSaveHeight().then(_ => {
+            _backAction()
+        })
     }
 
     closePromptAction() {
+        if (this.props.device_data.pillowStatus == 2) {
+            PillowManager.ShareInstance().startManual().then(_ => {this.setState({isSlidePrompt:true})})
+        }
+    }
 
+    risingAction() {
+        if (this.props.device_data.pillowStatus != 2) {
+            this.props.actions.showToast('请侧卧', 2000)
+        } else {
+            this.setState({isAdjusting: true, processingStr:'充气中', hadChange: true})
+            PillowManager.ShareInstance().startRising()
+        }
+    }
+
+    fallingAction() {
+        if (this.props.device_data.pillowStatus != 2) {
+            this.props.actions.showToast('请侧卧', 2000)
+          } else {
+            this.setState({isAdjusting: true, processingStr:'放气中', hadChange: true})
+            PillowManager.ShareInstance().startFalling()
+          }
+    }
+
+    pauseAction() {
+        this.setState({isAdjusting: false, processingStr:'请点击'})
+        PillowManager.ShareInstance().startPausing()
     }
 
     renderAdjustButton() {
-        if (this.state.adjusting) {
+        if (!this.state.isAdjusting) {
             return (<View style={styles.adjustButtonContainer} >
                 <TouchableHighlight 
                     activeOpacity={Theme.active.opacity}
                     underlayColor='transparent'
-                    onPress={this.props.risingAction}
+                    onPress={this.risingAction.bind(this)}
                     style={[styles.adjustButton, styles.risingAdjustButton]}>
                     <ImageBackground 
                         source={require('../statics/images/circle_button_border.png')} 
@@ -87,7 +123,7 @@ class AdjustView extends Component {
                 <TouchableHighlight 
                     activeOpacity={Theme.active.opacity}
                     underlayColor='transparent'
-                    onPress={this.props.fallingAction}
+                    onPress={this.fallingAction.bind(this)}
                     style={[styles.adjustButton, styles.fallingAdjustButton]}>
                     <ImageBackground 
                         source={require('../statics/images/circle_button_border.png')} 
@@ -101,7 +137,7 @@ class AdjustView extends Component {
                 <TouchableHighlight 
                     activeOpacity={Theme.active.opacity}
                     underlayColor='transparent'
-                    onPress={this.props.pauseAction}
+                    onPress={this.pauseAction.bind(this)}
                     style={[styles.adjustButton, styles.pauseAdjustButton]}>
                     <ImageBackground 
                         source={require('../statics/images/circle_button_border.png')} 
@@ -116,7 +152,7 @@ class AdjustView extends Component {
     renderBody() {
         return (
             <ImageBackground source={require('../statics/images/bg.jpg')} style={styles.container}>
-                <StatusView {...this.props}></StatusView>
+                <StatusView {...this.state} pillowStatus={this.props.device_data.pillowStatus} ></StatusView>
                 <View style={styles.body} >
                     {this.renderAdjustButton()}
                     <Text style={styles.adjustPromptText} >点击暂停调整</Text>
@@ -136,13 +172,19 @@ class AdjustView extends Component {
         return (
             <ImageBackground source={require('../statics/images/bg.jpg')} style={[styles.container,styles.promptContainer]}>
                 <Image style={styles.promptImage} source={require('../statics/images/adjust_slide_prompt.png')} ></Image>
-                <Text style={styles.promptText}>请调整睡姿到侧卧</Text>
+                <Text style={styles.promptText}>
+                    {
+                        this.props.device_data.pillowStatus > 2 ? '请等待枕头调整到指定高度':(
+                            this.props.device_data.pillowStatus == 2 ?'请点击确定开始调整':'请调整睡姿到侧卧'
+                        )
+                    }
+                </Text>
                 <TouchableHighlight 
                     activeOpacity={Theme.active.opacity}
                     underlayColor='transparent'
-                    onPress={this.closePromptAction}
+                    onPress={this.closePromptAction.bind(this)}
                     style={styles.saveButton}>
-                    <Text style={styles.saveButtonText}>{this.props.device_data.pillowStatus >= 2 ? '确定' : '请侧卧'}</Text>
+                    <Text style={this.props.device_data.pillowStatus ==2 ?styles.saveButtonText:styles.saveButtonTextDisable}>{this.props.device_data.pillowStatus >= 2 ? '确定' : '请侧卧'}</Text>
                 </TouchableHighlight>
             </ImageBackground>
         )
@@ -196,6 +238,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         ...Theme.font.common,
         fontSize: 18,
+    },
+    saveButtonTextDisable: {
+        width: '100%',
+        textAlign: 'center',
+        ...Theme.font.common,
+        fontSize: 18,
+        color: '#bbbbbb'
     },
     adjustContainer:{
         flex: 1,

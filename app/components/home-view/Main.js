@@ -119,7 +119,7 @@ class Main extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <StatusView {...this.props}></StatusView>
+                <StatusView onDisconnect={this.props.onDisconnect} {...this.props.device_data}></StatusView>
 
                 <ScrollView style={styles.body}>
                     {this.renderBody()}

@@ -14,10 +14,8 @@ let {height, width} = Dimensions.get('window');
 export default class StatusView extends Component{
 
     renderBattery = () => {
-        const { device_data } = this.props;
-        
-        if (device_data.uuid) {
-            const voltage = (parseInt(device_data.percent) || 100)
+        if (this.props.uuid && !this.props.hiddenBattery) {
+            const voltage = (parseInt(this.props.percent) || 100)
             // const voltage = 50
             const voltageStr = voltage + '%'
             return (
@@ -32,8 +30,7 @@ export default class StatusView extends Component{
     }
 
     renderDisconnect = () => {
-        const { device_data } = this.props;
-        if (device_data.uuid) {
+        if (this.props.uuid && !this.props.hiddenBattery) {
             return (
                 <TouchableHighlight
                         activeOpacity={Theme.active.opacity}
@@ -50,18 +47,17 @@ export default class StatusView extends Component{
     }
 
     renderPillow = () => {
-        const { device_data } = this.props;
-        if (device_data.isSlide) {
+        if (this.props.isSlide) {
             return (
                 <View style={styles.pillow} >
-                <Image style={[device_data.isDown?BasicStyle.down:{}, styles.arrowImage]} source={device_data.isProcessing?require('../statics/images/arrow_animation_up.gif'):{}} ></Image>
+                    <Image style={[this.props.isDown?BasicStyle.down:{}, styles.arrowImage]} source={this.props.isProcessing?require('../statics/images/arrow_animation_up.gif'):{}} ></Image>
                     <Image style={styles.pillowImage} source={require('../statics/images/main_pillow_slide.png')}></Image>
                 </View>
             )
         } else {
             return (
                 <View style={styles.pillow} >
-                <Image style={[device_data.isDown?BasicStyle.down:{}, styles.arrowImage]} source={false?require('../statics/images/arrow_animation_up.gif'):{}} ></Image>
+                    <Image style={[this.props.isDown?BasicStyle.down:{}, styles.arrowImage]} source={false?require('../statics/images/arrow_animation_up.gif'):{}} ></Image>
                     <Image style={styles.pillowImage} source={require('../statics/images/main_pillow_flat.png')}></Image>
                 </View>
             )
@@ -69,12 +65,11 @@ export default class StatusView extends Component{
     }
 
     renderBottomView = () => {
-        const { device_data } = this.props;
-        if (device_data.isProcessing) {
+        if (this.props.isProcessing) {
             return (
                 <View style={styles.bottomView} >
                     <Image style={styles.bottomViewLeft} source={require('../statics/images/main_processing.gif')} ></Image>
-                    <Text style={styles.bottomViewText}>{device_data.processingStr || '---'}</Text>
+                    <Text style={styles.bottomViewText}>{this.props.processingStr || '---'}</Text>
                     <Image style={styles.bottomViewRight} source={require('../statics/images/main_processing.gif')} ></Image>
                 </View>
             )
@@ -82,7 +77,7 @@ export default class StatusView extends Component{
             return (
                 <View style={styles.bottomView} >
                     <Image style={styles.bottomViewLeft} source={require('../statics/images/main_processed.png')} ></Image>
-                    <Text style={styles.bottomViewText}>{device_data.processingStr || '---'}</Text>
+                    <Text style={styles.bottomViewText}>{this.props.processingStr || '---'}</Text>
                     <Image style={styles.bottomViewRight} source={require('../statics/images/main_processed.png')} ></Image>
                 </View>
             )

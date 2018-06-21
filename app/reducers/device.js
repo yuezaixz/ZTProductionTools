@@ -66,7 +66,13 @@ export default function(state = initialState, action) {
         case types.READ_SLEEPDATA:
             return {...state, ...action.data};
         case types.READ_SLEEPSTATUS:
-            return {...state, sleepStatus: action.status};
+        {
+            let pillowStatus = action.status
+            let isSlide = pillowStatus == 2 ? true : (pillowStatus == 1 ? false : state.isSlide)
+            let isProcessing = pillowStatus > 2
+            let processingStr = ['请点击', '请点击', '请点击', '充气中', '放气中'][pillowStatus]
+            return {...state, pillowStatus, isSlide, isProcessing, processingStr};
+        }
         case types.READ_LOG:
             return {...state, logList: action.logList};
         case types.CLEAR_LOG:

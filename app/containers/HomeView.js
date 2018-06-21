@@ -48,7 +48,7 @@ class HomeView extends Component {
     _adjustAction(){
         console.log('_adjustAction');
         
-        // this.props.navigation.navigate('Adjust')
+        this.props.navigation.navigate('Adjust')
     }
     _logAction(){
         console.log('_logAction');
@@ -170,10 +170,16 @@ class HomeView extends Component {
     }
 
     onConnected() {
+        if (!this.state.isVisible) {
+            return
+        }
         this.props.actions.showLoading('连接成功', 2000);
     }
 
     foundLastDevice(data) {
+        if (!this.state.isVisible) {
+            return
+        }
         let device = data.device
         // 防止重复点击，停止搜索
         if (this.props.device_data.isConnecting) {
@@ -189,31 +195,49 @@ class HomeView extends Component {
     }
 
     readVoltage(data) {
+        if (!this.state.isVisible) {
+            return
+        }
         console.log(data)
         this.props.actions.readVoltage(data)
     }
 
     readVersion(data) {
+        if (!this.state.isVisible) {
+            return
+        }
         console.log(data)
         this.props.actions.readVersion(data)
     }
 
     readMacAddress(data) {
+        if (!this.state.isVisible) {
+            return
+        }
         console.log(data.macAddress)
         this.props.actions.readMacAddress(data.macAddress)
     }
 
     readSleepData(data) {
+        if (!this.state.isVisible) {
+            return
+        }
         console.log(data)
         this.props.actions.readSleepData(data)
     }
 
     readSleepStatus(data) {
+        if (!this.state.isVisible) {
+            return
+        }
         console.log(data.status)
         this.props.actions.readSleepStatus(data.status)
     }
 
     updateDeviceList(data) {
+        if (!this.state.isVisible) {
+            return
+        }
         if (data.data) {
             this.props.actions.updateDeviceList(data.data)
         }
@@ -289,20 +313,20 @@ class HomeView extends Component {
         this.props.actions.stopSearchDevice()
     }
     bindEvents = ()=>{
-        // this.willFocusSubscription  = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
-        //     if (this.currentRoute !== event.data.route) {//切换会当前页面，开始搜索，列表显示
-        //         this.setState({isVisible: false});
-        //     }
-        // });
-        // this.didFocusSubscription  = this.props.navigator.navigationContext.addListener('didfocus', (event) => {
-        //     if (this.currentRoute === event.data.route) {
-        //         this.setState({isVisible: true});
-        //     }
-        // });
+        this.willFocusSubscription  = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
+            if (this.currentRoute !== event.data.route) {//切换会当前页面，开始搜索，列表显示
+                this.setState({isVisible: false});
+            }
+        });
+        this.didFocusSubscription  = this.props.navigator.navigationContext.addListener('didfocus', (event) => {
+            if (this.currentRoute === event.data.route) {
+                this.setState({isVisible: true});
+            }
+        });
     }
     unBindEvents = ()=>{
-        // this.willFocusSubscription.remove();
-        // this.didFocusSubscription.remove();
+        this.willFocusSubscription.remove();
+        this.didFocusSubscription.remove();
     }
 
     render() {
