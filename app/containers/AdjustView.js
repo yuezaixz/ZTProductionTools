@@ -87,7 +87,7 @@ class AdjustView extends Component {
         if (this.props.device_data.pillowStatus != 2) {
             this.props.actions.showToast('请侧卧', 2000)
         } else {
-            this.setState({isAdjusting: true, processingStr:'充气中', hadChange: true})
+            this.setState({isAdjusting: true, isProcessing: true , processingStr:'充气中', hadChange: true})
             PillowManager.ShareInstance().startRising()
         }
     }
@@ -96,13 +96,13 @@ class AdjustView extends Component {
         if (this.props.device_data.pillowStatus != 2) {
             this.props.actions.showToast('请侧卧', 2000)
           } else {
-            this.setState({isAdjusting: true, processingStr:'放气中', hadChange: true})
+            this.setState({isAdjusting: true, isProcessing: true, processingStr:'放气中', hadChange: true})
             PillowManager.ShareInstance().startFalling()
           }
     }
 
     pauseAction() {
-        this.setState({isAdjusting: false, processingStr:'请点击'})
+        this.setState({isAdjusting: false, isProcessing: false, processingStr:'请点击'})
         PillowManager.ShareInstance().startPausing()
     }
 
@@ -159,7 +159,7 @@ class AdjustView extends Component {
                     <TouchableHighlight 
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
-                        onPress={this.saveAction}
+                        onPress={this.saveAction.bind(this)}
                         style={styles.saveButton}>
                         <Text style={styles.saveButtonText}>调整侧卧高度</Text>
                     </TouchableHighlight>
