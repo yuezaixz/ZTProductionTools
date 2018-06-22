@@ -103,11 +103,11 @@ class HomeView extends Component {
         this.props.navigation.addListener(
             'didFocus',
             payload => {
+                this.setState({isVisible: true});
                 if (!this.props.device_data.uuid) {
                     setTimeout(() => {
                         setTimeout(() => {this.props.actions.startSearchDevice()}, 500)
                         this.isFirst = false
-                        this.setState({isVisible: true});
                     }, 500)
                 }
             }
