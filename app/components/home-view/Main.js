@@ -20,7 +20,7 @@ class Main extends Component {
 
         return device_data.device_list.map((item, idx) => {
             return <DeviceListItem {...this.props}
-                             name={item.name}
+                             name={item.localName || item.name}
                              uuid={item.uuid}
                              key={item.uuid+idx}
                              rssi={item.rssi}
