@@ -72,7 +72,7 @@ export default function(state = initialState, action) {
             let isSlide = pillowStatus == 2 ? true : (pillowStatus == 1 ? false : state.isSlide)
             let isProcessing = pillowStatus > 2
             let isDown = pillowStatus == 4
-            let processingStr = ['请点击', '请点击', '请点击', '充气中', '放气中'][pillowStatus]
+            let processingStr = ['空置中', '仰卧中', '侧卧中', '充气中', '放气中'][pillowStatus]
             return {...state, pillowStatus, isSlide, isFlating ,isProcessing, processingStr, isDown};
         }
         case types.READ_LOG:
