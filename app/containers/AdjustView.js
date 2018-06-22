@@ -89,7 +89,7 @@ class AdjustView extends Component {
         if (this.props.device_data.pillowStatus != 2) {
             this.props.actions.showToast('请侧卧', 2000)
         } else {
-            this.setState({isAdjusting: true, isProcessing: true , processingStr:'充气中', hadChange: true})
+            this.setState({isAdjusting: true, isProcessing: true, isFlating: true, isDown:false, processingStr:'充气中', hadChange: true})
             PillowManager.ShareInstance().startRising()
         }
     }
@@ -98,13 +98,13 @@ class AdjustView extends Component {
         if (this.props.device_data.pillowStatus != 2) {
             this.props.actions.showToast('请侧卧', 2000)
           } else {
-            this.setState({isAdjusting: true, isProcessing: true, processingStr:'放气中', hadChange: true})
+            this.setState({isAdjusting: true, isProcessing: true, isFlating: true, isDown:true, processingStr:'放气中', hadChange: true})
             PillowManager.ShareInstance().startFalling()
           }
     }
 
     pauseAction() {
-        this.setState({isAdjusting: false, isProcessing: false, processingStr:'请点击'})
+        this.setState({isAdjusting: false, isProcessing: false, isFlating: false, processingStr:'请点击'})
         PillowManager.ShareInstance().startPausing()
     }
 

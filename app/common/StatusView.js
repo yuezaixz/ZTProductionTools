@@ -50,14 +50,14 @@ export default class StatusView extends Component{
         if (this.props.isSlide) {
             return (
                 <View style={styles.pillow} >
-                    <Image style={[this.props.isDown?BasicStyle.down:{}, styles.arrowImage]} source={this.props.isProcessing?require('../statics/images/arrow_animation_up.gif'):{}} ></Image>
+                    <Image style={[this.props.isDown?BasicStyle.down:{}, styles.arrowImage]} source={this.props.isFlating?require('../statics/images/arrow_animation_up.gif'):{}} ></Image>
                     <Image style={styles.pillowImage} source={require('../statics/images/main_pillow_slide.png')}></Image>
                 </View>
             )
         } else {
             return (
                 <View style={styles.pillow} >
-                    <Image style={[this.props.isDown?BasicStyle.down:{}, styles.arrowImage]} source={false?require('../statics/images/arrow_animation_up.gif'):{}} ></Image>
+                    <Image style={[this.props.isDown?BasicStyle.down:{}, styles.arrowImage]} source={this.props.isFlating?require('../statics/images/arrow_animation_up.gif'):{}} ></Image>
                     <Image style={styles.pillowImage} source={require('../statics/images/main_pillow_flat.png')}></Image>
                 </View>
             )
