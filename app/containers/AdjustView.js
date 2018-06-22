@@ -56,7 +56,9 @@ class AdjustView extends Component {
     }
 
     sleepStatus(data) {
-        this.props.actions.readSleepStatus(data.status)
+        if (this.props.device_data.pillowStatus != data.status) {
+            this.props.actions.readSleepStatus(data.status)
+        }
     }
 
     componentDidMount() {

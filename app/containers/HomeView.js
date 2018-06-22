@@ -233,7 +233,9 @@ class HomeView extends Component {
             return
         }
         console.log(data.status)
-        this.props.actions.readSleepStatus(data.status)
+        if (this.props.device_data.pillowStatus != data.status) {
+            this.props.actions.readSleepStatus(data.status)
+        }
     }
 
     updateDeviceList(data) {
