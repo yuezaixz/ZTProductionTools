@@ -542,7 +542,7 @@ export default class PillowManager{
     }
 
     deviceDisconnect(uuid, isKeepLast) {
-        if (isKeepLast) {
+        if (!isKeepLast) {
             this.lastConnectUUID = null
             AsyncStorage.removeItem(StorageKeys.LAST_CONNECT_UUID)
         }
