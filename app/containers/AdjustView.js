@@ -16,6 +16,7 @@ import NotificationCenter from "../../src/public/Com/NotificationCenter/Notifica
 import PillowManager from '../../src/manager/PillowManager';
 import Actions from '../actions';
 import StatusView from '../common/StatusView';
+import * as util from '../../src/utils/InsoleUtils';
 
 class AdjustView extends Component {
     logList = []
@@ -25,6 +26,9 @@ class AdjustView extends Component {
         hadChange:false,
         hiddenBattery: true
     }
+    isSaving = false//是否是正在保存操作
+    isFalling = false//上次调试是否为下降
+
     static navigationOptions = ({ navigation }) => {
         const params = navigation.state.params || {};
 
@@ -53,11 +57,91 @@ class AdjustView extends Component {
                                     this.sleepStatus.bind(this), 
                                     ''
                                 );
+        this.recvACKListener = NotificationCenter
+                                .createListener(
+                                    NotificationCenter.name.deviceData.recvACK, 
+                                    this.handleRecvACK.bind(this), 
+                                    ''
+                                );
+    }
+
+    handleRecvACK(data) {
+        if (!data.command) {
+            return
+        }
+
+        if (util.startWith(data.command, 'HAM0')) {//暂停
+            if (!this.isSaving) {
+              if (this.isFalling) {
+                setTimeout(() => { 
+                    this.props.actions.hiddenLoading()
+                    this.setState({
+                        isAdjusting: false, 
+                        isProcessing: true, 
+                        processingStr:'请保存', 
+                        hadChange: true
+                    })
+                }, 4000)
+              } else {
+                this.props.actions.hiddenLoading()
+                this.setState({
+                    isAdjusting: false, 
+                    isProcessing: false, 
+                    processingStr:'请保存', 
+                    hadChange: true
+                })
+              }
+            }
+        } else if (util.startWith(data.command, 'HIM1')) {//上升
+            if (this.isSaving) {//说明不是真的用户操作上升，而是保存前为了获得正确的气压，充气一会发暂停
+                setTimeout(()=>{
+                    PillowManager.ShareInstance().startPausing()
+                }, 2000)
+            } else {
+                this.props.actions.hiddenToast()
+                this.setState({
+                    isAdjusting: true, 
+                    isProcessing: true, 
+                    processingStr:'充气中', 
+                    hadChange: true
+                })
+            }
+        } else if (util.startWith(data.command, 'HDM1')) {//下降
+            this.props.actions.hiddenToast()
+            this.setState({
+                isAdjusting: true, 
+                isProcessing: true, 
+                processingStr:'放气中', 
+                hadChange: true
+            })
+        } else if (util.startWith(data.command, 'HCD')) {//保存
+            this.props.actions.showLoading('保存成功')
+            setTimeout(() => {
+                this.isSaving = false
+                this.props.actions.hiddenLoading()
+                this._backAction()
+            }, 2000)
+        } else if (data.command === 'ADJUST DONE' && this.isSaving) {
+            PillowManager.ShareInstance().startSaveHeight()
+        }
     }
 
     sleepStatus(data) {
         if (this.props.device_data.pillowStatus != data.status) {
             this.props.actions.readSleepStatus(data.status, data.poseCode, data.flatCode)
+        }
+
+        if (this.state.isSlidePrompt && (data.poseCode == 1)) {
+            PillowManager.ShareInstance().startPausing().then(() => {
+                return PillowManager.ShareInstance().stopManual()
+            }).then(() =>{
+                this.setState({
+                    hadChange: false,
+                    isSlidePrompt: false,
+                    isAdjusting: false, 
+                    processingStr: '请点击'
+                })
+            })
         }
     }
 
@@ -67,6 +151,7 @@ class AdjustView extends Component {
     componentWillUnmount(){
         PillowManager.ShareInstance().stopManual()
         NotificationCenter.removeListener(this.sleepStatusListener)
+        NotificationCenter.removeListener(this.recvACKListener)
     }
 
     saveAction() {
@@ -74,9 +159,15 @@ class AdjustView extends Component {
             return
         }
 
-        PillowManager.ShareInstance().startSaveHeight().then(_ => {
-            this._backAction()
-        })
+        this.props.actions.showLoading('正在保存')
+
+        if (this.isFalling) {
+            this.isSaving = true
+            PillowManager.ShareInstance().startInflate()
+        } else {
+            this.isSaving = true
+            PillowManager.ShareInstance().startSaveHeight()
+        }
     }
 
     closePromptAction() {
@@ -89,7 +180,10 @@ class AdjustView extends Component {
         if (this.props.device_data.pillowStatus != 2) {
             this.props.actions.showToast('请侧卧', 2000)
         } else {
-            this.setState({isAdjusting: true, isProcessing: true, isFlating: true, isDown:false, processingStr:'充气中', hadChange: true})
+            this.isSaving = false
+            this.isFalling = false
+            //暂时先发手动模式
+            this.props.actions.showToast('准备充气', 2000)
             PillowManager.ShareInstance().startRising()
         }
     }
@@ -97,14 +191,16 @@ class AdjustView extends Component {
     fallingAction() {
         if (this.props.device_data.pillowStatus != 2) {
             this.props.actions.showToast('请侧卧', 2000)
-          } else {
-            this.setState({isAdjusting: true, isProcessing: true, isFlating: true, isDown:true, processingStr:'放气中', hadChange: true})
+        } else {
+            this.isFalling = true
+            this.isSaving = false
+            this.props.actions.showToast('准备放气', 2000)
             PillowManager.ShareInstance().startFalling()
-          }
+        }
     }
 
     pauseAction() {
-        this.setState({isAdjusting: false, isProcessing: false, isFlating: false, processingStr:'请点击'})
+        this.props.actions.showLoading('正在停止')
         PillowManager.ShareInstance().startPausing()
     }
 

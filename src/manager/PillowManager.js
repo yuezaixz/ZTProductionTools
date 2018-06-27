@@ -203,6 +203,11 @@ export default class PillowManager{
 
             } else if (util.startWith(dataStr, "Recv ACK")) {
                 NotificationCenter.post(NotificationCenter.name.deviceData.recvACK)
+            } else if (util.startWith(dataStr, "RecvACK:") && dataStr.length > 8 ) {
+                let responseStr = dataStr.substring(8, dataStr.length)
+                NotificationCenter.post(NotificationCenter.name.deviceData.recvACK, {command:responseStr})
+            } else if (dataStr === '$WR:H-ADJUST DONE!') {
+                NotificationCenter.post(NotificationCenter.name.deviceData.recvACK, {command:'ADJUST DONE'})
             }
         }
     }
