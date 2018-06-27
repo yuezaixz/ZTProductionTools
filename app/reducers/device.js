@@ -68,12 +68,9 @@ export default function(state = initialState, action) {
         case types.READ_SLEEPSTATUS:
         {
             let pillowStatus = action.status
-            let isFlating = pillowStatus > 2
-            let isSlide = pillowStatus == 2 ? true : (pillowStatus == 1 ? false : state.isSlide)
-            let isProcessing = pillowStatus > 2
-            let isDown = pillowStatus == 4
-            let processingStr = ['空置中', '仰卧中', '侧卧中', '充气中', '放气中'][pillowStatus]
-            return {...state, pillowStatus, isSlide, isFlating ,isProcessing, processingStr, isDown};
+            let isProcessing = action.flatCode > 0
+            let processingStr = [null, '充气中', '放气中'][action.flatCode] || ['空置中', '仰卧中', '侧卧中'][action.poseCode]
+            return {...state, pillowStatus, poseCode:action.poseCode, flatCode:action.flatCode , isProcessing, processingStr};
         }
         case types.READ_LOG:
             return {...state, logList: action.logList};

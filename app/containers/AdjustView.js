@@ -57,7 +57,7 @@ class AdjustView extends Component {
 
     sleepStatus(data) {
         if (this.props.device_data.pillowStatus != data.status) {
-            this.props.actions.readSleepStatus(data.status)
+            this.props.actions.readSleepStatus(data.status, data.poseCode, data.flatCode)
         }
     }
 
@@ -154,7 +154,11 @@ class AdjustView extends Component {
     renderBody() {
         return (
             <ImageBackground source={require('../statics/images/bg.jpg')} style={styles.container}>
-                <StatusView {...this.state} pillowStatus={this.props.device_data.pillowStatus} ></StatusView>
+                <StatusView {...this.state} 
+                    pillowStatus={this.props.device_data.pillowStatus} 
+                    flatCode={this.props.device_data.flatCode} 
+                    poseCode={this.props.device_data.poseCode}>
+                </StatusView>
                 <View style={styles.body} >
                     {this.renderAdjustButton()}
                     <Text style={styles.adjustPromptText} >点击暂停调整</Text>

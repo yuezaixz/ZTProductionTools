@@ -47,41 +47,26 @@ export default class StatusView extends Component{
     }
 
     renderPillow = () => {
-        if (this.props.isSlide) {
-            return (
-                <View style={styles.pillow} >
-                    <Image style={[this.props.isDown?BasicStyle.down:{}, styles.arrowImage]} source={this.props.isFlating?require('../statics/images/arrow_animation_up.gif'):{}} ></Image>
-                    <Image style={styles.pillowImage} source={require('../statics/images/main_pillow_slide.png')}></Image>
-                </View>
-            )
-        } else {
-            return (
-                <View style={styles.pillow} >
-                    <Image style={[this.props.isDown?BasicStyle.down:{}, styles.arrowImage]} source={this.props.isFlating?require('../statics/images/arrow_animation_up.gif'):{}} ></Image>
-                    <Image style={styles.pillowImage} source={require('../statics/images/main_pillow_flat.png')}></Image>
-                </View>
-            )
-        }
+        return (
+            <View style={styles.pillow} >
+                <Image style={[this.props.flatCode == 2?BasicStyle.down:{}, styles.arrowImage]} source={this.props.flatCode != 0?require('../statics/images/arrow_animation_up.gif'):{}} ></Image>
+                <Image style={styles.pillowImage} source={this.props.poseCode == 2?require('../statics/images/main_pillow_slide.png'):require('../statics/images/main_pillow_flat.png')}></Image>
+            </View>
+        )
     }
 
     renderBottomView = () => {
-        if (this.props.isProcessing) {
-            return (
-                <View style={styles.bottomView} >
-                    <Image style={styles.bottomViewLeft} source={require('../statics/images/main_processing.gif')} ></Image>
-                    <Text style={styles.bottomViewText}>{this.props.processingStr || '---'}</Text>
-                    <Image style={styles.bottomViewRight} source={require('../statics/images/main_processing.gif')} ></Image>
-                </View>
-            )
-        } else {
-            return (
-                <View style={styles.bottomView} >
-                    <Image style={styles.bottomViewLeft} source={require('../statics/images/main_processed.png')} ></Image>
-                    <Text style={styles.bottomViewText}>{this.props.processingStr || '---'}</Text>
-                    <Image style={styles.bottomViewRight} source={require('../statics/images/main_processed.png')} ></Image>
-                </View>
-            )
-        }
+        return (
+            <View style={styles.bottomView} >
+                <Image style={styles.bottomViewLeft} source={this.processingImage(this.props.isProcessing)} ></Image>
+                <Text style={styles.bottomViewText}>{this.props.processingStr || '---'}</Text>
+                <Image style={styles.bottomViewRight} source={this.processingImage(this.props.isProcessing)} ></Image>
+            </View>
+        )
+    }
+
+    processingImage(isProcessing) {
+        return isProcessing?require('../statics/images/main_processing.gif'):require('../statics/images/main_processed.png')
     }
 
     actionDisconnect() {

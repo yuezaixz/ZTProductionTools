@@ -94,8 +94,8 @@ export function readSleepData(data) {
     return {type: types.READ_SLEEPDATA, data}
 }
 
-export function readSleepStatus(status) {
-    return {type: types.READ_SLEEPSTATUS, status}
+export function readSleepStatus(status, poseCode, flatCode) {
+    return {type: types.READ_SLEEPSTATUS, status, poseCode, flatCode}
 }
 
 export function readLog(logList) {

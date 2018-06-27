@@ -186,7 +186,7 @@ export default class PillowManager{
                 } else {
                     status = 2 + parseInt(responseStr2)
                 }
-                NotificationCenter.post(NotificationCenter.name.deviceData.sleepStatus, {status})
+                NotificationCenter.post(NotificationCenter.name.deviceData.sleepStatus, {status, poseCode:parseInt(responseStr1), flatCode:parseInt(responseStr2)})
             } else if (util.startWith(dataStr, "Reached Side Line")) {//充气成功
                 NotificationCenter.post(NotificationCenter.name.deviceData.completeInflate)
             } else if (util.startWith(dataStr, "Reached Flat Line")) {//放气成功
