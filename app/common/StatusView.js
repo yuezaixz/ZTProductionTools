@@ -65,7 +65,9 @@ export default class StatusView extends Component{
     }
 
     renderBottomView = () => {
-        if (!this.props.isSearching && this.props.poseCode != 0) {
+        if (!this.props.isSearching && this.props.poseCode == 0 && this.props.flatCode == 0) {
+            return null;
+        } else {
             return (
                 <View style={styles.bottomView} >
                     <Image style={styles.bottomViewLeft} source={this.processingImage(this.props.isProcessing)} ></Image>
@@ -74,7 +76,6 @@ export default class StatusView extends Component{
                 </View>
             )
         }
-        return null;
     }
 
     processingImage(isProcessing) {
