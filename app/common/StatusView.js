@@ -47,7 +47,6 @@ export default class StatusView extends Component{
                         style={styles.disconnectTouchContainer}
                         onPress={this.actionDisconnect.bind(this)}>
                     <View style={styles.disconnect} >
-                        <Image style={styles.disconnectImage} source={require('../statics/images/main_disconnect_device.png')} ></Image>
                         <Text style={styles.disconnectText}>断开</Text>
                     </View>
                 </TouchableHighlight>
@@ -155,9 +154,12 @@ const styles = StyleSheet.create({
     },
     disconnect: {
         flexDirection:'row',
+        width: 45
     },
     disconnectText: {
-        ...Theme.font.common
+        ...Theme.font.common,
+        width: '100%',
+        textAlign: 'center'
     },
     disconnectImage: {
         width: 17,
