@@ -145,9 +145,11 @@ export default class PillowManager{
                 var responseStr2 = dataStr.substring(5, 6)
                 console.log('用电模式:' + responseStr2)
             
+                let isCharging = responseStr2 !== '0'
+
                 var percent = util.voltagePercent(parseFloat(responseStr1) / 1000, parseInt(responseStr2))
                 this.startReadVersion()
-                NotificationCenter.post(NotificationCenter.name.deviceData.voltage, {voltage, percent})
+                NotificationCenter.post(NotificationCenter.name.deviceData.voltage, {voltage, percent, isCharging})
             } else if (util.startWith(dataStr, 'P:') && dataStr.indexOf('A:') === -1) {
                 var responseStr1 = dataStr.substring(2, dataStr.length)
                 var splitted = responseStr1.split(",");

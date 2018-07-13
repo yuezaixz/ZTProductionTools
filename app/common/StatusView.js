@@ -10,8 +10,16 @@ import {
 
 import {Theme, BasicStyle} from "../styles";
 let {height, width} = Dimensions.get('window');
+let winSize = Dimensions.get('window');
 
 export default class StatusView extends Component{
+
+    renderFlash = () => {
+        if (this.props.isCharging) {
+            return (<Image style={styles.flashImg} source={require('../statics/images/main_flash.png')} ></Image>)
+        }
+        return null
+    }
 
     renderBattery = () => {
         if (this.props.uuid && !this.props.hiddenBattery) {
@@ -22,7 +30,8 @@ export default class StatusView extends Component{
                 <View style={styles.battery} >
                     <Text style={styles.batteryText} >{voltageStr}</Text>
                     <Image style={styles.batteryImage} source={require('../statics/images/main_battery_border.png')} ></Image>
-                    <View style={[styles.batteryBlock,{width:voltage/5}]} ></View>
+                    <View style={[styles.batteryBlock, this.props.isCharging?{backgroundColor:'#46EA75', right:19}:{right:6}, {width:voltage/5}]} ></View>
+                    {this.renderFlash()}
                 </View>
             )
         }
@@ -113,19 +122,26 @@ const styles = StyleSheet.create({
     batteryText: {
         width: 50,
         textAlign: 'right',
-        ...Theme.font.common
+        fontSize: 30/winSize.scale,
+        color: '#FFFFFF',
     },
     batteryImage: {
-        width: 30,
-        height: 17,
-        marginLeft: 5
+        width: 29,
+        height: 14,
+        marginLeft: 5,
+        resizeMode: 'stretch',
     },
     batteryBlock: {
         position: 'absolute',
         backgroundColor: '#FFFFFF',
-        height: 11,
-        right:7,
-        marginTop: 3
+        height: 10,
+        marginTop: 2
+    },
+    flashImg: {
+        marginLeft: 5,
+        height: 17,
+        width: 8,
+        resizeMode: 'stretch',
     },
     disconnectTouchContainer: {
         position: 'absolute',
