@@ -6,6 +6,8 @@ const initialState = {
     processingStr: '搜索中',
     isProcessing: true,
     isSearching: true,
+    poseCode:0,
+    flatCode:0,
 }
 
 export default function(state = initialState, action) {
@@ -30,7 +32,9 @@ export default function(state = initialState, action) {
                 name: action.name, 
                 isProcessing: false, 
                 processingStr:'已连接', 
-                uuid: action.uuid, 
+                uuid: action.uuid,
+                poseCode:0,
+                flatCode:0,
                 serviceUUID: action.serviceUUID, 
                 noitfyUUID: action.noitfyUUID, 
                 writeUUID: action.writeUUID

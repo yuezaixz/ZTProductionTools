@@ -56,13 +56,16 @@ export default class StatusView extends Component{
     }
 
     renderBottomView = () => {
-        return (
-            <View style={styles.bottomView} >
-                <Image style={styles.bottomViewLeft} source={this.processingImage(this.props.isProcessing)} ></Image>
-                <Text style={styles.bottomViewText}>{this.props.processingStr || '---'}</Text>
-                <Image style={styles.bottomViewRight} source={this.processingImage(this.props.isProcessing)} ></Image>
-            </View>
-        )
+        if (!this.props.isSearching && this.props.poseCode != 0) {
+            return (
+                <View style={styles.bottomView} >
+                    <Image style={styles.bottomViewLeft} source={this.processingImage(this.props.isProcessing)} ></Image>
+                    <Text style={styles.bottomViewText}>{this.props.processingStr || '---'}</Text>
+                    <Image style={styles.bottomViewRight} source={this.processingImage(this.props.isProcessing)} ></Image>
+                </View>
+            )
+        }
+        return null;
     }
 
     processingImage(isProcessing) {

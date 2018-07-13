@@ -72,13 +72,17 @@ class HomeView extends Component {
         })
     }
     _clearDataAction(){
-        this.props.actions.showToast('准备清除')
-        PillowManager.ShareInstance().clearData().then(() => {
-            this.props.actions.showToast('清除成功', 2000)
-        }).catch(error => {
-            console.log(error)
-            this.props.actions.showToast('提示清除失败', 2000);
-        })
+        this.props.actions.showModal('提示','是否确认要清空数据？', [
+            {keyTitle:'好的', callBack:()=>{
+                this.props.actions.showToast('准备清除')
+                PillowManager.ShareInstance().clearData().then(() => {
+                    this.props.actions.showToast('清除成功', 2000)
+                }).catch(error => {
+                    console.log(error)
+                    this.props.actions.showToast('提示清除失败', 2000);
+                })
+            }}
+        ])
     }
     _disconnectAction() {
         if (this.props.device_data.uuid) {

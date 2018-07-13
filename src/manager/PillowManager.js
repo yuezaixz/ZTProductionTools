@@ -156,7 +156,7 @@ export default class PillowManager{
                     flatTime: util.timeStr(parseInt(splitted[1])) || "0分",
                     slideTime: util.timeStr(parseInt(splitted[2])) || "0分",
                     slidePercent: parseInt(splitted[3]),
-                    sleepPose: parseInt(splitted[1]) >= parseInt(splitted[2])?'侧睡':'仰睡',
+                    sleepPose: parseInt(splitted[1]) == 0 && parseInt(splitted[2])==0?'暂无统计': (parseInt(splitted[1]) > parseInt(splitted[2])?'仰睡':'侧睡'),
                 }
                 this.startReadMacaddress()
                 NotificationCenter.post(NotificationCenter.name.deviceData.sleepData, data)
