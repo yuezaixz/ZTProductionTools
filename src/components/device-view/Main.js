@@ -202,7 +202,7 @@ class Main extends Component {
                         </TouchableHighlight>
                     </View>
                 </View>
-                <View style={styles.air_pressure_block}>
+                {/* <View style={styles.air_pressure_block}>
                     <View style={styles.block_line} />
                     <Text style={[styles.block_title,styles.block_title_long]}>气压校准功能测试</Text>
                     <View style={[styles.block_main,styles.block_main_big]} >
@@ -221,7 +221,7 @@ class Main extends Component {
                             </Text>
                         </TouchableHighlight>
                     </View>
-                </View>
+                </View> */}
                 <View style={styles.log_block} >
                     {this.renderLogList()}
                 </View>

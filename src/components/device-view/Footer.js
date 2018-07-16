@@ -27,8 +27,7 @@ class Footer extends Component {
                 style={{flex:1}}
                 onPress={this.handleNext.bind(this)}>
                 <View style={styles.buttonContainer} >
-                    <Text style={[this.props.device_data.hadInflateTest&&this.props.device_data.voltage&&
-                    (this.props.device_data.fcpMax||this.props.device_data.fcpMax==0)&&this.props.device_data.hadFATTest ?styles.text:styles.textDisable, styles.title]}>
+                    <Text style={[this.props.device_data.hadFATTest&&this.props.device_data.voltage?styles.text:styles.textDisable, styles.title]}>
                         下一步（传感器校准）
                     </Text>
                 </View>
