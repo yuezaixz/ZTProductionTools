@@ -21,13 +21,17 @@ export function startSearchDevice() {
     }
 }
 
-export function updateDeviceList(list) {
-    return {type: types.UPDATE_DEVICE_LIST, devices: list}
+export function updateDeviceList(list, strongDevice) {
+    return {type: types.UPDATE_DEVICE_LIST, devices: list, strongDevice}
 }
 
 export function stopSearchDevice() {
     PillowManager.ShareInstance().stopSearchDevice()
     return {type: types.STOP_SEARCH_DEVICE}
+}
+
+export function changeOnlyStrong(onlyStrong) {
+    return {type: types.ONLY_STRONG, onlyStrong}
 }
 
 export function startDeviceConnect(device) {

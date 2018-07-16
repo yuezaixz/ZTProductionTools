@@ -479,7 +479,15 @@ export default class PillowManager{
 
                             this.device_list = [...new_list,...current_list]
 
-                            NotificationCenter.post(NotificationCenter.name.search.updateList, {data:this.device_list})
+                            let strongDevice = this.device_list.reduce((accumulator, currentValue) =>{
+                                if (!accumulator) {
+                                    return currentValue
+                                }
+                        
+                                return currentValue.rssi > accumulator.rssi ? currentValue: accumulator
+                            }, null)
+
+                            NotificationCenter.post(NotificationCenter.name.search.updateList, {data:this.device_list, strongDevice})
                         });
                 });
             }

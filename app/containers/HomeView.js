@@ -90,6 +90,11 @@ class HomeView extends Component {
         }
         this.props.actions.startSearchDevice()
     }
+
+    _disOnlyStrong() {
+        this.props.actions.changeOnlyStrong(false)
+    }
+
     _connectAction(device) {
         // 防止重复点击，停止搜索
         if (this.props.device_data.isConnecting) {
@@ -247,7 +252,7 @@ class HomeView extends Component {
             return
         }
         if (data.data) {
-            this.props.actions.updateDeviceList(data.data)
+            this.props.actions.updateDeviceList(data.data, data.strongDevice)
         }
     }
 
@@ -344,6 +349,7 @@ class HomeView extends Component {
                 <Main {...this.props} 
                     onDisconnect={this._disconnectAction.bind(this)} 
                     onConnect={this._connectAction.bind(this)} 
+                    disOnlyStrong={this._disOnlyStrong.bind(this)} 
                     adjustAction={this._adjustAction.bind(this)} 
                     logAction={this._logAction.bind(this)} 
                     rebootAction={this._rebootAction.bind(this)} 

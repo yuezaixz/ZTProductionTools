@@ -21,7 +21,7 @@ class DeviceListItem extends Component {
                 underlayColor='transparent'
                 onPress={this.handleConnect}>
                 <View style={[styles.container, {borderBottomWidth: this.props.isLast?0:1}]}>
-                    <Text style={styles.name}>{this.props.data.localName || this.props.data.name}📡  {this.props.data.rssi+130}</Text>
+                    <Text style={styles.name}>{this.props.onlyStrong?'Deeper护颈枕':((this.props.data.localName || this.props.data.name) + '📶  ' + (this.props.data.rssi+130) )}</Text>
                     <Text style={[styles.body, styles.timer]}>点击连接</Text>
                 </View>
             </TouchableHighlight>

@@ -8,6 +8,7 @@ const initialState = {
     isSearching: true,
     poseCode:0,
     flatCode:0,
+    onlyStrong: true
 }
 
 export default function(state = initialState, action) {
@@ -48,9 +49,11 @@ export default function(state = initialState, action) {
                 failConnectedMsg: action.errorMsg
             };
         case types.UPDATE_DEVICE_LIST:
-            return {...state, device_list: [...action.devices]};
+            return {...state, device_list: [...action.devices], strongDevice:action.strongDevice};
         case types.SUCCESS_DEVICE_DISCONNECT:
             return {...state, successDisconnect:true}
+        case types.ONLY_STRONG:
+            return {...state, onlyStrong:action.onlyStrong}
         case types.DEVICE_DISCONNECT:
             return {...state, 
                 uuid: "", 
