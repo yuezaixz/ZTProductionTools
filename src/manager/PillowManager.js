@@ -322,7 +322,7 @@ export default class PillowManager{
     }
 
     startReadFCP() {
-        const data = stringToBytes('FCP');
+        const data = stringToBytes('FCP:to1,to2');
         return this.writeData(data)
     }
 
