@@ -9,6 +9,7 @@ import {
     Text
 } from 'react-native';
 import StatusView from '../../common/StatusView';
+import SearchingView from '../../common/SearchingView';
 import DeviceListItem from '../../base/ListItem/DeviceListItem';
 import {Theme, BasicStyle} from '../../styles';
 
@@ -116,10 +117,21 @@ class Main extends Component {
             return;
         }
     }
+
+    renderStatusView() {
+        if (this.props.device_data.isSearching) {
+            return (
+                <SearchingView {...this.props.device_data}/>
+            )
+        } else {
+            return (<StatusView onDisconnect={this.props.onDisconnect} {...this.props.device_data}></StatusView>)
+        }
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                <StatusView onDisconnect={this.props.onDisconnect} {...this.props.device_data}></StatusView>
+                {this.renderStatusView()}
 
                 <ScrollView style={styles.body}>
                     {this.renderBody()}
