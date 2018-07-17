@@ -92,10 +92,10 @@ export default class SearchingView extends Component{
                     }]}>
 
                     </Animated.View>
-                    <Text style={styles.loadingText}>搜索中</Text>
+                    <Text style={styles.loadingText}>Searching</Text>
                 </View>
                 <View style={styles.status_bottom_view} >
-                    <Text style={styles.process_text} >请靠近Deeper护颈枕</Text>
+                    <Text style={styles.process_text} >Please close to Deeper Pillow</Text>
                 </View>
             </View>
         )

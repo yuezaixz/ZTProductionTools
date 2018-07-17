@@ -155,10 +155,10 @@ export default class PillowManager{
                 var splitted = responseStr1.split(",");
                 var data = {
                     rollCount: parseInt(splitted[0]),
-                    flatTime: util.timeStr(parseInt(splitted[1])) || "0分",
-                    slideTime: util.timeStr(parseInt(splitted[2])) || "0分",
+                    flatTime: util.timeStr(parseInt(splitted[1])) || "0 minutes",
+                    slideTime: util.timeStr(parseInt(splitted[2])) || "0 minutes",
                     slidePercent: parseInt(splitted[3]),
-                    sleepPose: parseInt(splitted[1]) == 0 && parseInt(splitted[2])==0?'暂无统计': (parseInt(splitted[1]) > parseInt(splitted[2])?'仰睡':'侧睡'),
+                    sleepPose: parseInt(splitted[1]) == 0 && parseInt(splitted[2])==0?'No Statistics': (parseInt(splitted[1]) > parseInt(splitted[2])?'Back sleeping':'Side sleeping'),
                 }
                 this.startReadMacaddress()
                 NotificationCenter.post(NotificationCenter.name.deviceData.sleepData, data)
@@ -175,7 +175,7 @@ export default class PillowManager{
                 var data = {
                     majorVersion, minorVersion, reVersion, version: responseStr1
                 }
-                this.log_list.push('版本:'+responseStr1)
+                this.log_list.push('Version:'+responseStr1)
                 this.current_pillow = {...this.current_pillow, ...data}
                 this.startReadSleepData()
                 NotificationCenter.post(NotificationCenter.name.deviceData.version, data)
@@ -464,7 +464,7 @@ export default class PillowManager{
                                     if (!isExit) {
                                         var device = {
                                             name:peripheral.name,
-                                            localName:'Deeper护颈枕' + peripheral.id.substring(peripheral.id.length - 5, peripheral.id.length),
+                                            localName:'Deeper Pillow' + peripheral.id.substring(peripheral.id.length - 5, peripheral.id.length),
                                             uuid:peripheral.id, 
                                             rssi:peripheral.rssi
                                         }

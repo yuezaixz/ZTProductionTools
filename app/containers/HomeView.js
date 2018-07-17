@@ -55,16 +55,16 @@ class HomeView extends Component {
         this.props.navigation.navigate('Log')
     }
     _rebootAction(){
-        this.props.actions.showToast('准备重启')
+        this.props.actions.showToast('Ready reboot')
         console.log('_rebootAction');
         PillowManager.ShareInstance().startDfu().then(() => {
-            this.props.actions.showLoading('稍等需要1分钟', 60*1000);
+            this.props.actions.showLoading('Please wait 1 minutes', 60*1000);
             setTimeout(() => {
                 this.props.actions.reinitApp()
                 this.props.actions.startSearchDevice()
             }, 60*1000);
         }).catch(error => {
-            this.props.actions.showLoading('稍等需要1分钟', 60*1000);
+            this.props.actions.showLoading('Please wait 1 minutes', 60*1000);
             setTimeout(() => {
                 this.props.actions.reinitApp()
                 this.props.actions.startSearchDevice()
@@ -72,14 +72,14 @@ class HomeView extends Component {
         })
     }
     _clearDataAction(){
-        this.props.actions.showModal('提示','是否确认要清空数据？', [
-            {keyTitle:'好的', callBack:()=>{
-                this.props.actions.showToast('准备清除')
+        this.props.actions.showModal('Tips','Are you sure to reset data？', [
+            {keyTitle:'OK', callBack:()=>{
+                this.props.actions.showToast('Ready to reset')
                 PillowManager.ShareInstance().clearData().then(() => {
-                    this.props.actions.showToast('清除成功', 2000)
+                    this.props.actions.showToast('Reset successfully', 2000)
                 }).catch(error => {
                     console.log(error)
-                    this.props.actions.showToast('提示清除失败', 2000);
+                    this.props.actions.showToast('Reset failed', 2000);
                 })
             }}
         ])
@@ -98,13 +98,13 @@ class HomeView extends Component {
     _connectAction(device) {
         // 防止重复点击，停止搜索
         if (this.props.device_data.isConnecting) {
-            this.props.actions.showLoading('连接中');
+            this.props.actions.showLoading('Connecting');
             return;
         }
         if (this.props.device_data.uuid == device.uuid) {
             return;
         }
-        this.props.actions.showLoading('连接中');
+        this.props.actions.showLoading('Connecting');
         this.props.actions.stopSearchDevice()
         this.props.actions.startDeviceConnect(device)
     }
@@ -184,7 +184,7 @@ class HomeView extends Component {
         if (!this.state.isVisible) {
             return
         }
-        this.props.actions.showLoading('连接成功', 2000);
+        this.props.actions.showLoading('Connected successfully', 2000);
     }
 
     foundLastDevice(data) {
@@ -194,13 +194,13 @@ class HomeView extends Component {
         let device = data.device
         // 防止重复点击，停止搜索
         if (this.props.device_data.isConnecting) {
-            this.props.actions.showLoading('连接中');
+            this.props.actions.showLoading('Connecting');
             return;
         }
         if (this.props.device_data.uuid == device.uuid) {
             return;
         }
-        this.props.actions.showLoading('自动连接中');
+        this.props.actions.showLoading('Auto connecting');
         this.props.actions.stopSearchDevice()
         this.props.actions.startDeviceConnect(device)
     }

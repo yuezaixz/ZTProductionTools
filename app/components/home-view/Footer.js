@@ -25,7 +25,7 @@ class Footer extends Component {
                     onPress={this.handleComplete}>
                     <View style={styles.buttonContainer} >
                         <Text style={[styles.text, styles.title]}>
-                            完成
+                            Complete
                         </Text>
                     </View>
                 </TouchableHighlight>

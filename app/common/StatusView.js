@@ -47,7 +47,7 @@ export default class StatusView extends Component{
                         style={styles.disconnectTouchContainer}
                         onPress={this.actionDisconnect.bind(this)}>
                     <View style={styles.disconnect} >
-                        <Text style={styles.disconnectText}>断开</Text>
+                        <Text style={styles.disconnectText}>Disconnect</Text>
                     </View>
                 </TouchableHighlight>
             )

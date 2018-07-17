@@ -40,7 +40,7 @@ class Main extends Component {
                     onPress={this.props.disOnlyStrong}>
                     <View style={[styles.moreContainer, {borderBottomWidth: this.props.isLast?0:1}]}>
                         <Text style={[styles.moreText]}>
-                            点击发现更多
+                            Click to search more
                         </Text>
                     </View>
                 </TouchableHighlight>
@@ -67,19 +67,19 @@ class Main extends Component {
             return (
                 <View style={styles.device} >
                     <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]} >
-                        <Text style={styles.deviceItemTitle}>仰卧时长</Text>
+                        <Text style={styles.deviceItemTitle}>Back time</Text>
                         <Text style={styles.deviceItemContent}>{device_data.flatTime}</Text>
                     </View>
                     <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
-                        <Text style={styles.deviceItemTitle}>侧卧时长</Text>
+                        <Text style={styles.deviceItemTitle}>Side time</Text>
                         <Text style={styles.deviceItemContent}>{device_data.slideTime}</Text>
                     </View>
                     <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
-                        <Text style={styles.deviceItemTitle}>翻身次数</Text>
+                        <Text style={styles.deviceItemTitle}>Switch times</Text>
                         <Text style={styles.deviceItemContent}>{device_data.rollCount || '0'+'次'}</Text>
                     </View>
                     <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
-                        <Text style={styles.deviceItemTitle}>睡眠习惯</Text>
+                        <Text style={styles.deviceItemTitle}>Sleep habits</Text>
                         <Text style={styles.deviceItemContent}>{device_data.sleepPose}</Text>
                     </View>
                     <TouchableHighlight 
@@ -88,7 +88,7 @@ class Main extends Component {
                         onPress={this.props.adjustAction}
                         style={[styles.deviceItem, BasicStyle.flexAllCenter]}>
                         <View style={[BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
-                            <Text style={styles.deviceItemTitle}>调整侧卧高度</Text>
+                            <Text style={styles.deviceItemTitle}>Adjust height of side sleeping</Text>
                             <Image style={styles.deviceItemArrow} source={require('../../statics/images/arrow_right.png')} ></Image>
                         </View>
                     </TouchableHighlight>
@@ -98,7 +98,7 @@ class Main extends Component {
                         onPress={this.props.rebootAction}
                         style={[styles.deviceItem, BasicStyle.flexAllCenter]}>
                         <View style={[BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
-                            <Text style={styles.deviceItemTitle}>重启枕头</Text>
+                            <Text style={styles.deviceItemTitle}>Restart</Text>
                             <Image style={styles.deviceItemArrow} source={require('../../statics/images/arrow_right.png')} ></Image>
                         </View>
                     </TouchableHighlight>
@@ -108,7 +108,7 @@ class Main extends Component {
                         onPress={this.props.clearDataAction}
                         style={[styles.deviceItem, BasicStyle.flexAllCenter]}>
                         <View style={[BasicStyle.rowFlex, BasicStyle.flexAllCenter]} >
-                            <Text style={styles.deviceItemTitle}>数据清零</Text>
+                            <Text style={styles.deviceItemTitle}>Data reset</Text>
                             <Image style={styles.deviceItemArrow} source={require('../../statics/images/arrow_right.png')} ></Image>
                         </View>
                     </TouchableHighlight>
@@ -118,7 +118,7 @@ class Main extends Component {
                         onPress={this.props.logAction}
                         style={[styles.deviceItem, BasicStyle.flexAllCenter]}>
                         <View style={[BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
-                            <Text style={styles.deviceItemTitle}>日志(协助研发)</Text>
+                            <Text style={styles.deviceItemTitle}>Log(assisting R&D)</Text>
                             <Image style={styles.deviceItemArrow} source={require('../../statics/images/arrow_right.png')} ></Image>
                         </View>
                     </TouchableHighlight>

@@ -83,7 +83,7 @@ export const timeStr = function (time) {
   console.log(hours)
   console.log(minutes)
   console.log(seconds)
-  return (hours ? (hours + "时") : "") + (minutes ? (minutes + "分") : "") + (seconds ? (seconds + "秒") : "")
+  return (hours ? (hours + " hours") : "") + (minutes ? (minutes + " minutes") : "") + (seconds ? (seconds + " seconds") : "")
 }
 
 export function curentTimeStr() {

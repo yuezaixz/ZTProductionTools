@@ -3,7 +3,7 @@ import * as types from '../constants/ActionTypes';
 const initialState = {
     debug: true,
     index: 0,
-    processingStr: '搜索中',
+    processingStr: 'Searching',
     isProcessing: true,
     isSearching: true,
     poseCode:0,
@@ -14,7 +14,7 @@ const initialState = {
 export default function(state = initialState, action) {
     switch(action.type) {
         case types.START_SEARCH_DEVICE:
-            var temp = {...state, isSearching: true, isProcessing: true, processingStr:'搜索中'};
+            var temp = {...state, isSearching: true, isProcessing: true, processingStr:'Searching'};
             return temp;
         case types.STOP_SEARCH_DEVICE:
             return {...state, isSearching: false, isProcessing: false, device_list: []};
@@ -23,7 +23,7 @@ export default function(state = initialState, action) {
                 failConnectedMsg: "", 
                 isConnecting: true, 
                 isProcessing: true, 
-                processingStr:'连接中', 
+                processingStr:'Connecting', 
                 connecting_uuid: action.uuid
             };
         case types.SUCCESS_DEVICE_CONNECT:
@@ -32,7 +32,7 @@ export default function(state = initialState, action) {
                 connecting_uuid:'', 
                 name: action.name, 
                 isProcessing: false, 
-                processingStr:'已连接', 
+                processingStr:'Connected', 
                 uuid: action.uuid,
                 poseCode:0,
                 flatCode:0,
@@ -44,7 +44,7 @@ export default function(state = initialState, action) {
             return {...state, 
                 isConnecting: false, 
                 isProcessing: false, 
-                processingStr:'连接失败', 
+                processingStr:'Connected failed', 
                 connecting_uuid:'', 
                 failConnectedMsg: action.errorMsg
             };
@@ -76,7 +76,7 @@ export default function(state = initialState, action) {
         {
             let pillowStatus = action.status
             let isProcessing = action.flatCode > 0
-            let processingStr = [null, '充气中', '放气中'][action.flatCode] || ['空置中', '仰卧中', '侧卧中'][action.poseCode]
+            let processingStr = [null, 'Inflating', 'Deflating'][action.flatCode] || ['No use', 'Back Sleeping', 'Side Sleeping'][action.poseCode]
             return {...state, pillowStatus, poseCode:action.poseCode, flatCode:action.flatCode , isProcessing, processingStr};
         }
         case types.READ_LOG:
