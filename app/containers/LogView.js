@@ -21,9 +21,9 @@ class LogView extends Component {
         const params = navigation.state.params || {};
 
         return {
-            title:"日志获取",
+            title:"Log",
             headerLeft: (
-                <StatusBarLeftButton textStyle={Theme.font.common} onPress={params.backAction} title="返回" ></StatusBarLeftButton>
+                <StatusBarLeftButton textStyle={Theme.font.common} onPress={params.backAction} title="Back" ></StatusBarLeftButton>
             ),
         };
     };

@@ -76,7 +76,7 @@ class Main extends Component {
                     </View>
                     <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
                         <Text style={styles.deviceItemTitle}>Switch times</Text>
-                        <Text style={styles.deviceItemContent}>{device_data.rollCount || '0'+'次'}</Text>
+                        <Text style={styles.deviceItemContent}>{device_data.rollCount || '0'+' times'}</Text>
                     </View>
                     <View style={[styles.deviceItem,BasicStyle.rowFlex, BasicStyle.flexAllCenter]}>
                         <Text style={styles.deviceItemTitle}>Sleep habits</Text>

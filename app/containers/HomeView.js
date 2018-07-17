@@ -33,7 +33,7 @@ class HomeView extends Component {
         const params = navigation.state.params || {};
 
         return {
-            title:"Deeper护颈枕",
+            title:"Deeper Pillow",
             // headerLeft: (
             //     <StatusBarLeftButton onPress={params.settingAction} textStyle={{color:"white"}} title="设置" ></StatusBarLeftButton>
             // ),
