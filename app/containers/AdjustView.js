@@ -33,9 +33,9 @@ class AdjustView extends Component {
         const params = navigation.state.params || {};
 
         return {
-            title:"调整高度",
+            title:"Adjust Pillow",
             headerLeft: (
-                <StatusBarLeftButton textStyle={Theme.font.common} onPress={params.backAction} title="返回" ></StatusBarLeftButton>
+                <StatusBarLeftButton textStyle={Theme.font.common} onPress={params.backAction} title="Back" ></StatusBarLeftButton>
             ),
         };
     };
@@ -78,7 +78,7 @@ class AdjustView extends Component {
                     this.setState({
                         isAdjusting: false, 
                         isProcessing: true, 
-                        processingStr:'请保存', 
+                        processingStr:'To Save', 
                         hadChange: true
                     })
                 }, 4000)
@@ -87,7 +87,7 @@ class AdjustView extends Component {
                 this.setState({
                     isAdjusting: false, 
                     isProcessing: false, 
-                    processingStr:'请保存', 
+                    processingStr:'To Save', 
                     hadChange: true
                 })
               }
@@ -102,7 +102,7 @@ class AdjustView extends Component {
                 this.setState({
                     isAdjusting: true, 
                     isProcessing: true, 
-                    processingStr:'充气中', 
+                    processingStr:'Inflating', 
                     hadChange: true
                 })
             }
@@ -111,11 +111,11 @@ class AdjustView extends Component {
             this.setState({
                 isAdjusting: true, 
                 isProcessing: true, 
-                processingStr:'放气中', 
+                processingStr:'Deflating', 
                 hadChange: true
             })
         } else if (util.startWith(data.command, 'HCD')) {//保存
-            this.props.actions.showLoading('保存成功')
+            this.props.actions.showLoading('Save successfully')
             setTimeout(() => {
                 this.isSaving = false
                 this.props.actions.hiddenLoading()
@@ -257,13 +257,13 @@ class AdjustView extends Component {
                 </StatusView>
                 <View style={styles.body} >
                     {this.renderAdjustButton()}
-                    <Text style={styles.adjustPromptText} >Click to </Text>
+                    <Text style={styles.adjustPromptText} >Click to Pause</Text>
                     <TouchableHighlight 
                         activeOpacity={Theme.active.opacity}
                         underlayColor='transparent'
                         onPress={this.saveAction.bind(this)}
                         style={styles.saveButton}>
-                        <Text style={styles.saveButtonText}>Adjust height of side sleeping</Text>
+                        <Text style={styles.saveButtonText}>Save height of side sleeping</Text>
                     </TouchableHighlight>
                 </View>
             </ImageBackground>

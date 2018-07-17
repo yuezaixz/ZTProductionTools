@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     },
     disconnect: {
         flexDirection:'row',
-        width: 45
+        width: 85
     },
     disconnectText: {
         ...Theme.font.common,

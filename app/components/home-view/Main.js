@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     },
     deviceItemContent: {
         paddingRight: Theme.constant.leftRightPadding,
-        flex: 1,
+        flex: 4,
         textAlign: 'right',
         ...Theme.font.common
 
