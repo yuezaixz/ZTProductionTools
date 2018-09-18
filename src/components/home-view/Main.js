@@ -54,7 +54,17 @@ class Main extends Component {
 
         if (this.props.home_data.uuid) {//连接成功，那就跳转了
             console.log(this.props.navigation.isFocused)
-            this.props.navigation.navigate('Device',{
+            // 旧的测试页
+            // this.props.navigation.navigate('Device',{
+            //     uuid: this.props.home_data.uuid,
+            //     name: this.props.home_data.name,
+            //     serviceUUID: this.props.home_data.serviceUUID,
+            //     noitfyUUID: this.props.home_data.noitfyUUID,
+            //     writeUUID: this.props.home_data.writeUUID
+            // })
+
+            // 现在跳到新的测试页
+            this.props.navigation.navigate('Exper',{
                 uuid: this.props.home_data.uuid,
                 name: this.props.home_data.name,
                 serviceUUID: this.props.home_data.serviceUUID,

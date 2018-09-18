@@ -33,6 +33,68 @@ export function readVoltage(voltage) {
     return {type: types.READ_VOLTAGE, voltage}
 }
 
+export function startOldTest() {
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().startOldTest()
+            .then(()=>{
+                dispatch({type: types.SEND_OTHER_COMMAND})
+            })
+    }
+}
+
+export function stopOldTest() {
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().stopOldTest()
+            .then(()=>{
+                dispatch({type: types.SEND_OTHER_COMMAND})
+            })
+    }
+}
+
+export function switchToOld() {
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().adjustSTB120()
+            .then(()=>{
+                dispatch({type: types.SWITCH_TO_OLD})
+            })
+    }
+}
+
+export function switchToOldForStop() {
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().adjustSTB120()
+            .then(()=>{
+                dispatch({type: types.SWITCH_TO_OLD_FOR_STOP})
+            })
+    }
+}
+
+export function successStopOldTest() {
+    return {type: types.SUCCESS_STOP_OLD_TEST}
+}
+
+export function switchToInflate() {
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().adjustSTB18000()
+            .then(()=>{
+                dispatch({type: types.SWITCH_TO_INFLATE})
+            })
+    }
+}
+
+export function startReadInflateTime() {
+    return async (dispatch, getState) =>{
+        PillowManager.ShareInstance().startReadInflateTime()
+            .then(()=>{
+                dispatch({type: types.START_READ_INFLATE_TIME})
+            })
+    }
+}
+
+export function readInflateTime(inflateTime) {
+    return {type: types.READ_INFLATE_TIME, inflateTime}
+}
+
 /****************板级功能测试****************/
 export function startReadFAT(uuid, serviceUUID, writeUUID) {
     return async (dispatch, getState) =>{

@@ -23,5 +23,6 @@ module.exports = {
         sleepData: 'com.podoon.ztproduct.sleepData',
         sleepStatus: 'com.podoon.ztproduct.sleepStatus',
         foundLastDevice: 'com.podoon.ztproduct.foundLastDevice',
+        inflateTime: 'com.podoon.ztproduct.inflateTime',
     }
 };

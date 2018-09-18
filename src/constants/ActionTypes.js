@@ -1,4 +1,11 @@
 export const SWITCH_MAIN_TAB = 'SWITCH_MAIN_TAB';
+export const SHOW_MODAL = 'SHOW_MODAL';
+export const HIDDEN_MODAL = 'HIDDEN_MODAL';
+export const SHOW_TOAST = 'SHOW_TOAST';
+export const HIDDEN_TOAST = 'HIDDEN_TOAST';
+export const SHOW_LOADING = 'SHOW_LOADING';
+export const HIDDEN_LOADING = 'HIDDEN_LOADING';
+export const REINIT_APP = 'REINIT_APP';
 
 /****************搜索连接相关****************/
 //HOME ACTION TYPES
@@ -25,6 +32,16 @@ export const READ_VERSION = 'READ_VERSION';
 export const READ_SLEEPDATA = 'READ_SLEEPDATA';
 export const READ_MACADDRESS = 'READ_MACADDRESS';
 export const READ_SLEEPSTATUS = 'READ_SLEEPSTATUS';
+export const START_READ_INFLATE_TIME = 'START_READ_INFLATE_TIME';
+export const READ_INFLATE_TIME = 'READ_INFLATE_TIME';
+export const START_OLD_TEST = 'START_OLD_TEST';
+export const STOP_OLD_TEST = 'STOP_OLD_TEST';
+export const SWITCH_TO_OLD = 'SWITCH_TO_OLD';
+export const SWITCH_TO_OLD_FOR_STOP = 'SWITCH_TO_OLD_FOR_STOP';
+export const SUCCESS_STOP_OLD_TEST = 'SUCCESS_STOP_OLD_TEST';
+export const SWITCH_TO_INFLATE = 'SWITCH_TO_INFLATE';
+export const SEND_OTHER_COMMAND = 'SEND_OTHER_COMMAND';
+export const SUCCESS_OTHER_COMMAND = 'SUCCESS_OTHER_COMMAND';
 
 /****************板级功能测试****************/
 export const START_READ_FAT = 'START_READ_FAT';

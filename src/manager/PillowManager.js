@@ -163,6 +163,10 @@ export default class PillowManager{
                 this.startReadMacaddress()
                 NotificationCenter.post(NotificationCenter.name.deviceData.sleepData, data)
 
+            } else if (util.startWith(dataStr, 'BST loops:')) {
+                var responseStr1 = dataStr.substring(10, dataStr.length)
+                var inflateTime = parseInt(responseStr1)
+                NotificationCenter.post(NotificationCenter.name.deviceData.inflateTime, {inflateTime:inflateTime})
             } else if (util.startWith(dataStr, 'MC:')) {
                 var responseStr1 = dataStr.substring(3, dataStr.length)
                 NotificationCenter.post(NotificationCenter.name.deviceData.macAddress, {macAddress:responseStr1})
@@ -262,6 +266,36 @@ export default class PillowManager{
     //API
     startReadVoltage() {
         const data = stringToBytes('GHV');
+        return this.writeData(data)
+    }
+
+    startReadInflateTime() {
+        const data = stringToBytes('GHX');
+        return this.writeData(data)
+    }
+
+    adjustSTB18000() {
+        const data = stringToBytes('STB:18000');
+        return this.writeData(data)
+    }
+
+    adjustSTB120() {
+        const data = stringToBytes('STB:120');
+        return this.writeData(data)
+    }
+
+    startOldTest() {
+        const data = stringToBytes('SHX:1');
+        return this.writeData(data)
+    }
+
+    stopOldTest() {
+        const data = stringToBytes('SHX:0');
+        return this.writeData(data)
+    }
+
+    startReadInflateTime() {
+        const data = stringToBytes('GHX');
         return this.writeData(data)
     }
 

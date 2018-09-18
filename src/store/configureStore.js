@@ -14,11 +14,12 @@ var logger = createLogger({
 //a dirty way to clear persisted old state
 //Todo: if you've ran the old TodoRN version, uncomment this before get started.
 //(async () => await AsyncStorage.clear())();
-
 var middlewares = compose(applyMiddleware(thunk, logger));
 
 export default function configureStore() {
+    console.log(111,reducers)
     const store = createStore(reducers, undefined, middlewares);
+    console.log(22)
     if (isDebuggingInChrome) {
         window.store = store;
     }
